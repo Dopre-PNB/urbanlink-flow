@@ -1,0 +1,30 @@
+{
+  "name": "urbanlink-flow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Projeto final: plataforma simples de logística e simulação de entregas",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "db:local": "node scripts/local-mysql.js start",
+    "db:stop": "node scripts/local-mysql.js stop",
+    "db:setup": "node scripts/setup.js",
+    "seed": "node scripts/seed.js",
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "test:ui": "node tests/browser-check.js"
+  },
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "leaflet": "^1.9.4",
+    "mysql2": "^3.15.0",
+    "sequelize": "^6.37.7",
+    "swagger-ui-dist": "^5.30.0"
+  },
+  "devDependencies": { "playwright": "^1.56.0" },
+  "overrides": { "sequelize": { "uuid": "11.1.1" } }
+}
