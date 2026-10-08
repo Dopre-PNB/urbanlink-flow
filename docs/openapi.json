@@ -1,0 +1,2649 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "UrbanLink Flow API",
+    "version": "1.0.0",
+    "description": "API acadêmica de logística urbana: entregas, rotas cadastradas, simulações estimadas e dois perfis. Todos os dados funcionais persistem em MySQL. Horários de previsão não representam tráfego em tempo real."
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Mesma origem da plataforma"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Autenticação",
+      "description": "Entrada única para dois perfis."
+    },
+    {
+      "name": "Usuários",
+      "description": "Acesso exclusivo do administrador. Senhas/hashes não aparecem em retornos."
+    },
+    {
+      "name": "Veículos",
+      "description": "Consulta dos dois perfis; escrita do administrador."
+    },
+    {
+      "name": "Rotas",
+      "description": "Distâncias estimadas e percursos ilustrativos. Consulta dos dois perfis; escrita do administrador."
+    },
+    {
+      "name": "Entregas",
+      "description": "Ambos os perfis criam/atualizam; exclusão do administrador. Autoria deriva do token."
+    },
+    {
+      "name": "Simulações",
+      "description": "Previsão em dois cenários e histórico persistido. Exclusão do administrador."
+    },
+    {
+      "name": "Painel",
+      "description": "Indicadores baseados em dados cadastrados e última simulação por entrega."
+    },
+    {
+      "name": "Sistema",
+      "description": "Estado da API e conexão com MySQL."
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Sistema"],
+        "summary": "Verificar aplicação e banco",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Aplicação e banco disponíveis.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          },
+          "503": {
+            "description": "Aplicação indisponível ou sem conexão com o banco.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Entrar com e-mail e senha",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token e dados públicos do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginSaida"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        },
+        "description": "Credenciais ausentes ou inválidas recebem 401 genérico."
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": ["Autenticação"],
+        "summary": "Consultar usuário autenticado",
+        "responses": {
+          "200": {
+            "description": "Dados públicos da conta atual.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResposta"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/usuarios": {
+      "get": {
+        "tags": ["Usuários"],
+        "summary": "Listar usuários",
+        "description": "Exclusivo do administrador.",
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Página começando em 1."
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Quantidade por página; máximo 100."
+          },
+          {
+            "name": "busca",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Busca textual no recurso."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioLista"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Usuários"],
+        "summary": "Criar usuario",
+        "description": "Exclusivo do administrador. E-mail único; senha de pelo menos oito caracteres. Não permite excluir a própria conta, remover/rebaixar o último administrador nem excluir conta com vínculos.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/usuarios/{id}": {
+      "get": {
+        "tags": ["Usuários"],
+        "summary": "Consultar usuario",
+        "description": "Exclusivo do administrador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Usuários"],
+        "summary": "Atualizar usuario",
+        "description": "Exclusivo do administrador. E-mail único; senha de pelo menos oito caracteres. Não permite excluir a própria conta, remover/rebaixar o último administrador nem excluir conta com vínculos.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioEditar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Usuários"],
+        "summary": "Excluir usuario",
+        "description": "Exclusivo do administrador. Registros com vínculos são preservados e recebem conflito 409.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro excluído.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mensagem"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/veiculos": {
+      "get": {
+        "tags": ["Veículos"],
+        "summary": "Listar veículos",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Página começando em 1."
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Quantidade por página; máximo 100."
+          },
+          {
+            "name": "busca",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Busca textual no recurso."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VeiculoLista"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Veículos"],
+        "summary": "Criar veiculo",
+        "description": "Exclusivo do administrador. Placa única e capacidade positiva. Veículo ocupado não pode entrar em manutenção ou ficar abaixo da carga em andamento.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VeiculoCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VeiculoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/veiculos/{id}": {
+      "get": {
+        "tags": ["Veículos"],
+        "summary": "Consultar veiculo",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VeiculoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Veículos"],
+        "summary": "Atualizar veiculo",
+        "description": "Exclusivo do administrador. Placa única e capacidade positiva. Veículo ocupado não pode entrar em manutenção ou ficar abaixo da carga em andamento.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VeiculoEditar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VeiculoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Veículos"],
+        "summary": "Excluir veiculo",
+        "description": "Exclusivo do administrador. Registros com vínculos são preservados e recebem conflito 409.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro excluído.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mensagem"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/rotas": {
+      "get": {
+        "tags": ["Rotas"],
+        "summary": "Listar rotas",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Página começando em 1."
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Quantidade por página; máximo 100."
+          },
+          {
+            "name": "busca",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Busca textual no recurso."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotaLista"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Rotas"],
+        "summary": "Criar rota",
+        "description": "Exclusivo do administrador. Nome único, distância positiva e de 2 a 30 pontos. A distância é informada, não calculada pelas ruas.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotaResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/rotas/{id}": {
+      "get": {
+        "tags": ["Rotas"],
+        "summary": "Consultar rota",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotaResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Rotas"],
+        "summary": "Atualizar rota",
+        "description": "Exclusivo do administrador. Nome único, distância positiva e de 2 a 30 pontos. A distância é informada, não calculada pelas ruas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaEditar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotaResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Rotas"],
+        "summary": "Excluir rota",
+        "description": "Exclusivo do administrador. Registros com vínculos são preservados e recebem conflito 409.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro excluído.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mensagem"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/entregas": {
+      "get": {
+        "tags": ["Entregas"],
+        "summary": "Listar entregas",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Página começando em 1."
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Quantidade por página; máximo 100."
+          },
+          {
+            "name": "busca",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Busca textual no recurso."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["pendente", "em_andamento", "concluida", "cancelada"]
+            },
+            "description": "Filtrar pelo estado da entrega."
+          },
+          {
+            "name": "data",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Data agendada no formato YYYY-MM-DD."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntregaLista"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Entregas"],
+        "summary": "Criar entrega",
+        "description": "Administrador e operador. Capacidade e disponibilidade verificadas. Sem rota não inicia. Dados gerais editáveis só enquanto pendente; estados terminais não retrocedem. usuario_id vem do token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntregaCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntregaResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/entregas/{id}": {
+      "get": {
+        "tags": ["Entregas"],
+        "summary": "Consultar entrega",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntregaResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Entregas"],
+        "summary": "Atualizar entrega",
+        "description": "Administrador e operador. Capacidade e disponibilidade verificadas. Sem rota não inicia. Dados gerais editáveis só enquanto pendente; estados terminais não retrocedem. usuario_id vem do token.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntregaEditar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntregaResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Entregas"],
+        "summary": "Excluir entrega",
+        "description": "Exclusivo do administrador. Registros com vínculos são preservados e recebem conflito 409.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro excluído.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mensagem"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/simulacoes": {
+      "get": {
+        "tags": ["Simulações"],
+        "summary": "Listar simulações",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Página começando em 1."
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Quantidade por página; máximo 100."
+          },
+          {
+            "name": "busca",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Busca textual no recurso."
+          },
+          {
+            "name": "entrega_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filtrar histórico de uma entrega."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulacaoLista"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Simulações"],
+        "summary": "Criar simulacao",
+        "description": "Administrador e operador. POST calcula e salva um retrato, sem associar automaticamente a rota à entrega. PUT recalcula cenário, preserva autor e registra atualizado_por_id; entrega_id é imutável.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Simular"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulacaoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/simulacoes/{id}": {
+      "get": {
+        "tags": ["Simulações"],
+        "summary": "Consultar simulacao",
+        "description": "Disponível aos dois perfis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulacaoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Simulações"],
+        "summary": "Atualizar simulacao",
+        "description": "Administrador e operador. POST calcula e salva um retrato, sem associar automaticamente a rota à entrega. PUT recalcula cenário, preserva autor e registra atualizado_por_id; entrega_id é imutável.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulacaoEditar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulacaoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Simulações"],
+        "summary": "Excluir simulacao",
+        "description": "Exclusivo do administrador. Registros com vínculos são preservados e recebem conflito 409.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Identificador persistido do registro."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro excluído.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mensagem"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Erro403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/simulacoes/prever": {
+      "post": {
+        "tags": ["Simulações"],
+        "summary": "Calcular sem salvar",
+        "description": "Ambos os perfis. Apenas rotas com mesma origem/destino. Normal 30 km/h; lento 20 km/h. Menor tempo vence; empate usa menor ID. Tempo ≤ prazo conta como dentro do prazo.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Simular"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comparação e recomendação sem gravação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrevisaoResposta"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Erro400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Erro404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Erro409"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    },
+    "/painel": {
+      "get": {
+        "tags": ["Painel"],
+        "summary": "Consultar indicadores de operações",
+        "description": "Ambos os perfis. Tempo médio e percentual no prazo usam a última simulação por entrega e representam previsões.",
+        "responses": {
+          "200": {
+            "description": "Contagens e indicadores de previsão.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PainelResposta"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Erro401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Erro500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token emitido em /login. Perfil atual conferido no banco a cada requisição."
+      }
+    },
+    "schemas": {
+      "Erro": {
+        "type": "object",
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "description": "Descrição legível do problema"
+          }
+        },
+        "required": ["mensagem"],
+        "additionalProperties": false
+      },
+      "Mensagem": {
+        "type": "object",
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "description": "Confirmação da operação"
+          }
+        },
+        "required": ["mensagem"],
+        "additionalProperties": false
+      },
+      "Ponto": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "description": "Latitude",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "description": "Longitude",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": ["lat", "lng"],
+        "additionalProperties": false
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": ["administrador", "operador"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "nome", "email", "tipo"],
+        "additionalProperties": false
+      },
+      "UsuarioResumo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nome": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "nome"],
+        "additionalProperties": false
+      },
+      "UsuarioCriar": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome completo",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "description": "E-mail único",
+            "format": "email",
+            "maxLength": 150
+          },
+          "senha": {
+            "type": "string",
+            "description": "Senha com pelo menos 8 caracteres e no máximo 72 bytes em UTF-8.",
+            "minLength": 8,
+            "maxLength": 72,
+            "writeOnly": true
+          },
+          "tipo": {
+            "type": "string",
+            "enum": ["administrador", "operador"]
+          }
+        },
+        "required": ["nome", "email", "senha", "tipo"],
+        "additionalProperties": false
+      },
+      "UsuarioEditar": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome completo",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "description": "E-mail único",
+            "format": "email",
+            "maxLength": 150
+          },
+          "senha": {
+            "type": "string",
+            "description": "Senha com pelo menos 8 caracteres e no máximo 72 bytes em UTF-8.",
+            "minLength": 8,
+            "maxLength": 72,
+            "writeOnly": true
+          },
+          "tipo": {
+            "type": "string",
+            "enum": ["administrador", "operador"]
+          }
+        },
+        "additionalProperties": false
+      },
+      "VeiculoCriar": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Identificação do veículo",
+            "maxLength": 100
+          },
+          "placa": {
+            "type": "string",
+            "description": "Placa única",
+            "maxLength": 15
+          },
+          "capacidade_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "status": {
+            "type": "string",
+            "enum": ["disponivel", "manutencao"]
+          }
+        },
+        "required": ["nome", "placa", "capacidade_kg"],
+        "additionalProperties": false
+      },
+      "VeiculoEditar": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Identificação do veículo",
+            "maxLength": 100
+          },
+          "placa": {
+            "type": "string",
+            "description": "Placa única",
+            "maxLength": 15
+          },
+          "capacidade_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "status": {
+            "type": "string",
+            "enum": ["disponivel", "manutencao"]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Veiculo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Identificação do veículo",
+            "maxLength": 100
+          },
+          "placa": {
+            "type": "string",
+            "description": "Placa única",
+            "maxLength": 15
+          },
+          "capacidade_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "status": {
+            "type": "string",
+            "enum": ["disponivel", "manutencao"]
+          },
+          "ocupado": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "nome", "placa", "capacidade_kg", "status", "ocupado"],
+        "additionalProperties": false
+      },
+      "RotaCriar": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome único",
+            "maxLength": 100
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem compatível com a entrega",
+            "maxLength": 150
+          },
+          "destino": {
+            "type": "string",
+            "description": "Destino compatível com a entrega",
+            "maxLength": 150
+          },
+          "distancia_km": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "pontos": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/Ponto"
+            }
+          }
+        },
+        "required": ["nome", "origem", "destino", "distancia_km", "pontos"],
+        "additionalProperties": false
+      },
+      "RotaEditar": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome único",
+            "maxLength": 100
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem compatível com a entrega",
+            "maxLength": 150
+          },
+          "destino": {
+            "type": "string",
+            "description": "Destino compatível com a entrega",
+            "maxLength": 150
+          },
+          "distancia_km": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "pontos": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/Ponto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Rota": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome único",
+            "maxLength": 100
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem compatível com a entrega",
+            "maxLength": 150
+          },
+          "destino": {
+            "type": "string",
+            "description": "Destino compatível com a entrega",
+            "maxLength": 150
+          },
+          "distancia_km": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "pontos": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/Ponto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "nome", "origem", "destino", "distancia_km", "pontos"],
+        "additionalProperties": false
+      },
+      "EntregaCriar": {
+        "type": "object",
+        "properties": {
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da carga",
+            "maxLength": 200
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem da entrega",
+            "maxLength": 150
+          },
+          "destino": {
+            "type": "string",
+            "description": "Destino da entrega",
+            "maxLength": 150
+          },
+          "peso_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "prazo_min": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "data_agendada": {
+            "type": "string",
+            "format": "date"
+          },
+          "veiculo_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "rota_id": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pendente", "em_andamento", "concluida", "cancelada"]
+          }
+        },
+        "required": [
+          "descricao",
+          "origem",
+          "destino",
+          "peso_kg",
+          "prazo_min",
+          "data_agendada",
+          "veiculo_id"
+        ],
+        "additionalProperties": false
+      },
+      "EntregaEditar": {
+        "type": "object",
+        "properties": {
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da carga",
+            "maxLength": 200
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem da entrega",
+            "maxLength": 150
+          },
+          "destino": {
+            "type": "string",
+            "description": "Destino da entrega",
+            "maxLength": 150
+          },
+          "peso_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "prazo_min": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "data_agendada": {
+            "type": "string",
+            "format": "date"
+          },
+          "veiculo_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "rota_id": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pendente", "em_andamento", "concluida", "cancelada"]
+          }
+        },
+        "additionalProperties": false
+      },
+      "EntregaResumo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "codigo": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "codigo", "descricao"],
+        "additionalProperties": false
+      },
+      "Entrega": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "codigo": {
+            "type": "string",
+            "example": "ULF-0001"
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da carga",
+            "maxLength": 200
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem da entrega",
+            "maxLength": 150
+          },
+          "destino": {
+            "type": "string",
+            "description": "Destino da entrega",
+            "maxLength": 150
+          },
+          "peso_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "prazo_min": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "data_agendada": {
+            "type": "string",
+            "format": "date"
+          },
+          "veiculo_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "rota_id": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pendente", "em_andamento", "concluida", "cancelada"]
+          },
+          "usuario_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "veiculo": {
+            "$ref": "#/components/schemas/VeiculoAssociado"
+          },
+          "rota": {
+            "type": "object",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Rota"
+              }
+            ]
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/UsuarioResumo"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "codigo",
+          "descricao",
+          "origem",
+          "destino",
+          "peso_kg",
+          "prazo_min",
+          "data_agendada",
+          "status",
+          "veiculo_id",
+          "usuario_id"
+        ],
+        "additionalProperties": false
+      },
+      "Simular": {
+        "type": "object",
+        "properties": {
+          "entrega_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cenario": {
+            "type": "string",
+            "enum": ["normal", "lento"]
+          }
+        },
+        "required": ["entrega_id", "cenario"],
+        "additionalProperties": false
+      },
+      "SimulacaoEditar": {
+        "type": "object",
+        "properties": {
+          "cenario": {
+            "type": "string",
+            "enum": ["normal", "lento"]
+          }
+        },
+        "required": ["cenario"],
+        "additionalProperties": false
+      },
+      "ResultadoRota": {
+        "type": "object",
+        "properties": {
+          "rota_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nome": {
+            "type": "string"
+          },
+          "origem": {
+            "type": "string"
+          },
+          "destino": {
+            "type": "string"
+          },
+          "distancia_km": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "tempo_min": {
+            "type": "number",
+            "minimum": 0
+          },
+          "dentro_prazo": {
+            "type": "boolean"
+          },
+          "pontos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ponto"
+            }
+          }
+        },
+        "required": [
+          "rota_id",
+          "nome",
+          "origem",
+          "destino",
+          "distancia_km",
+          "tempo_min",
+          "dentro_prazo",
+          "pontos"
+        ],
+        "additionalProperties": false
+      },
+      "Previsao": {
+        "type": "object",
+        "properties": {
+          "entrega_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cenario": {
+            "type": "string",
+            "enum": ["normal", "lento"]
+          },
+          "velocidade_kmh": {
+            "type": "number",
+            "enum": [30, 20]
+          },
+          "prazo_min": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "recomendada_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "resultados": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/ResultadoRota"
+            }
+          }
+        },
+        "required": [
+          "entrega_id",
+          "cenario",
+          "velocidade_kmh",
+          "prazo_min",
+          "recomendada_id",
+          "resultados"
+        ]
+      },
+      "Simulacao": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Previsao"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "rota_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "usuario_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "atualizado_por_id": {
+                "type": "integer",
+                "nullable": true,
+                "minimum": 1
+              },
+              "entrega": {
+                "$ref": "#/components/schemas/EntregaResumo"
+              },
+              "usuario": {
+                "$ref": "#/components/schemas/UsuarioResumo"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "atualizado_por": {
+                "type": "object",
+                "nullable": true,
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UsuarioResumo"
+                  }
+                ]
+              }
+            },
+            "required": ["id", "rota_id", "usuario_id"]
+          }
+        ]
+      },
+      "LoginEntrada": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "senha": {
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": ["email", "senha"],
+        "additionalProperties": false
+      },
+      "LoginSaida": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "JWT temporário"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/Usuario"
+          }
+        },
+        "required": ["token", "usuario"],
+        "additionalProperties": false
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ok"]
+          },
+          "banco": {
+            "type": "string",
+            "enum": ["conectado"]
+          }
+        },
+        "required": ["status", "banco"],
+        "additionalProperties": false
+      },
+      "Painel": {
+        "type": "object",
+        "properties": {
+          "total_entregas": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pendentes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "em_andamento": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "concluidas": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "canceladas": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "veiculos_disponiveis": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_veiculos": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tempo_medio_min": {
+            "type": "number",
+            "minimum": 0
+          },
+          "dentro_prazo_percentual": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "ultimas_entregas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Entrega"
+            }
+          }
+        },
+        "required": [
+          "total_entregas",
+          "pendentes",
+          "em_andamento",
+          "concluidas",
+          "canceladas",
+          "veiculos_disponiveis",
+          "total_veiculos",
+          "tempo_medio_min",
+          "dentro_prazo_percentual",
+          "ultimas_entregas"
+        ],
+        "additionalProperties": false
+      },
+      "UsuarioResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Usuario"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "UsuarioLista": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Usuario"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pagina": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limite": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": ["dados", "total", "pagina", "limite"],
+        "additionalProperties": false
+      },
+      "VeiculoResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Veiculo"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "VeiculoLista": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Veiculo"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pagina": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limite": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": ["dados", "total", "pagina", "limite"],
+        "additionalProperties": false
+      },
+      "RotaResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Rota"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "RotaLista": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rota"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pagina": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limite": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": ["dados", "total", "pagina", "limite"],
+        "additionalProperties": false
+      },
+      "EntregaResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Entrega"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "EntregaLista": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Entrega"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pagina": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limite": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": ["dados", "total", "pagina", "limite"],
+        "additionalProperties": false
+      },
+      "SimulacaoResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Simulacao"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "SimulacaoLista": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Simulacao"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pagina": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limite": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": ["dados", "total", "pagina", "limite"],
+        "additionalProperties": false
+      },
+      "PrevisaoResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Previsao"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "PainelResposta": {
+        "type": "object",
+        "properties": {
+          "dados": {
+            "$ref": "#/components/schemas/Painel"
+          }
+        },
+        "required": ["dados"],
+        "additionalProperties": false
+      },
+      "VeiculoAssociado": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Identificação do veículo",
+            "maxLength": 100
+          },
+          "placa": {
+            "type": "string",
+            "description": "Placa única",
+            "maxLength": 15
+          },
+          "capacidade_kg": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 99999999.99
+          },
+          "status": {
+            "type": "string",
+            "enum": ["disponivel", "manutencao"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "nome", "placa", "capacidade_kg", "status"],
+        "additionalProperties": false
+      }
+    },
+    "responses": {
+      "Erro400": {
+        "description": "Dados inválidos, cenário desconhecido, página/limite inválidos ou regra de negócio não satisfeita.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Erro401": {
+        "description": "Credenciais inválidas, token ausente, inválido ou expirado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Erro403": {
+        "description": "Perfil sem permissão para a ação.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Erro404": {
+        "description": "Registro não encontrado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Erro409": {
+        "description": "Unicidade, vínculo ou disputa pelo veículo impede a operação.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Erro500": {
+        "description": "Erro interno; detalhes do banco não são expostos.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      }
+    }
+  }
+}

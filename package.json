@@ -5,6 +5,9 @@
   "description": "Projeto final: plataforma simples de logística e simulação de entregas",
   "main": "src/app.js",
   "scripts": {
+    "format": "prettier --write \"src/**/*.js\" \"scripts/*.js\" \"tests/*.js\" \"public/**/*.{html,css,js}\" \"docs/*.{md,json}\" README.md package.json .prettierrc.json",
+    "format:check": "prettier --check \"src/**/*.js\" \"scripts/*.js\" \"tests/*.js\" \"public/**/*.{html,css,js}\" \"docs/*.{md,json}\" README.md package.json .prettierrc.json",
+    "demo": "node scripts/demo.js",
     "start": "node src/app.js",
     "dev": "node --watch src/app.js",
     "db:local": "node scripts/local-mysql.js start",
@@ -14,7 +17,9 @@
     "test": "node --test --test-concurrency=1 tests/*.test.js",
     "test:ui": "node tests/browser-check.js"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
@@ -25,6 +30,13 @@
     "sequelize": "^6.37.7",
     "swagger-ui-dist": "^5.30.0"
   },
-  "devDependencies": { "playwright": "^1.56.0" },
-  "overrides": { "sequelize": { "uuid": "11.1.1" } }
+  "devDependencies": {
+    "playwright": "^1.56.0",
+    "prettier": "^3.6.2"
+  },
+  "overrides": {
+    "sequelize": {
+      "uuid": "11.1.1"
+    }
+  }
 }
