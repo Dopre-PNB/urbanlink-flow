@@ -2,22 +2,22 @@ const path = require('node:path');
 const fs = require('node:fs/promises');
 require('dotenv').config({ path: path.join(__dirname, '../.env'), quiet: true });
 const mysql = require('mysql2/promise');
+const mysqlOptions = require('../src/config/mysql-options');
 async function setup() {
-  const nome = process.env.DB_NAME || 'urbanlink_flow';
-  if (!/^[a-zA-Z][a-zA-Z0-9_]{0,63}$/.test(nome))
-    throw new Error('DB_NAME inválido. Use letras, números e sublinhado.');
+  const { connection: options, createDatabase } = mysqlOptions();
+  const nome = options.database;
   const connection = await mysql.createConnection({
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USER || 'urbanlink_app',
-    password: process.env.DB_PASSWORD || '',
+    ...options,
+    database: createDatabase ? undefined : nome,
     multipleStatements: true
   });
   try {
-    const sql = (await fs.readFile(path.join(__dirname, '../database/schema.sql'), 'utf8')).replace(
+    let sql = (await fs.readFile(path.join(__dirname, '../database/schema.sql'), 'utf8')).replace(
       /\burbanlink_flow\b/g,
       nome
     );
+    // Provedores gerenciados já entregam o banco criado e podem bloquear CREATE DATABASE.
+    if (!createDatabase) sql = sql.replace(/^CREATE DATABASE[^\n]*\n/m, '');
     await connection.query(sql);
     // Upgrade reversível para bancos criados pela primeira versão: preservar ordem de edições.
     for (const tabela of ['usuarios', 'veiculos', 'rotas', 'entregas', 'simulacoes']) {

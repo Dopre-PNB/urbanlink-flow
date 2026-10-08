@@ -12,6 +12,14 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json({ limit: '128kb' }));
+app.get('/js/config.js', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res
+    .type('application/javascript')
+    .send(
+      `window.UL_CONFIG = ${JSON.stringify({ demonstracao: process.env.NODE_ENV !== 'production' })};`
+    );
+});
 app.get('/api/openapi.json', (req, res) =>
   res.sendFile(path.join(__dirname, '../docs/openapi.json'))
 );
@@ -43,10 +51,11 @@ module.exports = app;
 if (require.main === module) {
   const start = async () => {
     if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32)
-      throw new Error('Configure JWT_SECRET com pelo menos 32 caracteres no .env.');
+      throw new Error('Configure JWT_SECRET com pelo menos 32 caracteres no ambiente.');
     await sequelize.authenticate();
     const port = Number(process.env.PORT || 3000);
-    const host = process.env.HOST || '127.0.0.1';
+    const host =
+      process.env.HOST || (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
     const server = app.listen(port, host, () =>
       console.log(`UrbanLink Flow disponível em http://${host}:${port}`)
     );

@@ -1,6 +1,7 @@
 'use strict';
 (() => {
   const { $, $$, api, busy, formError } = UL;
+  $('.demo-box').hidden = !window.UL_CONFIG?.demonstracao;
   $$('[data-demo]').forEach((button) =>
     button.addEventListener('click', () => {
       const admin = button.dataset.demo === 'administrador';

@@ -9,6 +9,7 @@
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/*.js\" \"tests/*.js\" \"public/**/*.{html,css,js}\" \"docs/*.{md,json}\" README.md package.json .prettierrc.json",
     "demo": "node scripts/demo.js",
     "start": "node src/app.js",
+    "start:render": "node scripts/setup.js && node src/app.js",
     "dev": "node --watch src/app.js",
     "db:local": "node scripts/local-mysql.js start",
     "db:stop": "node scripts/local-mysql.js stop",
@@ -18,7 +19,7 @@
     "test:ui": "node tests/browser-check.js"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22 <25"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

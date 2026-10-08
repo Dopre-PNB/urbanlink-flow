@@ -2,8 +2,18 @@ const path = require('node:path');
 require('dotenv').config({ path: path.join(__dirname, '../.env'), quiet: true });
 const bcrypt = require('bcrypt');
 const { sequelize, Usuario, Veiculo, Rota, Entrega } = require('../src/models');
+const { criarAdministradorInicial } = require('../src/config/initial-admin');
 
 async function seed() {
+  if (process.env.NODE_ENV === 'production') {
+    const criado = await criarAdministradorInicial({ sequelize, Usuario });
+    console.log(
+      criado
+        ? 'Administrador inicial criado. Nenhum dado de demonstração foi inserido.'
+        : 'Administrador existente preservado. Nenhum dado de demonstração foi inserido.'
+    );
+    return;
+  }
   const data = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'America/Sao_Paulo',
     year: 'numeric',
@@ -87,7 +97,7 @@ module.exports = seed;
 if (require.main === module) {
   seed()
     .catch((error) => {
-      console.error('Falha ao criar dados de demonstração:', error.message);
+      console.error('Falha ao preparar os dados iniciais:', error.message);
       process.exitCode = 1;
     })
     .finally(() => sequelize.close());

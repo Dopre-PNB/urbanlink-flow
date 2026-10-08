@@ -21,7 +21,7 @@ Comando executado: `npm.cmd test`.
 | Proteção do último administrador                                  | Aprovado em teste de serviço com consultas substituídas; nenhuma conta real rebaixada/excluída.                                                                    |
 | Limpeza dos registros exclusivos de teste                         | Aprovado; remoção por IDs próprios e consulta posterior 404.                                                                                                       |
 
-Resultado da execução final após estabilizar o banco: **18 testes aprovados, 0 falhas**, incluindo dez subtestes HTTP reais, um contêiner desses subtestes e sete testes de serviço. A última execução, após a organização final do código, durou aproximadamente 5,7 segundos. O executor conta o contêiner como um teste; há 17 verificações/grupos independentes.
+Resultado da execução após preparar a hospedagem: **28 testes aprovados, 0 falhas**, incluindo dez subtestes HTTP reais, um contêiner desses subtestes, sete testes de serviço, quatro testes de configuração de hospedagem e seis testes de administrador inicial. A execução durou aproximadamente 9 segundos. O executor conta o contêiner como um teste; há 27 verificações/grupos independentes.
 
 Na primeira execução, o teste de login sem senha esperava 400; a API corretamente respondeu 401 genérico para credenciais inválidas. A expectativa foi corrigida conforme a regra de autenticação, e a suíte completa foi executada novamente com aprovação. Cadastro de usuário sem senha continua sendo validado como 400 e foi testado.
 
@@ -36,6 +36,19 @@ As seis páginas foram verificadas em computador (1440 px), tablet (768 px) e ce
 Evidências: `output/verificacao/resultado-interface.json` e capturas PNG na mesma pasta. Os registros temporários criados pelos testes foram removidos por seus próprios IDs; a entrega, as rotas, os veículos e as contas de demonstração foram preservados. CT26 aprovado.
 
 Também foram conferidos o JSON OpenAPI, suas 211 referências internas, as 30 operações em 15 caminhos e os links da documentação. A auditoria de dependências de produção retornou zero vulnerabilidades conhecidas. Uma amostra de cinco consultas à listagem local de entregas registrou 7, 17, 16, 9 e 4 ms; essa medição não constitui promessa de capacidade sob carga.
+
+## Preparação para GitHub e Render
+
+Foram executadas mais **seis verificações integradas aprovadas**, usando um banco descartável no MySQL local e a aplicação com `NODE_ENV=production`:
+
+1. Preparação das tabelas em banco previamente criado, com `DB_CREATE_DATABASE=false`.
+2. Criação apenas do administrador configurado; ausência de usuários e operações de demonstração.
+3. Inicialização em `0.0.0.0`, porta fornecida por variável e resposta saudável da API.
+4. Login com administrador inicial e recusa das duas credenciais de demonstração.
+5. Chrome confirma botões de demonstração ocultos em produção e funcionais localmente; arquivos privados retornam 404.
+6. Nova preparação e reinicialização preservam o veículo cadastrado e a senha original do administrador, mesmo com outra senha inicial nas variáveis.
+
+O banco e o usuário exclusivos dessa verificação foram removidos ao final; os dados locais de apresentação foram preservados. Evidências em `output/verificacao/resultado-hospedagem.json` e `output/verificacao/login-producao.png`. A conexão TLS foi verificada por testes de configuração, incluindo CA e verificação de identidade; uma conexão TLS com o provedor real depende da escolha e configuração desse serviço. Nenhuma publicação no GitHub ou no Render foi feita nesta etapa.
 
 ## Limitações da evidência
 
