@@ -7,8 +7,12 @@ const simulacao = require('../controllers/simulacaoController');
 const router = express.Router();
 
 router.get('/health', async (req, res) => {
-  try { await sequelize.authenticate(); res.json({ status: 'ok', banco: 'conectado' }); }
-  catch { res.status(503).json({ mensagem: 'Banco de dados indisponível.' }); }
+  try {
+    await sequelize.authenticate();
+    res.json({ status: 'ok', banco: 'conectado' });
+  } catch {
+    res.status(503).json({ mensagem: 'Banco de dados indisponível.' });
+  }
 });
 router.post('/login', auth.login);
 router.get('/me', autenticar, auth.me);

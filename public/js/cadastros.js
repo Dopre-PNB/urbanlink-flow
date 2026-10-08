@@ -1,24 +1,311 @@
 'use strict';
 (async () => {
-  const {$,$$,api,auth,escape,number,badge,params,pagination,empty,dialog,formError,busy,toast,confirmDelete,showPageError,clearPageError}=UL;
-  if(!await auth(true))return;
-  const modal=dialog('#record-dialog');let resource='veiculos',page=1,rows=[],editing=null,loading=false;
-  const config={veiculos:{title:'Veículos',single:'veículo',search:'Nome ou placa do veículo',note:'Um veículo em operação não pode entrar em manutenção ou ter sua capacidade reduzida abaixo da carga transportada.',headers:['Veículo','Placa','Capacidade','Disponibilidade','Ações']},rotas:{title:'Rotas',single:'rota',search:'Nome, origem ou destino da rota',note:'As distâncias são estimativas cadastradas. Os pontos de passagem servem para desenhar o percurso no mapa. Rotas vinculadas a entregas ou simulações não podem ser excluídas.',headers:['Rota','Origem','Destino','Distância estimada','Ações']},usuarios:{title:'Usuários',single:'usuário',search:'Nome ou e-mail do usuário',note:'O administrador cria as contas. Operadores gerenciam entregas e simulações. A própria conta, o último administrador e usuários com operações vinculadas não podem ser excluídos.',headers:['Nome','E-mail','Perfil','Ações']}};
-  const field=(label,name,type='text',extra='',full=false)=>`<div${full?' class="full"':''}><label for="record-${name}">${label}</label><input id="record-${name}" name="${name}" type="${type}" ${extra}></div>`;
-  function header(){const c=config[resource];$('#records-title').textContent=c.title;$('#new-record').textContent=`+ ${resource==='rotas'?'Nova':'Novo'} ${c.single}`;$('#record-search').placeholder=c.search;$('#record-note').textContent=c.note;$('#record-head').innerHTML=`<tr>${c.headers.map(label=>`<th scope="col">${label}</th>`).join('')}</tr>`;$('#records-panel').setAttribute('aria-labelledby',`tab-${resource}`);$$('[data-resource]').forEach(button=>{const selected=button.dataset.resource===resource;button.setAttribute('aria-selected',String(selected));button.tabIndex=selected?0:-1;});}
-  async function load(next=page){if(loading)return;loading=true;page=next;try{const query=()=>`/${resource}?${params({pagina:page,limite:10,busca:$('#record-search').value.trim()})}`;let result=await api(query());if(page>1&&!result.dados.length){page=Math.max(1,Math.ceil(result.total/result.limite));result=await api(query());}rows=result.dados;clearPageError();$('#records').innerHTML=rows.length?rows.map(item=>{let cells='';if(resource==='veiculos')cells=`<td class="description"><strong>${escape(item.nome)}</strong></td><td>${escape(item.placa)}</td><td>${number(item.capacidade_kg,2)} kg</td><td>${item.ocupado?'<span class="badge ocupado">Em operação</span>':badge(item.status)}</td>`;if(resource==='rotas')cells=`<td class="description"><strong>${escape(item.nome)}</strong><small>${number(item.pontos?.length || 0)} pontos no mapa</small></td><td>${escape(item.origem)}</td><td>${escape(item.destino)}</td><td>${number(item.distancia_km,2)} km</td>`;if(resource==='usuarios')cells=`<td><strong>${escape(item.nome)}</strong>${item.id===UL.user.id?'<small>Sua conta</small>':''}</td><td>${escape(item.email)}</td><td>${badge(item.tipo)}</td>`;return `<tr>${cells}<td><div class="actions"><button class="btn secondary small" type="button" data-edit="${item.id}">Editar</button><button class="btn danger small" type="button" data-delete="${item.id}" ${resource==='usuarios'&&item.id===UL.user.id?'disabled aria-label="A própria conta não pode ser excluída"':''}>Excluir</button></div></td></tr>`;}).join(''):empty(config[resource].headers.length,'Nenhum cadastro encontrado.','Crie um cadastro ou ajuste a busca.');pagination($('#record-pagination'),result,load);$$('[data-edit]').forEach(button=>button.addEventListener('click',()=>open(Number(button.dataset.edit))));$$('[data-delete]').forEach(button=>button.addEventListener('click',()=>{const item=rows.find(item=>item.id===Number(button.dataset.delete));confirmDelete(resource,item.id,`${config[resource].single} “${item.nome}”`,()=>load());}));}catch(error){showPageError(error.message);}finally{loading=false;}}
-  function selectTab(next){if(loading||next===resource)return;resource=next;$('#record-search').value='';header();load(1);}
-  $$('[data-resource]').forEach(button=>{button.addEventListener('click',()=>selectTab(button.dataset.resource));button.addEventListener('keydown',event=>{const tabs=$$('[data-resource]');let index=tabs.indexOf(button);if(event.key==='ArrowRight')index=(index+1)%tabs.length;else if(event.key==='ArrowLeft')index=(index+tabs.length-1)%tabs.length;else if(event.key==='Home')index=0;else if(event.key==='End')index=tabs.length-1;else return;event.preventDefault();if(!loading){selectTab(tabs[index].dataset.resource);tabs[index].focus();}});});
-  function pointsMarkup(points){$('#points-fields').innerHTML=points.map((point,index)=>`<div class="point-row"><div><label for="point-lat-${index}">Latitude ${index+1}</label><input id="point-lat-${index}" data-point-lat type="number" step="any" min="-90" max="90" value="${escape(point.lat ?? '')}" required placeholder="Ex.: -23.5505"></div><div><label for="point-lng-${index}">Longitude ${index+1}</label><input id="point-lng-${index}" data-point-lng type="number" step="any" min="-180" max="180" value="${escape(point.lng ?? '')}" required placeholder="Ex.: -46.6333"></div><button class="btn danger small" type="button" data-remove-point="${index}" aria-label="Remover ponto ${index+1}" ${points.length<=2?'disabled':''}>×</button></div>`).join('');$$('[data-remove-point]').forEach(button=>button.addEventListener('click',()=>{const current=readPoints(false);current.splice(Number(button.dataset.removePoint),1);pointsMarkup(current);}));$('#add-point').disabled=points.length>=30;}
-  function readPoints(convert=true){const lat=$$('[data-point-lat]'),lng=$$('[data-point-lng]');return lat.map((input,index)=>({lat:convert?Number(input.value):input.value,lng:convert?Number(lng[index].value):lng[index].value}));}
-  function open(id=null){editing=id;const item=id?rows.find(row=>row.id===id):null;const c=config[resource];const form=$('#record-form');formError(form,'');$('#record-dialog-title').textContent=`${id?'Editar':resource==='rotas'?'Nova':'Novo'} ${c.single}`;let fields='';
-    if(resource==='veiculos')fields=field('Nome do veículo','nome','text','required maxlength="120" placeholder="Ex.: Van de entregas"',true)+field('Placa','placa','text','required maxlength="12" placeholder="Ex.: ABC1D23"')+field('Capacidade (kg)','capacidade_kg','number','required min="0.01" step="0.01"')+'<div class="full"><label for="record-status">Status</label><select id="record-status" name="status"><option value="disponivel">Disponível</option><option value="manutencao">Manutenção</option></select></div>';
-    if(resource==='usuarios')fields=field('Nome completo','nome','text','required maxlength="120" autocomplete="off"',true)+field('E-mail','email','email','required maxlength="180" autocomplete="off"',true)+`<div class="full"><label for="record-senha">${id?'Nova senha (opcional)':'Senha de acesso'}</label><input id="record-senha" name="senha" type="password" minlength="8" autocomplete="new-password" ${id?'':'required'}><p class="form-help">Mínimo de 8 caracteres.${id?' Deixe em branco para manter a senha atual.':''}</p></div><div class="full"><label for="record-tipo">Perfil de acesso</label><select id="record-tipo" name="tipo"><option value="operador">Operador</option><option value="administrador">Administrador</option></select></div>`;
-    if(resource==='rotas')fields=field('Nome do percurso','nome','text','required maxlength="120" placeholder="Ex.: Via Central"',true)+field('Origem','origem','text','required maxlength="180" placeholder="Ex.: Centro de Distribuição"')+field('Destino','destino','text','required maxlength="180" placeholder="Ex.: Mercado Central"')+field('Distância estimada (km)','distancia_km','number','required min="0.01" step="0.01"',true)+'<div class="full"><h3>Pontos do percurso</h3><p class="form-help">O primeiro ponto é a origem e o último é o destino. Use coordenadas decimais (latitude e longitude). Adicione pontos intermediários para representar o caminho. Mínimo 2, máximo 30 pontos.</p><div id="points-fields" style="margin-top:15px"></div><button class="btn secondary small" type="button" id="add-point">+ Adicionar ponto de passagem</button></div>';
-    $('#record-fields').innerHTML=fields;if(item){Object.entries(item).forEach(([name,value])=>{if(name!=='senha'&&form.elements[name])form.elements[name].value=value ?? '';});}
-    if(resource==='rotas'){pointsMarkup(item?.pontos || [{lat:'',lng:''},{lat:'',lng:''}]);$('#add-point').addEventListener('click',()=>{const points=readPoints(false);if(points.length<30){points.push({lat:'',lng:''});pointsMarkup(points);$$('[data-point-lat]').at(-1).focus();}});}
+  const {
+    $,
+    $$,
+    api,
+    auth,
+    escape,
+    number,
+    badge,
+    params,
+    pagination,
+    empty,
+    dialog,
+    formError,
+    busy,
+    toast,
+    confirmDelete,
+    showPageError,
+    clearPageError
+  } = UL;
+  if (!(await auth(true))) return;
+  const modal = dialog('#record-dialog');
+  let resource = 'veiculos',
+    page = 1,
+    rows = [],
+    editing = null,
+    loading = false;
+  const config = {
+    veiculos: {
+      title: 'Veículos',
+      single: 'veículo',
+      search: 'Nome ou placa do veículo',
+      note: 'Um veículo em operação não pode entrar em manutenção ou ter sua capacidade reduzida abaixo da carga transportada.',
+      headers: ['Veículo', 'Placa', 'Capacidade', 'Disponibilidade', 'Ações']
+    },
+    rotas: {
+      title: 'Rotas',
+      single: 'rota',
+      search: 'Nome, origem ou destino da rota',
+      note: 'As distâncias são estimativas cadastradas. Os pontos de passagem servem para desenhar o percurso no mapa. Rotas vinculadas a entregas ou simulações não podem ser excluídas.',
+      headers: ['Rota', 'Origem', 'Destino', 'Distância estimada', 'Ações']
+    },
+    usuarios: {
+      title: 'Usuários',
+      single: 'usuário',
+      search: 'Nome ou e-mail do usuário',
+      note: 'O administrador cria as contas. Operadores gerenciam entregas e simulações. A própria conta, o último administrador e usuários com operações vinculadas não podem ser excluídos.',
+      headers: ['Nome', 'E-mail', 'Perfil', 'Ações']
+    }
+  };
+  const field = (label, name, type = 'text', extra = '', full = false) =>
+    `<div${full ? ' class="full"' : ''}><label for="record-${name}">${label}</label><input id="record-${name}" name="${name}" type="${type}" ${extra}></div>`;
+  function header() {
+    const c = config[resource];
+    $('#records-title').textContent = c.title;
+    $('#new-record').textContent = `+ ${resource === 'rotas' ? 'Nova' : 'Novo'} ${c.single}`;
+    $('#record-search').placeholder = c.search;
+    $('#record-note').textContent = c.note;
+    $('#record-head').innerHTML =
+      `<tr>${c.headers.map((label) => `<th scope="col">${label}</th>`).join('')}</tr>`;
+    $('#records-panel').setAttribute('aria-labelledby', `tab-${resource}`);
+    $$('[data-resource]').forEach((button) => {
+      const selected = button.dataset.resource === resource;
+      button.setAttribute('aria-selected', String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    });
+  }
+  async function load(next = page) {
+    if (loading) return;
+    loading = true;
+    page = next;
+    try {
+      const query = () =>
+        `/${resource}?${params({ pagina: page, limite: 10, busca: $('#record-search').value.trim() })}`;
+      let result = await api(query());
+      if (page > 1 && !result.dados.length) {
+        page = Math.max(1, Math.ceil(result.total / result.limite));
+        result = await api(query());
+      }
+      rows = result.dados;
+      clearPageError();
+      $('#records').innerHTML = rows.length
+        ? rows
+            .map((item) => {
+              let cells = '';
+              if (resource === 'veiculos')
+                cells = `<td class="description"><strong>${escape(item.nome)}</strong></td><td>${escape(item.placa)}</td><td>${number(item.capacidade_kg, 2)} kg</td><td>${item.ocupado ? '<span class="badge ocupado">Em operação</span>' : badge(item.status)}</td>`;
+              if (resource === 'rotas')
+                cells = `<td class="description"><strong>${escape(item.nome)}</strong><small>${number(item.pontos?.length || 0)} pontos no mapa</small></td><td>${escape(item.origem)}</td><td>${escape(item.destino)}</td><td>${number(item.distancia_km, 2)} km</td>`;
+              if (resource === 'usuarios')
+                cells = `<td><strong>${escape(item.nome)}</strong>${item.id === UL.user.id ? '<small>Sua conta</small>' : ''}</td><td>${escape(item.email)}</td><td>${badge(item.tipo)}</td>`;
+              return `<tr>${cells}<td><div class="actions"><button class="btn secondary small" type="button" data-edit="${item.id}">Editar</button><button class="btn danger small" type="button" data-delete="${item.id}" ${resource === 'usuarios' && item.id === UL.user.id ? 'disabled aria-label="A própria conta não pode ser excluída"' : ''}>Excluir</button></div></td></tr>`;
+            })
+            .join('')
+        : empty(
+            config[resource].headers.length,
+            'Nenhum cadastro encontrado.',
+            'Crie um cadastro ou ajuste a busca.'
+          );
+      pagination($('#record-pagination'), result, load);
+      $$('[data-edit]').forEach((button) =>
+        button.addEventListener('click', () => open(Number(button.dataset.edit)))
+      );
+      $$('[data-delete]').forEach((button) =>
+        button.addEventListener('click', () => {
+          const item = rows.find((item) => item.id === Number(button.dataset.delete));
+          confirmDelete(resource, item.id, `${config[resource].single} “${item.nome}”`, () =>
+            load()
+          );
+        })
+      );
+    } catch (error) {
+      showPageError(error.message);
+    } finally {
+      loading = false;
+    }
+  }
+  function selectTab(next) {
+    if (loading || next === resource) return;
+    resource = next;
+    $('#record-search').value = '';
+    header();
+    load(1);
+  }
+  $$('[data-resource]').forEach((button) => {
+    button.addEventListener('click', () => selectTab(button.dataset.resource));
+    button.addEventListener('keydown', (event) => {
+      const tabs = $$('[data-resource]');
+      let index = tabs.indexOf(button);
+      if (event.key === 'ArrowRight') index = (index + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') index = (index + tabs.length - 1) % tabs.length;
+      else if (event.key === 'Home') index = 0;
+      else if (event.key === 'End') index = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      if (!loading) {
+        selectTab(tabs[index].dataset.resource);
+        tabs[index].focus();
+      }
+    });
+  });
+  function pointsMarkup(points) {
+    $('#points-fields').innerHTML = points
+      .map(
+        (point, index) =>
+          `<div class="point-row"><div><label for="point-lat-${index}">Latitude ${index + 1}</label><input id="point-lat-${index}" data-point-lat type="number" step="any" min="-90" max="90" value="${escape(point.lat ?? '')}" required placeholder="Ex.: -23.5505"></div><div><label for="point-lng-${index}">Longitude ${index + 1}</label><input id="point-lng-${index}" data-point-lng type="number" step="any" min="-180" max="180" value="${escape(point.lng ?? '')}" required placeholder="Ex.: -46.6333"></div><button class="btn danger small" type="button" data-remove-point="${index}" aria-label="Remover ponto ${index + 1}" ${points.length <= 2 ? 'disabled' : ''}>×</button></div>`
+      )
+      .join('');
+    $$('[data-remove-point]').forEach((button) =>
+      button.addEventListener('click', () => {
+        const current = readPoints(false);
+        current.splice(Number(button.dataset.removePoint), 1);
+        pointsMarkup(current);
+      })
+    );
+    $('#add-point').disabled = points.length >= 30;
+  }
+  function readPoints(convert = true) {
+    const lat = $$('[data-point-lat]'),
+      lng = $$('[data-point-lng]');
+    return lat.map((input, index) => ({
+      lat: convert ? Number(input.value) : input.value,
+      lng: convert ? Number(lng[index].value) : lng[index].value
+    }));
+  }
+  function open(id = null) {
+    editing = id;
+    const item = id ? rows.find((row) => row.id === id) : null;
+    const c = config[resource];
+    const form = $('#record-form');
+    formError(form, '');
+    $('#record-dialog-title').textContent =
+      `${id ? 'Editar' : resource === 'rotas' ? 'Nova' : 'Novo'} ${c.single}`;
+    let fields = '';
+    if (resource === 'veiculos')
+      fields =
+        field(
+          'Nome do veículo',
+          'nome',
+          'text',
+          'required maxlength="120" placeholder="Ex.: Van de entregas"',
+          true
+        ) +
+        field('Placa', 'placa', 'text', 'required maxlength="12" placeholder="Ex.: ABC1D23"') +
+        field('Capacidade (kg)', 'capacidade_kg', 'number', 'required min="0.01" step="0.01"') +
+        '<div class="full"><label for="record-status">Status</label><select id="record-status" name="status"><option value="disponivel">Disponível</option><option value="manutencao">Manutenção</option></select></div>';
+    if (resource === 'usuarios')
+      fields =
+        field(
+          'Nome completo',
+          'nome',
+          'text',
+          'required maxlength="120" autocomplete="off"',
+          true
+        ) +
+        field('E-mail', 'email', 'email', 'required maxlength="180" autocomplete="off"', true) +
+        `<div class="full"><label for="record-senha">${id ? 'Nova senha (opcional)' : 'Senha de acesso'}</label><input id="record-senha" name="senha" type="password" minlength="8" autocomplete="new-password" ${id ? '' : 'required'}><p class="form-help">Mínimo de 8 caracteres.${id ? ' Deixe em branco para manter a senha atual.' : ''}</p></div><div class="full"><label for="record-tipo">Perfil de acesso</label><select id="record-tipo" name="tipo"><option value="operador">Operador</option><option value="administrador">Administrador</option></select></div>`;
+    if (resource === 'rotas')
+      fields =
+        field(
+          'Nome do percurso',
+          'nome',
+          'text',
+          'required maxlength="120" placeholder="Ex.: Via Central"',
+          true
+        ) +
+        field(
+          'Origem',
+          'origem',
+          'text',
+          'required maxlength="180" placeholder="Ex.: Centro de Distribuição"'
+        ) +
+        field(
+          'Destino',
+          'destino',
+          'text',
+          'required maxlength="180" placeholder="Ex.: Mercado Central"'
+        ) +
+        field(
+          'Distância estimada (km)',
+          'distancia_km',
+          'number',
+          'required min="0.01" step="0.01"',
+          true
+        ) +
+        '<div class="full"><h3>Pontos do percurso</h3><p class="form-help">O primeiro ponto é a origem e o último é o destino. Use coordenadas decimais (latitude e longitude). Adicione pontos intermediários para representar o caminho. Mínimo 2, máximo 30 pontos.</p><div id="points-fields" style="margin-top:15px"></div><button class="btn secondary small" type="button" id="add-point">+ Adicionar ponto de passagem</button></div>';
+    $('#record-fields').innerHTML = fields;
+    if (item) {
+      Object.entries(item).forEach(([name, value]) => {
+        if (name !== 'senha' && form.elements[name]) form.elements[name].value = value ?? '';
+      });
+    }
+    if (resource === 'rotas') {
+      pointsMarkup(
+        item?.pontos || [
+          { lat: '', lng: '' },
+          { lat: '', lng: '' }
+        ]
+      );
+      $('#add-point').addEventListener('click', () => {
+        const points = readPoints(false);
+        if (points.length < 30) {
+          points.push({ lat: '', lng: '' });
+          pointsMarkup(points);
+          $$('[data-point-lat]').at(-1).focus();
+        }
+      });
+    }
     modal.showModal();
   }
-  $('#new-record').addEventListener('click',()=>open());$('#record-form').addEventListener('submit',async event=>{event.preventDefault();const form=event.currentTarget,button=$('button[type=submit]',form);busy(button,true);formError(form,'');let body={};if(resource==='veiculos')body={nome:form.elements.nome.value.trim(),placa:form.elements.placa.value.trim(),capacidade_kg:Number(form.elements.capacidade_kg.value),status:form.elements.status.value};if(resource==='usuarios'){body={nome:form.elements.nome.value.trim(),email:form.elements.email.value.trim(),tipo:form.elements.tipo.value};if(form.elements.senha.value)body.senha=form.elements.senha.value;}if(resource==='rotas')body={nome:form.elements.nome.value.trim(),origem:form.elements.origem.value.trim(),destino:form.elements.destino.value.trim(),distancia_km:Number(form.elements.distancia_km.value),pontos:readPoints()};try{const result=await api(`/${resource}${editing?`/${editing}`:''}`,{method:editing?'PUT':'POST',body});modal.close();toast('Cadastro salvo.');if(resource==='usuarios'&&editing===UL.user.id){const stillAdmin=await auth(true);if(!stillAdmin)return;}await load(editing?page:1);}catch(error){formError(form,error.message);}finally{busy(button,false);}});
-  $('#record-filters').addEventListener('submit',event=>{event.preventDefault();load(1);});$('#clear-search').addEventListener('click',()=>{$('#record-search').value='';load(1);});header();await load();
+  $('#new-record').addEventListener('click', () => open());
+  $('#record-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget,
+      button = $('button[type=submit]', form);
+    busy(button, true);
+    formError(form, '');
+    let body = {};
+    if (resource === 'veiculos')
+      body = {
+        nome: form.elements.nome.value.trim(),
+        placa: form.elements.placa.value.trim(),
+        capacidade_kg: Number(form.elements.capacidade_kg.value),
+        status: form.elements.status.value
+      };
+    if (resource === 'usuarios') {
+      body = {
+        nome: form.elements.nome.value.trim(),
+        email: form.elements.email.value.trim(),
+        tipo: form.elements.tipo.value
+      };
+      if (form.elements.senha.value) body.senha = form.elements.senha.value;
+    }
+    if (resource === 'rotas')
+      body = {
+        nome: form.elements.nome.value.trim(),
+        origem: form.elements.origem.value.trim(),
+        destino: form.elements.destino.value.trim(),
+        distancia_km: Number(form.elements.distancia_km.value),
+        pontos: readPoints()
+      };
+    try {
+      const result = await api(`/${resource}${editing ? `/${editing}` : ''}`, {
+        method: editing ? 'PUT' : 'POST',
+        body
+      });
+      modal.close();
+      toast('Cadastro salvo.');
+      if (resource === 'usuarios' && editing === UL.user.id) {
+        const stillAdmin = await auth(true);
+        if (!stillAdmin) return;
+      }
+      await load(editing ? page : 1);
+    } catch (error) {
+      formError(form, error.message);
+    } finally {
+      busy(button, false);
+    }
+  });
+  $('#record-filters').addEventListener('submit', (event) => {
+    event.preventDefault();
+    load(1);
+  });
+  $('#clear-search').addEventListener('click', () => {
+    $('#record-search').value = '';
+    load(1);
+  });
+  header();
+  await load();
 })();
