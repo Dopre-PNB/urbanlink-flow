@@ -1,9 +1,21 @@
-// Verifica o fluxo real pelo navegador, usando dados temporários e MySQL.
+// Verifica o fluxo real pelo navegador, usando dados temporários no banco configurado.
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const { chromium } = require('playwright');
-const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:3000';
+const base = (process.env.TEST_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '');
+const credentials = {
+  administrador: {
+    email: process.env.TEST_ADMIN_EMAIL || 'admin@urbanlink.local',
+    senha: process.env.TEST_ADMIN_PASSWORD || 'Admin@123',
+    custom: Boolean(process.env.TEST_ADMIN_EMAIL || process.env.TEST_ADMIN_PASSWORD)
+  },
+  operador: {
+    email: process.env.TEST_OPERATOR_EMAIL || 'operador@urbanlink.local',
+    senha: process.env.TEST_OPERATOR_PASSWORD || 'Operador@123',
+    custom: Boolean(process.env.TEST_OPERATOR_EMAIL || process.env.TEST_OPERATOR_PASSWORD)
+  }
+};
 const output = path.resolve(__dirname, '../output/verificacao');
 const results = [];
 const created = { simulacoes: [], entregas: [], rotas: [], veiculos: [], usuarios: [] };
@@ -49,7 +61,12 @@ async function screenshot(page, file) {
 
 async function login(page, profile) {
   await page.goto(`${base}/login.html`);
-  await page.locator(`[data-demo="${profile}"]`).click();
+  if (credentials[profile].custom) {
+    await page.locator('#email').fill(credentials[profile].email);
+    await page.locator('#senha').fill(credentials[profile].senha);
+  } else {
+    await page.locator(`[data-demo="${profile}"]`).click();
+  }
   await page.getByRole('button', { name: 'Entrar na plataforma' }).click();
   await page.waitForURL('**/painel.html');
   await page.locator('#app-header .user-area').waitFor();
@@ -58,7 +75,12 @@ async function login(page, profile) {
 async function main() {
   await fs.mkdir(output, { recursive: true });
   adminToken = (
-    await request('/login', 'POST', { email: 'admin@urbanlink.local', senha: 'Admin@123' }, null)
+    await request(
+      '/login',
+      'POST',
+      { email: credentials.administrador.email, senha: credentials.administrador.senha },
+      null
+    )
   ).token;
   const runId = Date.now().toString(36);
   const origin = `Centro de verificação ${runId}`;
@@ -132,8 +154,8 @@ async function main() {
       await screenshot(page, 'login-desktop');
     });
     await record('Login inválido apresenta mensagem e mantém visitante fora', async () => {
-      await page.locator('#email').fill('operador@urbanlink.local');
-      await page.locator('#senha').fill('senha-invalida-123');
+      await page.locator('#email').fill(credentials.operador.email);
+      await page.locator('#senha').fill(`senha-invalida-${runId}`);
       await page.getByRole('button', { name: 'Entrar na plataforma' }).click();
       await page.locator('#login-form .form-error:not([hidden])').waitFor();
       assert.match(page.url(), /login\.html$/);
@@ -146,13 +168,14 @@ async function main() {
       await page.locator('#new-record').waitFor();
       await page.locator('#records [data-edit]').first().waitFor();
       await page.locator('[data-resource="usuarios"]').click();
-      await page.getByText('admin@urbanlink.local', { exact: true }).waitFor();
+      await page.getByText(credentials.administrador.email, { exact: true }).waitFor();
       await screenshot(page, 'cadastros-desktop');
     });
     await record('Nova entrega é criada pelo formulário e reaparece na tabela', async () => {
       await page.goto(`${base}/entregas.html`);
       await page.locator('#app-header .user-area').waitFor();
-      await page.locator('#deliveries [data-edit]').first().waitFor();
+      // A hospedagem pode começar sem nenhuma entrega de demonstração.
+      await page.locator('#deliveries tr').first().waitFor();
       await page.locator('#new-delivery').click();
       await page.locator('#delivery-dialog[open]').waitFor();
       const form = page.locator('#delivery-form');

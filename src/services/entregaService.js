@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { sequelize, Entrega, Veiculo, Rota, Usuario, Simulacao } = require('../models');
 const v = require('./validacao');
+const { operadorBusca } = require('./consultaTexto');
 const incluir = [
   { model: Veiculo, as: 'veiculo' },
   { model: Rota, as: 'rota' },
@@ -96,7 +97,7 @@ async function listar(query) {
   if (query.data !== undefined) where.data_agendada = v.data(query.data);
   if (busca) {
     where[Op.or] = ['descricao', 'origem', 'destino'].map((key) => ({
-      [key]: { [Op.like]: `%${busca}%` }
+      [key]: { [operadorBusca]: `%${busca}%` }
     }));
     if (/^(?:ULF-)?\d+$/i.test(busca))
       where[Op.or].push({ id: Number(busca.replace(/^ULF-/i, '')) });

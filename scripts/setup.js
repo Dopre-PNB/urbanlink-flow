@@ -4,6 +4,36 @@ require('dotenv').config({ path: path.join(__dirname, '../.env'), quiet: true })
 const mysql = require('mysql2/promise');
 const mysqlOptions = require('../src/config/mysql-options');
 async function setup() {
+  if (process.env.DATABASE_URL) {
+    await setupPostgres();
+  } else {
+    await setupMySQL();
+  }
+  const { sequelize } = require('../src/models');
+  try {
+    await require('./seed')();
+  } finally {
+    await sequelize.close();
+  }
+}
+async function setupPostgres() {
+  const { Client } = require('pg');
+  const client = new Client(require('../src/config/postgres-options')());
+  await client.connect();
+  try {
+    const sql = await fs.readFile(path.join(__dirname, '../database/schema-postgres.sql'), 'utf8');
+    await client.query('BEGIN');
+    await client.query(sql);
+    await client.query('COMMIT');
+    console.log('Estrutura do banco PostgreSQL criada ou verificada.');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    await client.end();
+  }
+}
+async function setupMySQL() {
   const { connection: options, createDatabase } = mysqlOptions();
   const nome = options.database;
   const connection = await mysql.createConnection({
@@ -34,12 +64,6 @@ async function setup() {
     console.log('Estrutura do banco MySQL criada ou verificada.');
   } finally {
     await connection.end();
-  }
-  const { sequelize } = require('../src/models');
-  try {
-    await require('./seed')();
-  } finally {
-    await sequelize.close();
   }
 }
 setup().catch((error) => {

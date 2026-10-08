@@ -1,6 +1,6 @@
 # Modelo lógico
 
-Banco MySQL `urbanlink_flow`. O script [../database/schema.sql](../database/schema.sql) é a autoridade para tipos físicos, tamanho de campos, nomes de constraints e índices. Abaixo estão os atributos e relações esperados pela API.
+O modelo lógico é comum ao MySQL local e ao PostgreSQL usado na hospedagem gratuita do Render. Os scripts [MySQL](../database/schema.sql) e [PostgreSQL](../database/schema-postgres.sql) definem os tipos físicos, tamanhos de campos, nomes de constraints e índices de cada banco. Abaixo estão os atributos e relações esperados pela API.
 
 | Tabela     | Atributos principais                                                                                                             | Chaves                                                                                                   |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |

@@ -19,7 +19,8 @@ function tratarErro(error, req, res, next) {
     return res.status(400).json({ mensagem: 'Confira os campos informados.' });
   if (
     error.original?.code === 'ER_LOCK_DEADLOCK' ||
-    error.original?.code === 'ER_LOCK_WAIT_TIMEOUT'
+    error.original?.code === 'ER_LOCK_WAIT_TIMEOUT' ||
+    ['40001', '40P01', '55P03'].includes(error.original?.code)
   )
     return res
       .status(409)

@@ -50,7 +50,13 @@ Foram executadas mais **seis verificações integradas aprovadas**, usando um ba
 
 O banco e o usuário exclusivos dessa verificação foram removidos ao final; os dados locais de apresentação foram preservados. Evidências em `output/verificacao/resultado-hospedagem.json` e `output/verificacao/login-producao.png`. A conexão TLS foi verificada por testes de configuração, incluindo CA e verificação de identidade; uma conexão TLS com o provedor real depende da escolha e configuração desse serviço. Nenhuma publicação no GitHub ou no Render foi feita nesta etapa.
 
-## Limitações da evidência
+## Adaptação ao PostgreSQL gratuito do Render
+
+Em 08/10/2026, após incluir o suporte a PostgreSQL por `DATABASE_URL`, a suíte completa foi executada novamente contra a aplicação local na porta 3001 e o MySQL exclusivo do projeto: **32 testes aprovados, zero falhas**. A contagem inclui quatro novos testes de configuração PostgreSQL, validação de TLS, leitura da URL e tratamento de conflitos de transação. A compatibilidade com o MySQL local foi preservada.
+
+O banco `urbanlink-flow-db` foi criado no plano Free, PostgreSQL 18, região Virginia, com expiração informada pelo Render em **07/11/2026**. A configuração da conexão interna no serviço e a verificação integrada no banco hospedado ainda estão pendentes; esses testes locais não comprovam uma implantação PostgreSQL funcional. A auditoria de dependências retornou zero vulnerabilidades conhecidas.
+
+## Limitações da evidência atual
 
 Os testes confirmam uma operação didática local, não capacidade de produção sob carga. Não validam GPS ou tráfego real, pois esses recursos estão fora do escopo. Proteção do último administrador é verificada no serviço com contagem controlada para não alterar as contas globais. A disponibilidade do mapa-base depende de acesso externo ao OpenStreetMap.
 

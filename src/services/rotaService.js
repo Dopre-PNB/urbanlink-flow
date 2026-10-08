@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { sequelize, Rota, Entrega, Simulacao } = require('../models');
 const v = require('./validacao');
+const { operadorBusca, igualSemMaiusculas } = require('./consultaTexto');
 function validar(body, current) {
   v.objeto(body);
   const dados = {
@@ -20,12 +21,14 @@ async function listar(query) {
   const where = busca
     ? {
         [Op.or]: ['nome', 'origem', 'destino'].map((key) => ({
-          [key]: { [Op.like]: `%${busca}%` }
+          [key]: { [operadorBusca]: `%${busca}%` }
         }))
       }
     : {};
-  if (query.origem !== undefined) where.origem = v.texto(query.origem, 'Origem');
-  if (query.destino !== undefined) where.destino = v.texto(query.destino, 'Destino');
+  if (query.origem !== undefined)
+    where.origem = igualSemMaiusculas(v.texto(query.origem, 'Origem'));
+  if (query.destino !== undefined)
+    where.destino = igualSemMaiusculas(v.texto(query.destino, 'Destino'));
   const result = await Rota.findAndCountAll({
     where,
     order: [['id', 'ASC']],

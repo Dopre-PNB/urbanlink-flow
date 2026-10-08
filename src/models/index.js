@@ -1,5 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const postgres = sequelize.getDialect() === 'postgres';
+const integer = postgres ? DataTypes.INTEGER : DataTypes.INTEGER.UNSIGNED;
+const optionType = (...values) => (postgres ? DataTypes.STRING(20) : DataTypes.ENUM(...values));
 const timestamps = {
   createdAt: { type: DataTypes.DATE(3), allowNull: false },
   updatedAt: { type: DataTypes.DATE(3), allowNull: false }
@@ -17,12 +20,12 @@ const Usuario = sequelize.define(
   'usuarios',
   {
     ...timestamps,
-    id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
+    id: { type: integer, primaryKey: true, autoIncrement: true },
     nome: { type: DataTypes.STRING(100), allowNull: false },
     email: { type: DataTypes.STRING(150), allowNull: false, unique: true },
     senha_hash: { type: DataTypes.STRING(255), allowNull: false },
     tipo: {
-      type: DataTypes.ENUM('administrador', 'operador'),
+      type: optionType('administrador', 'operador'),
       allowNull: false,
       defaultValue: 'operador'
     }
@@ -35,19 +38,19 @@ const Usuario = sequelize.define(
 
 const Veiculo = sequelize.define('veiculos', {
   ...timestamps,
-  id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
+  id: { type: integer, primaryKey: true, autoIncrement: true },
   nome: { type: DataTypes.STRING(100), allowNull: false },
   placa: { type: DataTypes.STRING(15), allowNull: false, unique: true },
   capacidade_kg: decimal('capacidade_kg'),
   status: {
-    type: DataTypes.ENUM('disponivel', 'manutencao'),
+    type: optionType('disponivel', 'manutencao'),
     allowNull: false,
     defaultValue: 'disponivel'
   }
 });
 const Rota = sequelize.define('rotas', {
   ...timestamps,
-  id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
+  id: { type: integer, primaryKey: true, autoIncrement: true },
   nome: { type: DataTypes.STRING(100), allowNull: false, unique: true },
   origem: { type: DataTypes.STRING(150), allowNull: false },
   destino: { type: DataTypes.STRING(150), allowNull: false },
@@ -56,7 +59,7 @@ const Rota = sequelize.define('rotas', {
 });
 const Entrega = sequelize.define('entregas', {
   ...timestamps,
-  id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
+  id: { type: integer, primaryKey: true, autoIncrement: true },
   descricao: { type: DataTypes.STRING(200), allowNull: false },
   origem: { type: DataTypes.STRING(150), allowNull: false },
   destino: { type: DataTypes.STRING(150), allowNull: false },
@@ -64,13 +67,13 @@ const Entrega = sequelize.define('entregas', {
   prazo_min: decimal('prazo_min'),
   data_agendada: { type: DataTypes.DATEONLY, allowNull: false },
   status: {
-    type: DataTypes.ENUM('pendente', 'em_andamento', 'concluida', 'cancelada'),
+    type: optionType('pendente', 'em_andamento', 'concluida', 'cancelada'),
     allowNull: false,
     defaultValue: 'pendente'
   },
-  usuario_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-  veiculo_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-  rota_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: true },
+  usuario_id: { type: integer, allowNull: false },
+  veiculo_id: { type: integer, allowNull: false },
+  rota_id: { type: integer, allowNull: true },
   codigo: {
     type: DataTypes.VIRTUAL,
     get() {
@@ -80,15 +83,15 @@ const Entrega = sequelize.define('entregas', {
 });
 const Simulacao = sequelize.define('simulacoes', {
   ...timestamps,
-  id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
-  entrega_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-  cenario: { type: DataTypes.ENUM('normal', 'lento'), allowNull: false },
-  velocidade_kmh: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
+  id: { type: integer, primaryKey: true, autoIncrement: true },
+  entrega_id: { type: integer, allowNull: false },
+  cenario: { type: optionType('normal', 'lento'), allowNull: false },
+  velocidade_kmh: { type: integer, allowNull: false },
   prazo_min: decimal('prazo_min'),
-  rota_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
+  rota_id: { type: integer, allowNull: false },
   resultados: { type: DataTypes.JSON, allowNull: false },
-  usuario_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-  atualizado_por_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: true },
+  usuario_id: { type: integer, allowNull: false },
+  atualizado_por_id: { type: integer, allowNull: true },
   recomendada_id: {
     type: DataTypes.VIRTUAL,
     get() {

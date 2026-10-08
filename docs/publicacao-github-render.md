@@ -1,106 +1,112 @@
 # Publicação no GitHub e no Render
 
-O GitHub guarda o código. Um único Web Service no Render serve as páginas HTML/CSS/JavaScript e a API Node.js/Express. O banco continua sendo MySQL, conforme os materiais de aula, e precisa de uma instância hospedada separadamente.
+O [GitHub](https://github.com/Dopre-PNB/urbanlink-flow) guarda o código. Um único Web Service no Render serve as seis páginas HTML/CSS/JavaScript e a API Node.js/Express. A publicação usa PostgreSQL no próprio Render, escolhido pelo responsável pelo projeto para manter aplicação e banco no plano Free. O ambiente local continua usando MySQL, conforme as aulas.
 
 ```text
-Navegador → Render (site + API) → MySQL hospedado
-                  ↑
-             GitHub / main
+Navegador → Render Free (site + API) → Render PostgreSQL Free
+                         ↑                rede interna
+                    GitHub / main
 ```
 
-## 1. Preparar o MySQL
+## 1. Entender os limites gratuitos
 
-Use MySQL 8 ou superior e um banco dedicado ao projeto. Anote host, porta, nome do banco, usuário e senha fornecidos pelo serviço. O usuário precisa consultar e alterar dados e criar/alterar as tabelas desse banco. O setup é idempotente: cria o que está faltando e preserva os dados existentes.
+- O Web Service Free hiberna após 15 minutos sem acessos e pode demorar cerca de um minuto para reativar. Abra o site antes da apresentação.
+- O PostgreSQL Free tem 1 GB de armazenamento e expira após 30 dias. A hibernação do site não prolonga esse prazo. Exporte os dados antes da expiração se precisar preservá-los.
+- A conta utilizada não tem forma de pagamento cadastrada. Quando limites gratuitos aplicáveis forem atingidos, o serviço pode ser suspenso. Não adicione cartão, selecione plano pago ou aumente recursos para contornar uma suspensão.
+- Esta configuração não inclui disco pago, banco MySQL hospedado ou atualização para planos pagos.
 
-O projeto aceita um MySQL gerenciado externo com TLS. Se o provedor fornecer um certificado CA próprio, cadastre seu conteúdo PEM em `DB_SSL_CA` no Render; são aceitas quebras de linha reais ou representadas por `\n`. A conexão verifica o certificado e o nome do servidor.
+Os limites e a data de expiração devem ser conferidos no painel antes da apresentação. Referência: [regras do Render Free](https://render.com/docs/free).
 
-Também é possível manter o MySQL no próprio Render usando um serviço privado e disco persistente. Essa alternativa usa recursos pagos e exige administrar o banco. Não instale o MySQL dentro do Web Service da aplicação nem envie a pasta `.local` para o GitHub. Veja a [orientação oficial de MySQL no Render](https://render.com/docs/deploy-mysql).
+## 2. Manter o código no GitHub
 
-Este repositório não provisiona nem contrata um serviço de banco. A escolha do provedor e a criação da instância precedem a publicação.
+O repositório é [Dopre-PNB/urbanlink-flow](https://github.com/Dopre-PNB/urbanlink-flow), branch `main`. O conteúdo de `urbanlink-flow`, incluindo `package.json` e `render.yaml`, fica na raiz do repositório. Os PDFs dos materiais de aula ficam fora dele.
 
-## 2. Enviar o projeto ao GitHub
-
-O repositório Git local fica em `urbanlink-flow`. Envie o conteúdo dessa pasta, com `package.json` e `render.yaml` na raiz do repositório. Os PDFs dos materiais de aula ficam fora desse repositório.
-
-1. Crie um repositório vazio no GitHub, público ou privado conforme a entrega acadêmica. Evite inicializá-lo com outro README, pois este projeto já tem histórico Git.
-2. Conecte o repositório local ao endereço criado e envie a branch `main`.
-3. Confira se os arquivos `package.json`, `package-lock.json`, `render.yaml`, `src`, `public` e `database` aparecem no GitHub.
-
-Exemplo no terminal, dentro de `urbanlink-flow`, substituindo o endereço pelo repositório real:
+Antes de enviar uma alteração, confira os arquivos modificados, execute as verificações apropriadas e faça um commit descritivo. Depois, dentro da pasta do projeto:
 
 ```powershell
-git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-git push -u origin main
+git push origin main
 ```
 
-O `.gitignore` exclui `.env`, variações privadas de `.env`, `.local`, dependências e resultados de execução. Só `.env.example` contém o modelo sem credenciais reais. As senhas de demonstração presentes no código/README são locais; a inicialização em produção não cria essas contas.
+O `.gitignore` exclui `.env`, suas variações privadas, `.local`, dependências e resultados de execução. Somente `.env.example` contém o modelo sem credenciais reais. Senhas de demonstração documentadas no projeto são locais; a inicialização em produção não cria essas contas.
 
-## 3. Criar o serviço no Render
+## 3. Configurar os serviços no Render
 
-O caminho preparado é **New → Blueprint**, conectando o repositório e a branch `main`. O Render lê `render.yaml`, configura o serviço Node e solicita as variáveis marcadas para preenchimento. O arquivo gera `JWT_SECRET` automaticamente e seleciona a instância gratuita para a aplicação. Confira o resumo de recursos antes de criar.
+Use os recursos existentes quando já estiverem criados. Não aplique outro Blueprint para duplicar o site ou o banco. `render.yaml` registra a configuração para uma nova instalação; o caminho **New → Blueprint** permite reproduzi-la conectando a branch `main`. Confira se todos os recursos estão no plano **Free** antes de criar.
 
-Se preferir criar por **New → Web Service**, use:
+Para criar ou conferir manualmente o banco, use **New → Postgres**:
 
-| Campo             | Valor                                                   |
-| ----------------- | ------------------------------------------------------- |
-| Language          | Node                                                    |
-| Branch            | main                                                    |
-| Root Directory    | Vazio quando `package.json` está na raiz do repositório |
-| Build Command     | `npm ci --omit=dev`                                     |
-| Start Command     | `npm run start:render`                                  |
-| Health Check Path | `/api/health`                                           |
+| Campo   | Valor                            |
+| ------- | -------------------------------- |
+| Name    | `urbanlink-flow-db`              |
+| Region  | Virginia, a mesma região do site |
+| Plan    | Free                             |
+| Storage | 1 GB incluído no plano gratuito  |
 
-O arquivo `.node-version` seleciona Node 24. O comando de início prepara as tabelas, cria o primeiro administrador quando necessário e então inicia a aplicação. Isso dispensa shell remoto e comando de pré-deploy. Não utilize `npm run demo` na hospedagem: esse comando prepara a instância MySQL local do Windows.
+Depois de o banco ficar disponível, use a **Internal Database URL** na variável `DATABASE_URL` do Web Service. Mantenha essa conexão dentro da rede do Render. O PostgreSQL já existe quando o projeto inicia; o setup prepara somente as tabelas e os dados iniciais necessários.
 
-Referências: [publicar Express](https://render.com/docs/deploy-node-express-app), [formato do Blueprint](https://render.com/docs/blueprint-spec) e [verificação de funcionamento](https://render.com/docs/health-checks).
+Para criar ou conferir o site em **New → Web Service**:
+
+| Campo             | Valor                             |
+| ----------------- | --------------------------------- |
+| Name              | `urbanlink-flow`                  |
+| Language          | Node                              |
+| Region            | Virginia, a mesma região do banco |
+| Plan              | Free                              |
+| Repository        | `Dopre-PNB/urbanlink-flow`        |
+| Branch            | `main`                            |
+| Root Directory    | Vazio                             |
+| Build Command     | `npm ci --omit=dev`               |
+| Start Command     | `npm run start:render`            |
+| Health Check Path | `/api/health`                     |
+
+O arquivo `.node-version` seleciona Node 24. `npm run start:render` executa o setup idempotente, cria o primeiro administrador quando necessário e então inicia a aplicação. As publicações seguintes preservam as tabelas e os registros existentes. Não use `npm run demo` na hospedagem: esse comando prepara a instância MySQL local do Windows.
+
+Referências: [publicar Express](https://render.com/docs/deploy-node-express-app), [PostgreSQL no Render](https://render.com/docs/postgresql), [Blueprint](https://render.com/docs/blueprint-spec) e [verificação de funcionamento](https://render.com/docs/health-checks).
 
 ## 4. Configurar as variáveis de ambiente
 
-Insira senhas apenas na configuração do serviço; não as coloque em commits ou no chat.
+Insira senhas apenas nas configurações privadas do serviço. Não coloque a URL de conexão, senhas ou chaves em commits ou no chat.
 
 | Variável                 | Valor na hospedagem                                                                    |
 | ------------------------ | -------------------------------------------------------------------------------------- |
 | `NODE_ENV`               | `production`                                                                           |
 | `HOST`                   | `0.0.0.0`                                                                              |
 | `PORT`                   | Deixe o Render fornecer                                                                |
-| `DB_HOST`                | Endereço do MySQL hospedado, sem `https://`                                            |
-| `DB_PORT`                | Porta informada pelo provedor, frequentemente `3306`                                   |
-| `DB_NAME`                | Banco existente dedicado ao projeto; letras, números e sublinhado, começando por letra |
-| `DB_USER`                | Usuário com acesso ao banco                                                            |
-| `DB_PASSWORD`            | Senha desse usuário                                                                    |
-| `DB_CREATE_DATABASE`     | `false`                                                                                |
-| `DB_SSL`                 | `true` para a conexão externa com TLS                                                  |
-| `DB_SSL_CA`              | Opcional: certificado CA PEM fornecido pelo provedor                                   |
+| `DATABASE_URL`           | Internal Database URL do PostgreSQL do projeto                                         |
+| `DB_SSL`                 | `false` para a conexão interna entre estes serviços do Render                          |
 | `JWT_SECRET`             | Chave aleatória com pelo menos 32 caracteres; gerada pelo Blueprint                    |
-| `INITIAL_ADMIN_EMAIL`    | E-mail escolhido para seu acesso de administrador                                      |
-| `INITIAL_ADMIN_PASSWORD` | Sua senha inicial; pelo menos 8 caracteres, no máximo 72 bytes; não use as senhas demo |
+| `INITIAL_ADMIN_EMAIL`    | E-mail escolhido para o acesso de administrador                                        |
+| `INITIAL_ADMIN_PASSWORD` | Senha inicial; pelo menos 8 caracteres e no máximo 72 bytes; diferente das senhas demo |
 | `INITIAL_ADMIN_NAME`     | Opcional; padrão `Administrador UrbanLink`                                             |
 
-Se o MySQL for um serviço privado do Render sem TLS, use o host interno, a mesma região da aplicação e `DB_SSL=false`, conforme a configuração efetiva desse banco. Para um provedor que filtre conexões por IP, permita os endereços de saída do Web Service indicados pelo Render.
+A presença de `DATABASE_URL` seleciona PostgreSQL. As variáveis `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD` pertencem à configuração MySQL usada quando não há `DATABASE_URL`. Elas não precisam ser preenchidas na publicação PostgreSQL. A configuração `.env` do MySQL local não precisa ser alterada.
 
-Em produção, os atalhos de demonstração ficam ocultos e nenhum veículo, rota, entrega ou operador de demonstração é criado. O primeiro acesso usa as credenciais configuradas acima; depois, o administrador cadastra o operador e os dados para apresentação pela plataforma.
+`DB_SSL=false` acima se aplica à URL interna do Render. Para uma conexão PostgreSQL externa com TLS, use `DB_SSL=true` e um certificado válido; configure `DB_SSL_CA` se o provedor exigir uma autoridade certificadora própria. Não desative a verificação de certificado para contornar um erro externo.
 
-Quando já existe um administrador no banco, reiniciar ou publicar novamente preserva usuários e senhas. Alterar `INITIAL_ADMIN_PASSWORD` não redefine uma senha existente: utilize a edição de usuários da plataforma. Você pode remover as variáveis `INITIAL_ADMIN_*` após o primeiro acesso. Use um banco novo para publicar; importar o banco da demonstração local também importaria as contas de demonstração.
+Em produção, os atalhos de demonstração ficam ocultos e nenhum veículo, rota, entrega ou operador de demonstração é criado. O primeiro acesso usa as credenciais configuradas acima. O administrador cadastra o operador e os dados da apresentação pela plataforma.
+
+Quando já existe um administrador, reiniciar ou publicar novamente preserva usuários e senhas. Alterar `INITIAL_ADMIN_PASSWORD` não redefine uma senha existente: use a edição de usuários da plataforma. As variáveis `INITIAL_ADMIN_*` podem ser removidas após o primeiro acesso.
 
 ## 5. Conferir a publicação
 
-1. Aguarde o serviço ficar disponível no endereço HTTPS fornecido pelo Render.
+O endereço configurado para o site é [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com). A existência do endereço não confirma que uma implantação foi concluída; verifique o status e os passos abaixo:
+
+1. Aguarde a implantação ficar **Live** no painel.
 2. Abra `/api/health`; o retorno esperado é `{"status":"ok","banco":"conectado"}`.
-3. Abra a página de login: os botões de demonstração devem estar ocultos. Entre com seu administrador inicial.
-4. Cadastre um operador, um veículo e as duas rotas do roteiro de apresentação. Confira o acesso do operador e execute uma entrega/simulação.
+3. Abra o login e confira que os botões de demonstração estão ocultos. Entre com o administrador inicial.
+4. Cadastre operador, veículo e rotas do roteiro. Confira as permissões e execute uma entrega/simulação.
 5. Confira `/api/docs` e abra o site no celular.
-6. Faça uma nova publicação e confirme que os registros permanecem no banco.
+6. Depois de uma nova publicação, confirme que os registros permanecem no banco.
 
-O Render pode publicar automaticamente as alterações enviadas à branch conectada. O código não depende de `localhost` no navegador: páginas e API utilizam o mesmo endereço.
-
-A instância gratuita da aplicação suspende após 15 minutos sem acessos e pode levar cerca de um minuto para reativar. Abra o site antes da apresentação. O banco tem disponibilidade e custos próprios, conforme o provedor. Veja as [limitações do plano gratuito](https://render.com/docs/free).
+O Render pode publicar automaticamente alterações enviadas à branch conectada. O navegador usa o mesmo endereço para as páginas e a API. Os scripts físicos `database/schema.sql` e `database/schema-postgres.sql` representam as mesmas entidades em MySQL e PostgreSQL, respectivamente.
 
 ## Se a inicialização falhar
 
-- **Banco indisponível:** confira endereço, porta, usuário, senha e permissão de acesso a partir do Render.
-- **Erro de certificado:** mantenha `DB_SSL=true` para o banco externo e configure a CA correta em `DB_SSL_CA` quando exigida.
-- **Banco desconhecido:** crie/selecione o banco no provedor e use seu nome em `DB_NAME`; a configuração de produção não cria a instância do banco.
+- **Banco indisponível:** confira se o PostgreSQL está disponível e dentro do prazo gratuito, se `DATABASE_URL` contém a URL interna completa e se os dois serviços estão na mesma região.
+- **Erro de certificado:** para acesso externo, mantenha `DB_SSL=true` e configure a CA correta quando exigida. Para esta conexão interna do Render, confira `DB_SSL=false`.
+- **Configuração MySQL solicitada no Render:** confira se `DATABASE_URL` foi cadastrada no Web Service. Sem ela, o projeto usa MySQL.
 - **Administrador inicial ausente:** preencha `INITIAL_ADMIN_EMAIL` e `INITIAL_ADMIN_PASSWORD` se o banco ainda não tem administrador.
-- **Nenhuma porta detectada:** confirme `HOST=0.0.0.0`, o comando de início e os logs de conexão com o banco.
+- **Nenhuma porta detectada:** confira `HOST=0.0.0.0`, o comando de início e os logs de conexão com o banco.
+- **Banco expirado ou serviço suspenso:** confira o motivo no painel. Não altere para plano pago; preserve o requisito de custo zero e prepare um novo ambiente gratuito quando permitido.
 
-Os testes automatizados de API/interface do repositório usam o ambiente local de demonstração. Execute-os localmente; eles não são um comando de inicialização no Render e não devem ser apontados para um banco de uso real.
+Os testes automatizados de API/interface usam contas e registros de demonstração em ambiente de teste. Eles não são um comando de inicialização no Render e não devem ser apontados para um banco com dados reais. Registre as verificações efetivamente executadas em `docs/resultados-testes.md`.

@@ -30,7 +30,8 @@ function numero(value, label, max = 99999999.99) {
   return rounded;
 }
 function id(value, label = 'Identificador') {
-  if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 1 || value > 4294967295)
+  // Mesmo limite nos dois bancos; evita estouro do INTEGER no PostgreSQL.
+  if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 1 || value > 2147483647)
     falhar(400, `${label} inválido.`);
   return value;
 }

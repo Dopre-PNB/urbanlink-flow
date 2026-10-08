@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { sequelize, Entrega, Rota, Simulacao, Usuario } = require('../models');
 const v = require('./validacao');
+const { operadorBusca, igualSemMaiusculas } = require('./consultaTexto');
 const incluir = [
   { model: Entrega, as: 'entrega', attributes: ['id', 'descricao', 'codigo'] },
   { model: Usuario, as: 'usuario', attributes: ['id', 'nome'] },
@@ -21,7 +22,10 @@ async function calcular(entregaId, cenario, transaction) {
   });
   if (!entrega) v.falhar(404, 'Entrega não encontrada.');
   const rotas = await Rota.findAll({
-    where: { origem: entrega.origem, destino: entrega.destino },
+    where: {
+      origem: igualSemMaiusculas(entrega.origem),
+      destino: igualSemMaiusculas(entrega.destino)
+    },
     order: [['id', 'ASC']],
     transaction,
     ...(transaction ? { lock: transaction.LOCK.SHARE } : {})
@@ -77,8 +81,8 @@ async function listar(query) {
   const busca = v.busca(query.busca);
   if (busca) {
     where[Op.or] = [
-      { '$entrega.descricao$': { [Op.like]: `%${busca}%` } },
-      { cenario: { [Op.like]: `%${busca}%` } }
+      { '$entrega.descricao$': { [operadorBusca]: `%${busca}%` } },
+      { cenario: { [operadorBusca]: `%${busca}%` } }
     ];
     if (/^(?:ULF-)?\d+$/i.test(busca))
       where[Op.or].push({ entrega_id: Number(busca.replace(/^ULF-/i, '')) });

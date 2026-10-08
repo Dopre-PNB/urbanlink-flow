@@ -17,12 +17,20 @@ Este projeto é orientado pelo Guia do Projeto Final e pelos sete materiais de a
 
 O design fornecido pelo usuário orienta azul, logo, cards, arredondamentos e a página inicial. As páginas internas usam fundo claro para leitura de tabelas e formulários. Agenda vira filtro por data; Mapa fica na simulação; o convite de download vira acesso à plataforma, pois a entrega é web.
 
-Uma tela de login atende a duas funções: administrador e operador. Duas contas iniciais bastam para apresentar permissões. Administração de usuários substitui cadastro público. O servidor lê o perfil atual no banco, independentemente de controles visuais.
+Uma tela de login atende a duas funções: administrador e operador. Duas contas iniciais locais bastam para apresentar permissões. Na publicação, somente o administrador inicial é criado com as credenciais configuradas no Render; ele cadastra os demais usuários. Administração de usuários substitui cadastro público. O servidor lê o perfil atual no banco, independentemente de controles visuais.
 
 A otimização demonstrada consiste em selecionar a melhor alternativa de um conjunto de rotas já cadastradas. Cenários mudam uma velocidade média fixa. A implementação não promete um algoritmo de roteamento urbano, acesso a tráfego real ou distância exata pelas ruas. Com velocidades iguais nas alternativas, a menor distância também terá o menor tempo nos dois cenários; o cenário serve para avaliar impacto no prazo, não para inverter a recomendação.
 
 O termo monitoramento é concretizado com atualização manual do status e consulta periódica do painel a cada 30 segundos. Esta é uma decisão de escopo didático. O Guia não define protocolo de atualização nem algoritmo específico; esta implementação deve ser apresentada com os limites explicitados e submetida à avaliação como simulação acadêmica.
 
+## Adaptação para a hospedagem gratuita
+
+Os materiais de aula usam MySQL, preservado no ambiente local. Depois da implementação, o responsável pelo projeto solicitou hospedar aplicação e banco no próprio Render, exclusivamente no plano gratuito. A publicação foi adaptada para PostgreSQL, pois a opção gratuita de banco relacional do Render usa esse mecanismo. Node.js, Express, Sequelize, as cinco entidades, os perfis, as seis páginas e as regras de negócio permanecem no projeto.
+
+`DATABASE_URL` seleciona PostgreSQL. Sem essa variável, a conexão continua usando as variáveis `DB_*` do MySQL local. Cada banco possui seu script físico: `database/schema.sql` e `database/schema-postgres.sql`. O modelo conceitual e os relacionamentos lógicos são comuns aos dois.
+
+Esta decisão permite a apresentação no plano Free, mas o PostgreSQL gratuito expira após 30 dias. O site hiberna após 15 minutos sem acesso. Não foi autorizada contratação, atualização automática para plano pago ou inclusão de forma de pagamento. Esses limites devem ser considerados na data da apresentação e na preservação dos dados. Referência: [Render Free](https://render.com/docs/free).
+
 ## Fora do escopo acordado
 
-GPS/tráfego ao vivo, aplicativo nativo, pagamentos, notificações, inteligência artificial, geocodificação, recuperação de senha por e-mail e cadastro público. Nenhum desses recursos é necessário ao fluxo combinado. A entrega usa MySQL real; armazenamento em arquivo ou memória não substitui o banco.
+GPS/tráfego ao vivo, aplicativo nativo, pagamentos, notificações, inteligência artificial, geocodificação, recuperação de senha por e-mail e cadastro público. Nenhum desses recursos é necessário ao fluxo combinado. A entrega usa banco relacional real: MySQL local ou PostgreSQL no Render; armazenamento em arquivo ou memória não substitui o banco.

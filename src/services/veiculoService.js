@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { sequelize, Veiculo, Entrega } = require('../models');
 const v = require('./validacao');
+const { operadorBusca } = require('./consultaTexto');
 function validar(body, current) {
   v.objeto(body);
   return {
@@ -29,7 +30,12 @@ async function listar(query) {
   const page = v.paginacao(query);
   const busca = v.busca(query.busca);
   const where = busca
-    ? { [Op.or]: [{ nome: { [Op.like]: `%${busca}%` } }, { placa: { [Op.like]: `%${busca}%` } }] }
+    ? {
+        [Op.or]: [
+          { nome: { [operadorBusca]: `%${busca}%` } },
+          { placa: { [operadorBusca]: `%${busca}%` } }
+        ]
+      }
     : {};
   const result = await Veiculo.findAndCountAll({
     where,

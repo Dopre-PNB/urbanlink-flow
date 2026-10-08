@@ -5,6 +5,14 @@ const assert = require('node:assert/strict');
 const { randomUUID } = require('node:crypto');
 
 const base = (process.env.TEST_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '');
+const adminCredentials = {
+  email: process.env.TEST_ADMIN_EMAIL || 'admin@urbanlink.local',
+  senha: process.env.TEST_ADMIN_PASSWORD || 'Admin@123'
+};
+const operatorCredentials = {
+  email: process.env.TEST_OPERATOR_EMAIL || 'operador@urbanlink.local',
+  senha: process.env.TEST_OPERATOR_PASSWORD || 'Operador@123'
+};
 
 async function request(method, path, token, payload) {
   const response = await fetch(`${base}/api${path}`, {
@@ -81,10 +89,7 @@ test(
       await t.test('01: login válido e inválido; dados públicos sem senha', async () => {
         expectStatus(await request('GET', '/health'), 200, 'banco ativo');
         const adm = expectStatus(
-          await request('POST', '/login', null, {
-            email: 'admin@urbanlink.local',
-            senha: 'Admin@123'
-          }),
+          await request('POST', '/login', null, adminCredentials),
           200,
           'login administrador'
         );
@@ -92,10 +97,7 @@ test(
         assert.equal(adm.usuario.tipo, 'administrador');
         withoutSecrets(adm);
         const op = expectStatus(
-          await request('POST', '/login', null, {
-            email: 'operador@urbanlink.local',
-            senha: 'Operador@123'
-          }),
+          await request('POST', '/login', null, operatorCredentials),
           200,
           'login operador'
         );
@@ -105,14 +107,14 @@ test(
         withoutSecrets(op);
         expectStatus(
           await request('POST', '/login', null, {
-            email: 'operador@urbanlink.local',
-            senha: 'senha-incorreta'
+            email: operatorCredentials.email,
+            senha: `senha-incorreta-${randomUUID()}`
           }),
           401,
           'senha incorreta'
         );
         expectStatus(
-          await request('POST', '/login', null, { email: 'operador@urbanlink.local' }),
+          await request('POST', '/login', null, { email: operatorCredentials.email }),
           401,
           'credenciais incompletas'
         );

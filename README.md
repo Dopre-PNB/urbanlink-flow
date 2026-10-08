@@ -1,10 +1,12 @@
 # UrbanLink Flow
 
-Projeto final de Desenvolvimento de Sistemas: plataforma web simples para cadastrar entregas, comparar percursos e acompanhar uma operação logística. O back-end segue as aulas de Node.js, Express, Sequelize e MySQL; as páginas usam HTML, CSS e JavaScript puro.
+Projeto final de Desenvolvimento de Sistemas: plataforma web simples para cadastrar entregas, comparar percursos e acompanhar uma operação logística. O back-end segue as aulas de Node.js, Express e Sequelize, com MySQL na demonstração local. A publicação gratuita no Render usa PostgreSQL, por solicitação do responsável pelo projeto. As páginas usam HTML, CSS e JavaScript puro.
 
 ## Publicar no GitHub e no Render
 
-O projeto inclui `render.yaml` para hospedar site e API juntos em um Web Service Node, com banco MySQL hospedado separadamente. Siga o [passo a passo de publicação](docs/publicacao-github-render.md). Em produção, o primeiro administrador usa credenciais configuradas no Render e as contas de demonstração não são criadas.
+O projeto inclui `render.yaml` para hospedar site e API juntos em um Web Service Node e conectar um PostgreSQL no próprio Render, ambos no plano Free. O código está no [GitHub](https://github.com/Dopre-PNB/urbanlink-flow). Siga o [passo a passo de publicação](docs/publicacao-github-render.md). Em produção, o primeiro administrador usa credenciais configuradas no Render e as contas de demonstração não são criadas.
+
+O site gratuito hiberna após 15 minutos sem acesso. O PostgreSQL gratuito expira após 30 dias; essa validade é independente da hibernação do site. Nenhuma conversão para plano pago faz parte desta configuração. Veja as [limitações oficiais do Render Free](https://render.com/docs/free).
 
 ## Começar no Windows
 
@@ -83,12 +85,13 @@ Agenda corresponde ao filtro por data em Entregas. Mapa é uma seção de Simula
 
 As distâncias são estimativas cadastradas para duas alternativas que têm a mesma origem e o mesmo destino. A previsão usa `tempo em minutos = distância em km / velocidade em km/h × 60`: 30 km/h no cenário normal e 20 km/h no lento. Recomenda-se o menor tempo; em caso de igualdade, vence a rota de menor ID. A igualdade com o prazo conta como dentro do prazo.
 
-Os pontos no mapa ilustram o percurso cadastrado. A aplicação não calcula distâncias viárias, GPS ou tráfego ao vivo. O mapa-base do OpenStreetMap depende de internet. Cadastros e cálculos usam a API e o MySQL configurados: locais na demonstração e hospedados na publicação. O monitoramento resulta da atualização de status pelo operador. O Painel consulta a API a cada 30 segundos, pausando a consulta quando a aba fica oculta. A média de tempo e o percentual dentro do prazo vêm da última simulação de cada entrega, não da duração real da viagem.
+Os pontos no mapa ilustram o percurso cadastrado. A aplicação não calcula distâncias viárias, GPS ou tráfego ao vivo. O mapa-base do OpenStreetMap depende de internet. Cadastros e cálculos usam a API e um banco relacional: MySQL na demonstração local e PostgreSQL na publicação gratuita do Render. O monitoramento resulta da atualização de status pelo operador. O Painel consulta a API a cada 30 segundos, pausando a consulta quando a aba fica oculta. A média de tempo e o percentual dentro do prazo vêm da última simulação de cada entrega, não da duração real da viagem.
 
 ## Estrutura e documentação
 
 ```text
-database/schema.sql       banco físico, PK, FK e índices
+database/schema.sql       modelo físico MySQL, PK, FK e índices
+database/schema-postgres.sql modelo físico PostgreSQL para o Render
 docs/                     requisitos, modelos, OpenAPI, testes e apresentação
 public/                   seis páginas, CSS, JavaScript e imagens
 scripts/                  configuração MySQL local, setup e dados iniciais
@@ -113,7 +116,7 @@ Documentos principais:
 - [Referências e decisões de escopo](docs/fontes-e-escopo.md)
 - [Publicação no GitHub e no Render](docs/publicacao-github-render.md)
 
-O modelo físico está em [database/schema.sql](database/schema.sql). A API segue `/api` e retorna `{ dados }` nas consultas individuais; as listas retornam `{ dados, total, pagina, limite }`. Utilize o token de login no cabeçalho `Authorization: Bearer ...`.
+Os modelos físicos estão em [database/schema.sql](database/schema.sql), para MySQL, e [database/schema-postgres.sql](database/schema-postgres.sql), para PostgreSQL. A variável `DATABASE_URL` seleciona PostgreSQL; sem ela, a aplicação usa a configuração MySQL `DB_*`. Os dois bancos usam as mesmas cinco entidades e regras da plataforma. A API segue `/api` e retorna `{ dados }` nas consultas individuais; as listas retornam `{ dados, total, pagina, limite }`. Utilize o token de login no cabeçalho `Authorization: Bearer ...`.
 
 ## Verificação
 

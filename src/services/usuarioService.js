@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 const { sequelize, Usuario, Entrega, Simulacao } = require('../models');
 const v = require('./validacao');
+const { operadorBusca } = require('./consultaTexto');
 const publicos = ['id', 'nome', 'email', 'tipo', 'createdAt', 'updatedAt'];
 function validar(body, current) {
   v.objeto(body);
@@ -30,7 +31,12 @@ async function listar(query) {
   const page = v.paginacao(query);
   const busca = v.busca(query.busca);
   const where = busca
-    ? { [Op.or]: [{ nome: { [Op.like]: `%${busca}%` } }, { email: { [Op.like]: `%${busca}%` } }] }
+    ? {
+        [Op.or]: [
+          { nome: { [operadorBusca]: `%${busca}%` } },
+          { email: { [operadorBusca]: `%${busca}%` } }
+        ]
+      }
     : {};
   const result = await Usuario.findAndCountAll({
     where,
