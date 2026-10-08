@@ -54,11 +54,15 @@ O banco e o usuário exclusivos dessa verificação foram removidos ao final; os
 
 Em 08/10/2026, após incluir o suporte a PostgreSQL por `DATABASE_URL`, a suíte completa foi executada novamente contra a aplicação local na porta 3001 e o MySQL exclusivo do projeto: **32 testes aprovados, zero falhas**. A contagem inclui quatro novos testes de configuração PostgreSQL, validação de TLS, leitura da URL e tratamento de conflitos de transação. A compatibilidade com o MySQL local foi preservada.
 
-O banco `urbanlink-flow-db` foi criado no plano Free, PostgreSQL 18, região Virginia, com expiração informada pelo Render em **07/11/2026**. A configuração da conexão interna no serviço e a verificação integrada no banco hospedado ainda estão pendentes; esses testes locais não comprovam uma implantação PostgreSQL funcional. A auditoria de dependências retornou zero vulnerabilidades conhecidas.
+O banco `urbanlink-flow-db` foi criado no plano Free, PostgreSQL 18, região Virginia, com expiração informada pelo Render em **07/11/2026**. A conexão interna foi configurada na aplicação, com acesso externo ao banco bloqueado. A auditoria de dependências retornou zero vulnerabilidades conhecidas.
+
+Na publicação em `https://urbanlink-flow.onrender.com`, o Render confirmou **Live** e `/api/health` respondeu `{"status":"ok","banco":"conectado"}`. Entre 23:50 e 23:52 UTC de 08/10/2026, foram executados **32 testes de API/serviços aprovados** (aproximadamente 32 segundos) e **21 cenários de interface aprovados** (aproximadamente 49 segundos), sem falhas. As requisições HTTP e os formulários usaram a API hospedada e o PostgreSQL real do Render; os testes unitários mantiveram seu ambiente local.
+
+Foram verificados login e perfis, os cinco cadastros, persistência, filtros, capacidade e disputa por veículo, cenários normal/lento, histórico e alterações de status, mapa, documentação e as seis páginas em computador/tablet/celular. Somente registros criados pelos testes foram removidos; o operador temporário também foi excluído e o administrador inicial foi preservado. O relatório sem credenciais está em `output/verificacao/resultado-render.json`, e o comprovante visual do Render em `output/verificacao/render-live.png`. Esses arquivos de execução são ignorados pelo Git.
 
 ## Limitações da evidência atual
 
-Os testes confirmam uma operação didática local, não capacidade de produção sob carga. Não validam GPS ou tráfego real, pois esses recursos estão fora do escopo. Proteção do último administrador é verificada no serviço com contagem controlada para não alterar as contas globais. A disponibilidade do mapa-base depende de acesso externo ao OpenStreetMap.
+Os testes confirmam a operação didática local e publicada; não medem capacidade sob carga. Não validam GPS ou tráfego real, pois esses recursos estão fora do escopo. Proteção do último administrador é verificada no serviço com contagem controlada para não alterar as contas globais. A disponibilidade do mapa-base depende de acesso externo ao OpenStreetMap.
 
 ## Defeitos
 

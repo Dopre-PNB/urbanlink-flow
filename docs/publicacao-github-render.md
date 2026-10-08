@@ -89,7 +89,7 @@ Quando já existe um administrador, reiniciar ou publicar novamente preserva usu
 
 ## 5. Conferir a publicação
 
-O endereço configurado para o site é [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com). A existência do endereço não confirma que uma implantação foi concluída; verifique o status e os passos abaixo:
+O site foi publicado em [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com) em 08/10/2026. O Render confirmou **Live**, a API respondeu com o banco conectado e os testes de API e interface passaram usando PostgreSQL. O banco gratuito atual expira em **07/11/2026**. Para conferir após alterações, siga os passos abaixo:
 
 1. Aguarde a implantação ficar **Live** no painel.
 2. Abra `/api/health`; o retorno esperado é `{"status":"ok","banco":"conectado"}`.
@@ -109,4 +109,4 @@ O Render pode publicar automaticamente alterações enviadas à branch conectada
 - **Nenhuma porta detectada:** confira `HOST=0.0.0.0`, o comando de início e os logs de conexão com o banco.
 - **Banco expirado ou serviço suspenso:** confira o motivo no painel. Não altere para plano pago; preserve o requisito de custo zero e prepare um novo ambiente gratuito quando permitido.
 
-Os testes automatizados de API/interface usam contas e registros de demonstração em ambiente de teste. Eles não são um comando de inicialização no Render e não devem ser apontados para um banco com dados reais. Registre as verificações efetivamente executadas em `docs/resultados-testes.md`.
+Os testes automatizados de API/interface devem usar um ambiente controlado e registros temporários. Para contas próprias, as variáveis `TEST_ADMIN_EMAIL`, `TEST_ADMIN_PASSWORD`, `TEST_OPERATOR_EMAIL` e `TEST_OPERATOR_PASSWORD` substituem as contas de demonstração. Eles não são um comando de inicialização no Render. Registre as verificações efetivamente executadas em `docs/resultados-testes.md`.

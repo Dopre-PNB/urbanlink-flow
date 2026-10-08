@@ -4,7 +4,7 @@ Projeto final de Desenvolvimento de Sistemas: plataforma web simples para cadast
 
 ## Publicar no GitHub e no Render
 
-O projeto inclui `render.yaml` para hospedar site e API juntos em um Web Service Node e conectar um PostgreSQL no próprio Render, ambos no plano Free. O código está no [GitHub](https://github.com/Dopre-PNB/urbanlink-flow). Siga o [passo a passo de publicação](docs/publicacao-github-render.md). Em produção, o primeiro administrador usa credenciais configuradas no Render e as contas de demonstração não são criadas.
+O site está publicado em [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com), com site/API e PostgreSQL no próprio Render, ambos no plano Free. A publicação e o fluxo completo foram verificados em 08/10/2026. O código está no [GitHub](https://github.com/Dopre-PNB/urbanlink-flow). O arquivo `render.yaml` e o [passo a passo de publicação](docs/publicacao-github-render.md) registram a configuração. Em produção, o primeiro administrador usa credenciais privadas configuradas no Render e as contas de demonstração não são criadas.
 
 O site gratuito hiberna após 15 minutos sem acesso. O PostgreSQL gratuito expira após 30 dias; essa validade é independente da hibernação do site. Nenhuma conversão para plano pago faz parte desta configuração. Veja as [limitações oficiais do Render Free](https://render.com/docs/free).
 
@@ -127,6 +127,6 @@ npm.cmd test
 npm.cmd run test:ui
 ```
 
-Os testes de API usam as contas demonstrativas, criam registros exclusivos com prefixo de teste e limpam somente os IDs que criaram. Se a aplicação usar outra porta, configure antes `$env:TEST_BASE_URL = 'http://127.0.0.1:3001'`. A verificação da interface usa o Google Chrome instalado; como alternativa, instale o Chromium com `npx.cmd playwright install chromium`. As capturas de tela e o relatório ficam em `output/verificacao/`.
+Os testes de API usam as contas demonstrativas por padrão, criam registros exclusivos com prefixo de teste e limpam somente os IDs que criaram. Para um ambiente de teste com contas próprias, configure `TEST_ADMIN_EMAIL`, `TEST_ADMIN_PASSWORD`, `TEST_OPERATOR_EMAIL` e `TEST_OPERATOR_PASSWORD` sem registrar as senhas no repositório. Se a aplicação usar outra porta, configure antes `$env:TEST_BASE_URL = 'http://127.0.0.1:3001'`. A verificação da interface usa o Google Chrome instalado; como alternativa, instale o Chromium com `npx.cmd playwright install chromium`. As capturas de tela e o relatório ficam em `output/verificacao/`.
 
 Resultados executados e limitações da verificação devem ser registrados em [docs/resultados-testes.md](docs/resultados-testes.md). Alterações significativas devem receber commits descritivos no Git. `.env`, dependências, dados privados e arquivos de execução local não entram no repositório.

@@ -47,7 +47,8 @@ function withoutSecrets(value) {
 
 test(
   'API real: acesso, CRUD, regras e simulações com registros isolados',
-  { timeout: 120000 },
+  // A suíte faz várias requisições sequenciais; o Render Free acrescenta latência de rede.
+  { timeout: process.env.TEST_BASE_URL ? 600000 : 120000 },
   async (t) => {
     const marker = `test-${randomUUID().slice(0, 8)}`;
     const cleanup = { simulacoes: [], entregas: [], rotas: [], veiculos: [], usuarios: [] };
