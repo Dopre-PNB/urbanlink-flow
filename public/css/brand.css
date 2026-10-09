@@ -1,0 +1,28 @@
+/* Inter 4.1, fonte oficial de rsms.me. Licença em /assets/fonts/LICENSE.txt. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/InterVariable.woff2') format('woff2');
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.brand-logo img {
+  display: block;
+  width: auto;
+  height: 32px;
+  object-fit: contain;
+}
+
+.brand-mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+}

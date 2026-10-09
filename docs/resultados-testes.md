@@ -66,6 +66,14 @@ As seis páginas receberam uma apresentação mais formal, com tipografia consis
 
 A suíte de interface foi executada novamente contra a aplicação local na porta 3001: **21 cenários aprovados, zero falhas**. Foram preservados login, perfis, cadastros, entregas, filtros, simulações, histórico e mapa. As seis páginas foram verificadas em 1440, 768 e 390 px, sem rolagem horizontal da página. A alteração se limita à apresentação em HTML/CSS; não adiciona dependências ou serviços pagos.
 
+## Identidade inspirada em Mapbox, Onfleet, Linear e Samsara
+
+As seis páginas foram reorganizadas com uma nova marca em SVG, fonte Inter servida localmente, paleta navy/azul e componentes consistentes. A página inicial apresenta uma ilustração de percursos; o painel destaca entregas, frota e previsões; a simulação organiza planejamento e mapa lado a lado no computador. A interface mantém HTML, CSS e o JavaScript existente, sem framework novo. As decisões e fontes estão em `docs/identidade-visual.md`.
+
+A suíte de interface passou novamente em `http://127.0.0.1:3001`: **21 cenários aprovados, zero falhas**. Foram conferidos os dois perfis, os formulários, os filtros, os cenários de circulação, o histórico, os status das entregas e o mapa. A inspeção visual das seis páginas em 1440, 768 e 390 px confirmou adaptação às telas, carregamento da fonte e das marcas e ausência de rolagem horizontal da página. A formatação e a verificação de diferenças também passaram.
+
+Evidências locais: `output/verificacao/resultado-interface.json`, `visual-premium-*.png` e `redesign-*.png`. A publicação é verificada separadamente, sem criar registros de teste no banco hospedado.
+
 ## Limitações da evidência atual
 
 Os testes confirmam a operação didática local e publicada; não medem capacidade sob carga. Não validam GPS ou tráfego real, pois esses recursos estão fora do escopo. Proteção do último administrador é verificada no serviço com contagem controlada para não alterar as contas globais. A disponibilidade do mapa-base depende de acesso externo ao OpenStreetMap.

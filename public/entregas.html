@@ -4,7 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Entregas — UrbanLink Flow</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/workspace.css" />
     <script defer src="/js/app.js"></script>
     <script defer src="/js/entregas.js"></script>
   </head>
@@ -14,7 +16,7 @@
     <main id="conteudo" class="container deliveries-page">
       <div class="page-heading">
         <div>
-          <div class="eyebrow">Operação</div>
+          <div class="eyebrow">Operação <span aria-hidden="true">/</span> Entregas</div>
           <h1 id="page-title">Entregas</h1>
           <p class="muted">Gerencie os agendamentos, os percursos e as etapas de cada entrega.</p>
         </div>
@@ -22,6 +24,12 @@
       </div>
       <div id="page-error" class="form-error" role="alert" hidden></div>
       <section class="card table-card" aria-label="Consulta de entregas">
+        <div class="card-top">
+          <div class="card-heading">
+            <h2>Entregas cadastradas</h2>
+            <p>Consulte a agenda, os percursos e o andamento das entregas.</p>
+          </div>
+        </div>
         <form id="filters" class="filters">
           <div class="field wide">
             <label for="busca">Buscar entrega</label

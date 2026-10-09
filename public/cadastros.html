@@ -4,7 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Cadastros — UrbanLink Flow</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/workspace.css" />
     <script defer src="/js/app.js"></script>
     <script defer src="/js/cadastros.js"></script>
   </head>
@@ -14,7 +16,7 @@
     <main id="conteudo" class="container records-page">
       <div class="page-heading">
         <div>
-          <div class="eyebrow">Administração</div>
+          <div class="eyebrow">Operação <span aria-hidden="true">/</span> Administração</div>
           <h1>Cadastros da plataforma</h1>
           <p class="muted">Administre os veículos, as rotas e os acessos da operação.</p>
         </div>
@@ -30,7 +32,7 @@
           aria-selected="true"
           aria-controls="records-panel"
         >
-          Veículos</button
+          <span data-icon="truck" aria-hidden="true"></span>Veículos</button
         ><button
           id="tab-rotas"
           role="tab"
@@ -40,7 +42,7 @@
           tabindex="-1"
           aria-controls="records-panel"
         >
-          Rotas</button
+          <span data-icon="route" aria-hidden="true"></span>Rotas</button
         ><button
           id="tab-usuarios"
           role="tab"
@@ -50,7 +52,7 @@
           tabindex="-1"
           aria-controls="records-panel"
         >
-          Usuários
+          <span data-icon="user" aria-hidden="true"></span>Usuários
         </button>
       </div>
       <section

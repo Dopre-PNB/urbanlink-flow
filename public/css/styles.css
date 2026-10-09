@@ -1,18 +1,19 @@
 @import url('/vendor/leaflet/leaflet.css');
+@import url('/css/brand.css');
 
 :root {
-  --blue: #087fca;
-  --sky: #49afe8;
-  --navy: #112f4c;
-  --dark: #183248;
-  --muted: #697c8e;
-  --bg: #f5f7fa;
-  --line: #dde5ec;
-  --radius: 12px;
-  --shadow: 0 3px 12px #18324804;
+  --blue: #2563eb;
+  --sky: #60c3ff;
+  --navy: #0b1729;
+  --dark: #17243b;
+  --muted: #64748b;
+  --bg: #f6f8fb;
+  --line: #e2e8f0;
+  --radius: 16px;
+  --shadow: 0 2px 3px #0b172904, 0 12px 30px #0b172903;
   --danger: #b13b48;
   --green: #277652;
-  --sidebar: 236px;
+  --sidebar: 260px;
 }
 * {
   box-sizing: border-box;
@@ -24,6 +25,7 @@ body {
   margin: 0;
   color: var(--dark);
   font-family:
+    Inter,
     'Segoe UI',
     system-ui,
     -apple-system,
@@ -35,7 +37,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a {
-  color: #096fab;
+  color: #2563eb;
   text-decoration: none;
 }
 a:hover {
@@ -67,8 +69,8 @@ textarea {
   width: 100%;
   min-height: 44px;
   padding: 10px 13px;
-  border: 1px solid #cfdbe5;
-  border-radius: 7px;
+  border: 1px solid #d8e0eb;
+  border-radius: 9px;
   color: var(--dark);
   background: white;
 }
@@ -85,7 +87,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px #087fca18;
+  box-shadow: 0 0 0 4px #2563eb12;
 }
 :focus-visible {
   outline: 3px solid #0a67af;
@@ -142,7 +144,7 @@ p {
   z-index: 1000;
   background: white;
   padding: 12px;
-  border-radius: 7px;
+  border-radius: 9px;
 }
 .skip-link:focus {
   top: 12px;
@@ -166,7 +168,7 @@ p {
   min-height: 42px;
   padding: 10px 17px;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 9px;
   background: var(--blue);
   color: white;
   font-size: 0.85rem;
@@ -179,18 +181,18 @@ p {
     border-color 0.15s;
 }
 .btn:hover {
-  background: #066dab;
+  background: #1d4ed8;
   color: white;
   text-decoration: none;
 }
 .btn.secondary {
   background: white;
-  border-color: #cfdbe5;
-  color: #3e5c72;
+  border-color: #d8e0eb;
+  color: #44546b;
 }
 .btn.secondary:hover {
-  background: #f4f8fb;
-  border-color: #aac0d2;
+  background: #f6f8fc;
+  border-color: #b9c8df;
 }
 .btn.danger {
   background: white;
@@ -222,8 +224,8 @@ p {
   inset: 0 auto 0 0;
   width: var(--sidebar);
   z-index: 20;
-  background: var(--navy);
-  border-right: 1px solid #ffffff18;
+  background: linear-gradient(180deg, #0b1729, #101f35);
+  border-right: 1px solid #ffffff0d;
 }
 .header-inner {
   display: flex;
@@ -231,7 +233,8 @@ p {
 }
 .app-page .header-inner {
   height: 100%;
-  padding: 32px 19px 24px;
+  overflow-y: auto;
+  padding: 32px 22px 22px;
   flex-direction: column;
   align-items: stretch;
 }
@@ -245,48 +248,64 @@ p {
 }
 .brand-logo img {
   display: block;
-  width: 148px;
-  height: 51px;
+  width: 204px;
+  height: 36px;
+  max-width: 100%;
   object-fit: contain;
 }
 .app-page .brand-logo {
-  padding: 0 12px 26px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ffffff24;
+  padding: 0 0 30px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #ffffff14;
+}
+.nav-label {
+  margin: 0 0 13px 13px;
+  color: #697d98;
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
 }
 .nav {
   display: flex;
-  gap: 7px;
+  gap: 6px;
 }
 .app-page .nav {
   flex: 1;
   flex-direction: column;
   align-items: stretch;
-  padding-top: 20px;
+  padding-top: 29px;
 }
 .nav a {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 7px;
+  gap: 12px;
+  padding: 13px 14px;
+  border-radius: 9px;
   border: 1px solid transparent;
-  font-size: 0.85rem;
+  font-size: 0.81rem;
   font-weight: 500;
   text-decoration: none;
 }
 .app-page .nav a {
-  color: #b8ccdc;
+  color: #9badc5;
 }
 .app-page .nav a:hover {
   color: white;
-  background: #ffffff09;
+  background: #ffffff07;
 }
 .app-page .nav a.active {
   color: white;
-  background: #ffffff0d;
-  border-color: #ffffff1f;
-  box-shadow: inset 3px 0 var(--sky);
+  background: linear-gradient(110deg, #2563eb25, #2563eb14);
+  border-color: #4c82e82e;
+  box-shadow: inset 2px 0 #60a5fa;
+}
+.nav-icon {
+  display: inline-flex;
+  color: #859cb9;
+}
+.nav a.active .nav-icon {
+  color: #77b9fc;
 }
 .user-area {
   display: flex;
@@ -296,29 +315,52 @@ p {
   font-size: 0.79rem;
 }
 .app-page .user-area {
-  border-top: 1px solid #ffffff24;
-  padding: 21px 7px 0;
-  color: #eef5fa;
+  border-top: 1px solid #ffffff14;
+  padding: 22px 0 0;
+  color: #edf3fc;
+}
+.user-profile {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+  min-width: 0;
+}
+.user-profile > span {
+  min-width: 0;
+}
+.user-avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: 1px solid #ffffff1a;
+  border-radius: 10px;
+  color: #b8d6fc;
+  background: #ffffff08;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 .user-area strong,
 .user-area small {
   display: block;
 }
 .user-area strong {
-  max-width: 132px;
+  max-width: 122px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
 }
 .app-page .user-area small {
-  color: #91aabf;
+  color: #7e95b0;
   font-size: 0.71rem;
   margin-top: 3px;
 }
 .app-page .user-area .btn {
   background: transparent;
-  border-color: #ffffff40;
+  border-color: #ffffff20;
   color: white;
 }
 .app-page .user-area .btn:hover {
@@ -337,12 +379,13 @@ p {
 }
 
 .container {
-  max-width: 1430px;
+  max-width: 1660px;
   margin: 0 auto;
-  padding: 46px 42px 54px;
+  padding: 38px 40px 44px;
 }
 .app-page .container {
   margin-left: var(--sidebar);
+  max-width: none;
   min-height: calc(100vh - 65px);
 }
 .page-heading {
@@ -350,7 +393,7 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 .page-heading > div {
   min-width: 0;
@@ -366,7 +409,7 @@ p {
 }
 .eyebrow {
   margin: 0 0 10px;
-  color: #73879a;
+  color: #8796ad;
   font-size: 0.66rem;
   font-weight: 650;
   letter-spacing: 1.9px;
@@ -553,8 +596,8 @@ p {
 }
 .table-wrap {
   overflow: auto;
-  border: 1px solid #e3eaf0;
-  border-radius: 8px;
+  border: 1px solid #e8edf4;
+  border-radius: 10px;
 }
 table {
   width: 100%;
@@ -565,8 +608,8 @@ table {
 }
 th {
   padding: 13px 16px;
-  color: #758798;
-  background: #f8fafc;
+  color: #75849a;
+  background: #f8fafd;
   border-bottom: 1px solid #e3eaf0;
   font-size: 0.66rem;
   font-weight: 650;
@@ -758,13 +801,13 @@ td code {
   max-height: 90vh;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 16px;
   color: var(--dark);
-  box-shadow: 0 24px 90px #112f4c33;
+  box-shadow: 0 30px 100px #0b172945;
 }
 .dialog::backdrop {
-  background: #112f4c66;
-  backdrop-filter: blur(3px);
+  background: #0b17296b;
+  backdrop-filter: blur(6px);
 }
 .dialog-head {
   display: flex;
@@ -773,7 +816,7 @@ td code {
   gap: 20px;
   padding: 22px 26px;
   border-bottom: 1px solid var(--line);
-  background: #fcfdfe;
+  background: #fafcff;
 }
 .dialog-head h2 {
   margin: 0;
@@ -940,7 +983,7 @@ td code {
 }
 @media (max-width: 1200px) {
   :root {
-    --sidebar: 210px;
+    --sidebar: 232px;
   }
   .container {
     padding: 35px 28px 44px;
@@ -953,6 +996,9 @@ td code {
   }
 }
 @media (max-width: 1050px) {
+  .app-page .nav-label {
+    display: none;
+  }
   .app-page .app-header {
     position: relative;
     inset: auto;
@@ -973,8 +1019,8 @@ td code {
     border: 0;
   }
   .app-page .brand-logo img {
-    width: 126px;
-    height: 44px;
+    width: 174px;
+    height: 32px;
   }
   .app-page .nav {
     flex-direction: row;
@@ -1006,6 +1052,9 @@ td code {
   }
 }
 @media (max-width: 760px) {
+  .app-page .user-profile {
+    display: none;
+  }
   .table-wrap:has(.empty) table {
     table-layout: fixed;
   }
@@ -1098,8 +1147,8 @@ td code {
     gap: 10px;
   }
   .app-page .brand-logo img {
-    width: 115px;
-    height: 40px;
+    width: 158px;
+    height: 30px;
   }
   .container {
     padding: 28px 17px 32px;

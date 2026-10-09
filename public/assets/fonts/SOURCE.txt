@@ -1,0 +1,11 @@
+Inter Variable 4.1
+Autor: The Inter Project Authors / Rasmus Andersson
+Repositório oficial: https://github.com/rsms/inter
+Arquivo original: https://rsms.me/inter/font-files/InterVariable.woff2?v=4.1
+Estilos: normal, pesos 100 a 900, tamanho óptico 14 a 32.
+Licença: SIL Open Font License 1.1; texto integral em LICENSE.txt.
+
+A fonte é hospedada junto com o projeto, sem requisições a um serviço
+externo de fontes. InterVariable.woff2 foi obtido sem alterações.
+O nome da marca nos SVGs está convertido em contornos para manter
+a aparência em qualquer navegador ou programa de apresentação.

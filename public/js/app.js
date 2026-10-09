@@ -9,6 +9,8 @@ window.UL = (() => {
     info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     check: '<path d="M5 12l4 4L19 6"/>',
+    chart: '<path d="M4 19h16M7 15V9M12 15V5M17 15v-3"/>',
+    grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
     menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
     pin: '<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2"/>'
@@ -104,13 +106,21 @@ window.UL = (() => {
   function header() {
     const current = location.pathname.split('/').pop() || 'painel.html';
     const links = [
-      ['painel.html', 'Monitor de Fluxos'],
-      ['entregas.html', 'Entregas'],
-      ['simulacao.html', 'Simulação e mapa']
+      ['painel.html', 'Monitor de Fluxos', 'chart'],
+      ['entregas.html', 'Entregas', 'truck'],
+      ['simulacao.html', 'Simulação e mapa', 'route']
     ];
-    if (user.tipo === 'administrador') links.push(['cadastros.html', 'Cadastros']);
+    if (user.tipo === 'administrador') links.push(['cadastros.html', 'Cadastros', 'grid']);
+    const initials = user.nome
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('')
+      .toLocaleUpperCase('pt-BR');
     $('#app-header').innerHTML =
-      `<div class="header-inner"><a href="/" class="brand brand-logo" aria-label="UrbanLink Flow, página inicial"><img src="/assets/logo.png" alt="UrbanLink Flow"></a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">${icon('menu')}</button><nav class="nav" id="main-nav" aria-label="Menu principal">${links.map(([href, label]) => `<a href="/${href}" ${href === current ? 'class="active" aria-current="page"' : ''}>${label}</a>`).join('')}</nav><div class="user-area"><span><strong>${escape(user.nome)}</strong><small>${escape(labels[user.tipo])}</small></span><button class="btn secondary small" id="logout" type="button">Sair</button></div></div>`;
+      `<div class="header-inner"><a href="/" class="brand brand-logo" aria-label="UrbanLink Flow, página inicial"><img src="/assets/brand-logo-light.svg" alt="UrbanLink Flow"></a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">${icon('menu')}</button><nav class="nav" id="main-nav" aria-label="Menu principal"><p class="nav-label">Plataforma</p>${links.map(([href, label, symbol]) => `<a href="/${href}" ${href === current ? 'class="active" aria-current="page"' : ''}><span class="nav-icon">${icon(symbol)}</span><span>${label}</span></a>`).join('')}</nav><div class="user-area"><div class="user-profile"><div class="user-avatar" aria-hidden="true">${escape(initials)}</div><span><strong>${escape(user.nome)}</strong><small>${escape(labels[user.tipo])}</small></span></div><button class="btn secondary small" id="logout" type="button">Sair</button></div></div>`;
     $('#logout').addEventListener('click', logout);
     $('.nav-toggle').addEventListener('click', (event) => {
       const open = $('#main-nav').classList.toggle('open');
