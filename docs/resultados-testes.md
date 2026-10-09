@@ -74,6 +74,8 @@ A suíte de interface passou novamente em `http://127.0.0.1:3001`: **21 cenário
 
 Evidências locais: `output/verificacao/resultado-interface.json`, `visual-premium-*.png` e `redesign-*.png`. A publicação é verificada separadamente, sem criar registros de teste no banco hospedado.
 
+Na revisão complementar de 09/10/2026, o foco de teclado dos campos do login passou a usar um contorno azul sólido. A prévia local dos arquivos da interface foi conferida com Tab em 1440 e 390 px: e-mail e senha apresentam foco visível, sem exceções JavaScript. O ajuste é somente de CSS e não altera autenticação. Evidências em `output/verificacao/resultado-foco-login.json` e `login-foco-*.png`.
+
 ## Limitações da evidência atual
 
 Os testes confirmam a operação didática local e publicada; não medem capacidade sob carga. Não validam GPS ou tráfego real, pois esses recursos estão fora do escopo. Proteção do último administrador é verificada no serviço com contagem controlada para não alterar as contas globais. A disponibilidade do mapa-base depende de acesso externo ao OpenStreetMap.

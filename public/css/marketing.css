@@ -875,6 +875,10 @@
   border-color: #729cf2;
   outline: 3px solid #2563eb14;
 }
+.login-form input:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
 .login-form .btn {
   width: 100%;
   min-height: 49px;
