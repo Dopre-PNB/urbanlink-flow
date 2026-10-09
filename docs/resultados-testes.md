@@ -60,6 +60,12 @@ Na publicação em `https://urbanlink-flow.onrender.com`, o Render confirmou **L
 
 Foram verificados login e perfis, os cinco cadastros, persistência, filtros, capacidade e disputa por veículo, cenários normal/lento, histórico e alterações de status, mapa, documentação e as seis páginas em computador/tablet/celular. Somente registros criados pelos testes foram removidos; o operador temporário também foi excluído e o administrador inicial foi preservado. O relatório sem credenciais está em `output/verificacao/resultado-render.json`, e o comprovante visual do Render em `output/verificacao/render-live.png`. Esses arquivos de execução são ignorados pelo Git.
 
+## Refinamento visual em HTML e CSS
+
+As seis páginas receberam uma apresentação mais formal, com tipografia consistente, paleta azul-marinho, cartões discretos, formulários padronizados e navegação lateral no computador. A página inicial e o login mantêm as imagens fornecidas no Figma. No celular, a navegação interna passa a um menu expansível e as tabelas continuam com rolagem dentro do próprio painel.
+
+A suíte de interface foi executada novamente contra a aplicação local na porta 3001: **21 cenários aprovados, zero falhas**. Foram preservados login, perfis, cadastros, entregas, filtros, simulações, histórico e mapa. As seis páginas foram verificadas em 1440, 768 e 390 px, sem rolagem horizontal da página. A alteração se limita à apresentação em HTML/CSS; não adiciona dependências ou serviços pagos.
+
 ## Limitações da evidência atual
 
 Os testes confirmam a operação didática local e publicada; não medem capacidade sob carga. Não validam GPS ou tráfego real, pois esses recursos estão fora do escopo. Proteção do último administrador é verificada no serviço com contagem controlada para não alterar as contas globais. A disponibilidade do mapa-base depende de acesso externo ao OpenStreetMap.

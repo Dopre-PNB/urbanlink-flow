@@ -8,20 +8,20 @@
     <script defer src="/js/app.js"></script>
     <script defer src="/js/entregas.js"></script>
   </head>
-  <body>
+  <body class="app-page">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <header id="app-header" class="app-header"></header>
-    <main id="conteudo" class="container">
+    <main id="conteudo" class="container deliveries-page">
       <div class="page-heading">
         <div>
           <div class="eyebrow">Operação</div>
-          <h1 id="page-title">Suas entregas</h1>
-          <p class="muted">Cadastre entregas, escolha o percurso e acompanhe cada etapa.</p>
+          <h1 id="page-title">Entregas</h1>
+          <p class="muted">Gerencie os agendamentos, os percursos e as etapas de cada entrega.</p>
         </div>
         <button id="new-delivery" class="btn" type="button">+ Nova entrega</button>
       </div>
       <div id="page-error" class="form-error" role="alert" hidden></div>
-      <section class="card">
+      <section class="card table-card" aria-label="Consulta de entregas">
         <form id="filters" class="filters">
           <div class="field wide">
             <label for="busca">Buscar entrega</label
@@ -46,7 +46,7 @@
             <label for="data-filter">Data agendada</label
             ><input id="data-filter" name="data" type="date" />
           </div>
-          <button class="btn" type="submit">Filtrar</button
+          <button class="btn secondary" type="submit">Filtrar</button
           ><button id="clear-filters" class="btn secondary" type="button">Limpar</button>
         </form>
         <div class="table-wrap">
@@ -73,8 +73,8 @@
       <div class="note">
         <span data-icon="info"></span>
         <p>
-          Para iniciar uma entrega, escolha uma rota na simulação. Ao concluir ou cancelar a
-          operação, o veículo é liberado para outras entregas.
+          A entrega pode ser iniciada após a definição da rota. Ao concluir ou cancelar a operação,
+          o veículo fica disponível para outras entregas.
         </p>
       </div>
     </main>
