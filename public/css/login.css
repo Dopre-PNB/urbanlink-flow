@@ -106,8 +106,6 @@
 .login-eyebrow,
 .login-route,
 .login-scene-caption,
-.login-video-toggle,
-.login-motion-toggle,
 .login-section-label,
 .login-main-foot {
   font-family: var(--mono);
@@ -205,37 +203,10 @@
   vector-effect: non-scaling-stroke;
 }
 
-.login-scene-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
 .login-scene-caption {
+  margin: 10px 0 0;
   color: #c6d2d9a8;
   font-size: 9px;
-}
-
-.login-video-toggle,
-.login-motion-toggle {
-  min-height: 44px;
-  padding: 8px 0;
-  border: 0;
-  border-radius: 0;
-  color: #d9dfe1;
-  background: transparent;
-  font-size: 9px;
-  text-decoration: underline;
-  text-decoration-color: #ffffff50;
-  text-underline-offset: 5px;
-  transition: color 180ms ease;
-}
-
-.login-video-toggle:hover,
-.login-motion-toggle:hover {
-  color: var(--blue);
 }
 
 .login-main {
@@ -258,11 +229,6 @@
 .login-back .icon {
   width: 15px;
   height: 15px;
-}
-
-.login-motion-toggle {
-  color: #a9b2b9;
-  white-space: nowrap;
 }
 
 .login-content {
@@ -461,10 +427,6 @@
   .login-story h2 {
     font-size: clamp(38px, 4.3vw, 52px);
   }
-
-  .login-scene-caption {
-    max-width: 170px;
-  }
 }
 
 @media (max-width: 800px) {
@@ -501,22 +463,8 @@
   }
 
   .login-story > p:last-child,
-  .login-route,
-  .login-scene-caption {
-    display: none;
-  }
-
   .login-aside-foot {
-    position: absolute;
-    top: 14px;
-    right: 24px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
-
-  .login-scene-controls {
-    margin: 0;
+    display: none;
   }
 
   .login-main {
@@ -553,11 +501,6 @@
     width: 155px;
   }
 
-  .login-aside-foot {
-    right: 20px;
-    top: 13px;
-  }
-
   .login-story h2 {
     font-size: 34px;
   }
@@ -573,10 +516,6 @@
   .login-back {
     gap: 7px;
     font-size: 10px;
-  }
-
-  .login-motion-toggle {
-    font-size: 8px;
   }
 
   .login-heading h1 {

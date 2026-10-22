@@ -224,65 +224,8 @@ html.workspace-motion::view-transition-group(urbanlink-brand) {
   overflow: hidden;
 }
 
-[data-video-toggle] {
-  touch-action: manipulation;
-}
-
-[data-motion-toggle][hidden] {
-  display: none !important;
-}
-
 .app-page .user-area {
   flex-wrap: wrap;
-}
-
-.app-page .motion-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 9px;
-  flex: 1 0 100%;
-  order: 3;
-  min-height: 44px;
-  padding: 9px 11px;
-  border: 1px solid #ffffff20;
-  border-radius: 3px;
-  background: transparent;
-  color: #c2ccda;
-  font: inherit;
-  font-size: 0.68rem;
-  line-height: 1.3;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease;
-}
-
-.app-page .motion-toggle:hover {
-  color: #f0eee8;
-  border-color: #75aaff66;
-  background: #75aaff09;
-}
-
-.app-page .motion-toggle:focus-visible {
-  outline: 2px solid #75aaff;
-  outline-offset: 3px;
-}
-
-.motion-indicator {
-  width: 5px;
-  height: 5px;
-  flex: 0 0 5px;
-  border: 1px solid #75aaff;
-  border-radius: 50%;
-  background: transparent;
-}
-
-.motion-enabled .motion-indicator {
-  background: #75aaff;
-  box-shadow: 0 0 8px #75aaff40;
 }
 
 .motion-ready .app-page [data-reveal] {
@@ -334,13 +277,6 @@ html.workspace-motion::view-transition-group(urbanlink-brand) {
   }
 }
 
-@media (max-width: 1050px) {
-  .app-page .motion-toggle {
-    flex: 0 0 auto;
-    order: initial;
-  }
-}
-
 html.motion-reduced {
   scroll-behavior: auto !important;
 }
@@ -356,8 +292,7 @@ html.motion-reduced #site-menu a {
 }
 
 html.motion-reduced .route-trace,
-html.motion-reduced .route-traveler,
-html.motion-reduced .motion-toggle {
+html.motion-reduced .route-traveler {
   animation: none !important;
   transition: none !important;
 }
