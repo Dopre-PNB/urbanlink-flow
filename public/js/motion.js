@@ -1,5 +1,5 @@
 /**
- * Shared UrbanLink motion — no dependencies, native links stay native.
+ * Shared UrbanLink motion. The home page optionally loads Lenis for wheel smoothing.
  * [data-reveal]                 reveals once when it enters the viewport.
  * [data-hero-line] > span       clips a whole headline line into view.
  * [data-hero-media]             receives --hero-travel / --hero-scale.
@@ -28,6 +28,19 @@
     )
   ];
   const registeredVideos = new Set();
+  const smoothScroll =
+    document.body.classList.contains('home') && typeof window.Lenis === 'function'
+      ? new window.Lenis({
+          autoRaf: true,
+          smoothWheel: true,
+          syncTouch: false,
+          lerp: 0.14,
+          wheelMultiplier: 1,
+          respectReducedMotion: false,
+          anchors: true,
+          stopInertiaOnNavigate: true
+        })
+      : null;
   let revealObserver;
   let scrollFrame = 0;
 
@@ -84,6 +97,17 @@
   window.addEventListener('scroll', requestScrollUpdate, { passive: true });
   window.addEventListener('resize', requestScrollUpdate, { passive: true });
 
+  // Native keyboard navigation takes over immediately from wheel inertia.
+  document.addEventListener('keydown', (event) => {
+    if (
+      smoothScroll &&
+      ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key) &&
+      !event.target.closest?.('input, textarea, select, [contenteditable="true"]')
+    ) {
+      smoothScroll.scrollTo(window.scrollY, { immediate: true });
+    }
+  });
+
   const menu = document.getElementById('site-menu');
   const menuToggle = document.querySelector('[data-menu-toggle]');
   let previousFocus;
@@ -106,6 +130,8 @@
     menu.setAttribute('aria-hidden', String(!open));
     menuToggle.setAttribute('aria-expanded', String(open));
     menuToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    if (open) smoothScroll?.stop();
+    else smoothScroll?.start();
     const menuLabel = menuToggle.querySelector('[data-menu-label]');
     if (menuLabel) menuLabel.textContent = open ? 'Fechar' : 'Menu';
     const menuSymbol = menuToggle.querySelector('span[aria-hidden="true"]');
@@ -206,11 +232,16 @@
   });
   insertionObserver.observe(document.body, { childList: true, subtree: true });
 
-  window.addEventListener('pagehide', () => videos.forEach((video) => video.pause()));
+  window.addEventListener('pagehide', () => {
+    smoothScroll?.stop();
+    videos.forEach((video) => video.pause());
+  });
   window.addEventListener('pageshow', () => {
     root.classList.add('motion-enabled');
     root.classList.remove('motion-reduced');
     if (menuOpen) setMenu(false, false);
+    smoothScroll?.start();
+    smoothScroll?.resize();
     revealElements.forEach((element) => {
       if (isInViewport(element)) reveal(element);
     });

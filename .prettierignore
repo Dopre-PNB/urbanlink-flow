@@ -3,4 +3,5 @@ node_modules/
 output/
 .env
 public/assets/
+public/vendor/
 *.sql
