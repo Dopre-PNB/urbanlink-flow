@@ -109,10 +109,10 @@ button {
   right: 0;
   z-index: 40;
   min-height: 112px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 10px 30px;
   padding: 27px 35px;
 }
 .has-scrolled .site-header {
@@ -161,10 +161,7 @@ button {
   }
 }
 .header-brand {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 10px;
+  grid-area: 1 / 1;
 }
 .brand-shared {
   display: block;
@@ -175,12 +172,20 @@ button {
   height: auto;
 }
 .header-caption {
+  grid-area: 2 / 1;
   font: 8px/1.5 var(--mono);
   letter-spacing: 0.1em;
   color: #e5e6e2bb;
   margin-left: 6px;
 }
+.header-signature {
+  grid-column: 2;
+  justify-self: end;
+  margin-left: 0;
+  text-align: right;
+}
 .desktop-nav {
+  grid-area: 1 / 2;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -211,6 +216,7 @@ button {
   margin-left: 25px;
 }
 .menu-toggle {
+  grid-area: 1 / 2;
   display: none;
   background: transparent;
   margin-top: 6px;
@@ -326,15 +332,6 @@ button {
   top: calc(74% - 7px);
   left: calc(75% - 7px);
 }
-.hero-topline {
-  position: absolute;
-  left: 39px;
-  right: 39px;
-  top: 157px;
-  display: flex;
-  justify-content: space-between;
-  color: #f0eee8c9;
-}
 .hero-title {
   position: relative;
   font-size: clamp(48px, 7.75vw, 140px);
@@ -381,11 +378,6 @@ button {
   gap: 13px;
   justify-content: center;
   white-space: nowrap;
-}
-.scroll-line {
-  height: 43px;
-  width: 1px;
-  background: #eeeadd70;
 }
 .scroll-cue > span:last-child {
   font-size: 20px;
@@ -776,15 +768,6 @@ em {
     min-height: 670px;
     max-height: 1000px;
   }
-  .hero-topline {
-    left: 26px;
-    right: 26px;
-    top: 137px;
-    font-size: 8px;
-  }
-  .hero-topline > span:last-child {
-    display: none;
-  }
   .hero-title {
     padding: 0 0 80px;
     margin-top: 50px;
@@ -811,9 +794,6 @@ em {
     grid-column: 1 / -1;
     justify-content: flex-start;
     font-size: 8px;
-  }
-  .scroll-line {
-    height: 23px;
   }
   .hero-side-label {
     right: 13px;
@@ -1009,7 +989,7 @@ em {
 /* Entrada real e atalhos de navegação da plataforma. */
 @media (max-width: 380px) {
   .site-header {
-    gap: 12px;
+    column-gap: 12px;
     padding-inline: 20px;
   }
   .brand-shared {
