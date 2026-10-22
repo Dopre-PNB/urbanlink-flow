@@ -1,5 +1,27 @@
 # Resultados da verificação
 
+## Integração visual — 22/10/2026
+
+Ambiente local Windows, aplicação completa em `http://127.0.0.1:3000`, MySQL dedicado na porta 3307. O design aprovado foi aplicado a início, login, painel, entregas, simulação e cadastros.
+
+| Verificação                                 | Resultado                                                                                                                                                                                                                     |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm.cmd test` após a integração            | 32 testes passaram, nenhuma falha. Inclui autenticação, perfis, CRUD, cálculos, indicadores e configuração de produção.                                                                                                       |
+| Sintaxe e formatação dos arquivos alterados | Aprovadas com `node --check` e Prettier. `git diff --check` sem erros de whitespace.                                                                                                                                          |
+| Navegação pelo navegador interno            | Início, login, painel, entregas, simulação e cadastros verificados. Links de acesso, menu público e menu operacional funcionam.                                                                                               |
+| Login e perfis pela interface               | Login inválido mostra erro. Administrador acessa os três cadastros. Operador não recebe link administrativo e é redirecionado ao tentar abrir cadastros. Saída de sessão verificada.                                          |
+| Fluxo completo com dados temporários        | Criar e filtrar entrega; prever 16/24 min no cenário normal e 24/36 min no lento; salvar previsão; vincular rota; recalcular o histórico; iniciar e concluir entrega; verificar veículo disponível e indicadores atualizados. |
+| Limpeza do teste visual                     | Simulação e entrega temporárias excluídas pela interface. A entrega demonstrativa original e demais cadastros foram preservados.                                                                                              |
+| Responsividade                              | Área operacional verificada em 1440 e 390 px; início e login também em 320 px. Sem overflow da página. Tabelas mantêm rolagem interna e diálogos mantêm campos e ações acessíveis.                                            |
+| Movimento e vídeos                          | Ativação/pausa explícita, preferência reduzida, entrada dos títulos, menu com Escape e vídeos locais verificados. Vídeos pausam fora da tela; conteúdos permanecem visíveis com efeitos desativados.                          |
+| Peso dos vídeos                             | Otimizados de 33.951.445 para 4.227.800 bytes no total. H.264, sem áudio e com faststart, usando os mesmos caminhos.                                                                                                          |
+
+O roteiro acima foi executado diretamente no navegador interno. O script legado `test:ui`, que abre um navegador externo, não foi executado nesta rodada. Durante o teste manual, a instância MySQL local precisou ser reiniciada após uma interrupção; a operação de recálculo foi repetida com sucesso e a bateria automatizada posterior passou integralmente.
+
+Documentação da integração: `docs/design-motion.md`. Evidências visuais locais em `output/design-integrado/`.
+
+## Verificação anterior — 08/10/2026
+
 Data: 08/10/2026. Ambiente local Windows, aplicação em `http://127.0.0.1:3000`, MySQL dedicado na porta 3307 e dados preparados com `db:setup`.
 
 ## API e serviços

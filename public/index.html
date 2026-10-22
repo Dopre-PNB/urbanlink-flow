@@ -5,380 +5,354 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="UrbanLink Flow: planeje entregas, compare percursos e acompanhe suas operações."
+      content="UrbanLink Flow. Uma nova perspectiva para a logística urbana. Planeje entregas, compare percursos e acompanhe sua operação."
     />
-    <title>UrbanLink Flow — Conecte-se. Simule.</title>
+    <meta name="theme-color" content="#151719" />
+    <title>UrbanLink Flow — A cidade em movimento</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/marketing.css" />
+    <link
+      rel="preload"
+      href="/assets/fonts/InterVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/css/motion.css" />
+    <script defer src="/js/motion.js"></script>
   </head>
   <body class="home">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-    <header class="home-header">
-      <div class="home-header-inner">
-        <a class="home-brand" href="/" aria-label="UrbanLink Flow, início">
-          <img class="home-logo" src="/assets/brand-logo-light.svg" alt="UrbanLink Flow" />
-        </a>
-        <nav class="home-nav" aria-label="Funcionalidades">
-          <a href="/entregas.html">Entregas</a>
-          <a href="/painel.html">Monitor de Fluxos</a>
-          <a href="/simulacao.html">Previsões</a>
-          <a href="/entregas.html?agenda=1">Agenda</a>
-          <a href="/simulacao.html#mapa">Mapa</a>
-        </nav>
-        <a class="btn home-header-cta" href="/login.html">
-          Acessar plataforma
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
-        </a>
+    <header class="site-header">
+      <div class="header-brand">
+        <a class="brand-shared home-brand" href="/" aria-label="UrbanLink Flow, início"
+          ><img
+            class="home-logo"
+            src="/assets/brand-logo-light.svg"
+            alt="UrbanLink Flow"
+            width="252"
+            height="44"
+        /></a>
+        <span class="header-caption">PLANEJAR O PRÓXIMO MOVIMENTO.</span>
       </div>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="/entregas.html">Entregas</a><a href="/painel.html">Monitor de Fluxos</a
+        ><a href="/simulacao.html">Simulação</a
+        ><a class="header-access" href="/login.html"
+          >Acessar plataforma <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-controls="site-menu"
+        aria-expanded="false"
+      >
+        <span data-menu-label>Menu</span> <span aria-hidden="true">＋</span>
+      </button>
     </header>
-    <main id="conteudo">
-      <section class="home-hero">
-        <div class="hero-layout">
-          <div class="hero-copy">
-            <p class="hero-eyebrow">
-              <span aria-hidden="true"></span> Logística urbana, com clareza.
-            </p>
-            <h1>Conecte-se. Simule.<br />Transforme sua <span>cidade.</span></h1>
-            <p class="hero-description">
-              Planeje entregas, compare percursos e acompanhe cada etapa da sua operação em um só
-              lugar.
-            </p>
-            <div class="hero-actions">
-              <a class="btn" href="/login.html"
-                >Comece a planejar
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" /></svg
-              ></a>
-              <a class="hero-secondary" href="#sobre"
-                >Conheça a plataforma <span aria-hidden="true">↗</span></a
-              >
-            </div>
-            <div class="hero-details">
-              <span
-                ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m5 12 4 4L19 6" />
-                </svg>
-                Planejamento simples</span
-              >
-              <span
-                ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m5 12 4 4L19 6" />
-                </svg>
-                Visão da operação</span
-              >
-            </div>
-          </div>
-          <div class="hero-product">
-            <div class="route-preview">
-              <div class="route-preview-head">
-                <div>
-                  <p class="preview-kicker">Planejamento de rotas</p>
-                  <h2>Percursos ilustrativos</h2>
-                </div>
-                <span class="preview-tag">Ilustração</span>
-              </div>
-              <div class="preview-map">
-                <svg
-                  class="route-illustration"
-                  viewBox="0 0 540 340"
-                  role="img"
-                  aria-label="Esquema ilustrativo de dois percursos entre uma origem e um destino."
-                >
-                  <defs>
-                    <pattern id="urban-grid" width="92" height="76" patternUnits="userSpaceOnUse">
-                      <rect
-                        x="12"
-                        y="12"
-                        width="66"
-                        height="50"
-                        rx="6"
-                        fill="#e7edf4"
-                        stroke="#dae3ed"
-                        stroke-width="1"
-                      />
-                    </pattern>
-                  </defs>
-                  <rect width="540" height="340" fill="#f4f7fb" />
-                  <rect width="540" height="340" fill="url(#urban-grid)" />
-                  <path
-                    d="M-20 300 C70 210 126 225 192 180 S350 205 410 150 S466 38 560 22"
-                    fill="none"
-                    stroke="#d4e8e1"
-                    stroke-width="42"
-                  />
-                  <path
-                    d="M-20 300 C70 210 126 225 192 180 S350 205 410 150 S466 38 560 22"
-                    fill="none"
-                    stroke="#eaf4ef"
-                    stroke-width="26"
-                  />
-                  <path
-                    d="M90 265H250V210H435V75"
-                    fill="none"
-                    stroke="#fff"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M90 265H250V210H435V75"
-                    fill="none"
-                    stroke="#8296ad"
-                    stroke-width="4"
-                    stroke-dasharray="7 7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M90 265V165H190V95H375L435 75"
-                    fill="none"
-                    stroke="#fff"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M90 265V165H190V95H375L435 75"
-                    fill="none"
-                    stroke="#2563eb"
-                    stroke-width="5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <circle cx="90" cy="265" r="14" fill="#fff" stroke="#2563eb" stroke-width="3" />
-                  <circle cx="90" cy="265" r="5" fill="#2563eb" />
-                  <circle cx="435" cy="75" r="14" fill="#2563eb" stroke="#fff" stroke-width="4" />
-                  <circle cx="435" cy="75" r="4" fill="#fff" />
-                  <rect
-                    x="32"
-                    y="287"
-                    width="116"
-                    height="29"
-                    rx="7"
-                    fill="#fff"
-                    stroke="#e0e7ef"
-                  />
-                  <text
-                    x="90"
-                    y="306"
-                    text-anchor="middle"
-                    fill="#253750"
-                    font-size="12"
-                    font-family="Inter, system-ui, sans-serif"
-                  >
-                    Origem
-                  </text>
-                  <rect
-                    x="385"
-                    y="24"
-                    width="101"
-                    height="29"
-                    rx="7"
-                    fill="#fff"
-                    stroke="#e0e7ef"
-                  />
-                  <text
-                    x="435"
-                    y="43"
-                    text-anchor="middle"
-                    fill="#253750"
-                    font-size="12"
-                    font-family="Inter, system-ui, sans-serif"
-                  >
-                    Destino
-                  </text>
-                </svg>
-                <div class="preview-map-key">
-                  <span><i></i>Percurso A</span><span><i></i>Percurso B</span>
-                </div>
-              </div>
-              <div class="route-preview-foot">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 11v5M12 7h.01" />
-                </svg>
-                Representação esquemática para demonstrar a comparação.
-              </div>
-            </div>
-            <div class="hero-photo">
-              <img
-                src="/assets/hero.png"
-                alt="Estrada cercada por vegetação, referência visual do projeto."
-              />
-              <div>
-                <span class="photo-overline">Conectando possibilidades</span>
-                <p>Da cidade ao seu próximo percurso.</p>
-              </div>
-              <span class="photo-route-mark" aria-hidden="true"
-                ><svg viewBox="0 0 48 48">
-                  <path d="M8 37V20h15V10h17" />
-                  <circle cx="8" cy="37" r="3" />
-                  <circle cx="40" cy="10" r="3" /></svg
-              ></span>
-            </div>
-          </div>
+    <button
+      class="motion-toggle"
+      type="button"
+      data-motion-toggle
+      aria-label="Ativar animações"
+      hidden
+    >
+      <span data-motion-label>Ativar animações</span> <span aria-hidden="true">↗</span>
+    </button>
+    <nav class="site-menu" id="site-menu" aria-label="Menu expandido" hidden>
+      <span class="micro">EXPLORE A URBANLINK</span
+      ><a href="/"><small>01</small> Início <span aria-hidden="true">↗</span></a
+      ><a href="/entregas.html"><small>02</small> Entregas <span aria-hidden="true">↗</span></a
+      ><a href="/painel.html"
+        ><small>03</small> Monitor de Fluxos <span aria-hidden="true">↗</span></a
+      ><a href="/simulacao.html"
+        ><small>04</small> Simulação e mapa <span aria-hidden="true">↗</span></a
+      ><a href="/login.html"
+        ><small>05</small> Acessar plataforma <span aria-hidden="true">↗</span></a
+      >
+      <p>Conectar a cidade começa com um bom plano.</p>
+    </nav>
+    <main id="conteudo" class="page-main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" data-hero-media>
+          <video
+            id="hero-video"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="/assets/media/hero-truck.jpg"
+            aria-label="Vista aérea de caminhões percorrendo uma rodovia"
+          >
+            <source src="/assets/media/hero-truck.mp4" type="video/mp4" />
+          </video>
         </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="technical-grid" aria-hidden="true">
+          <i></i><i></i><i></i><span class="cross cross-one">+</span
+          ><span class="cross cross-two">+</span>
+        </div>
+        <div class="hero-topline micro">
+          <span>LOGÍSTICA URBANA / NOVAS PERSPECTIVAS</span><span>URBANLINK — FLOW</span>
+        </div>
+        <h1 class="hero-title" id="hero-title">
+          <span data-hero-line><span>A CIDADE</span></span>
+          <span class="hero-title-offset" data-hero-line><span>EM MOVIMENTO.</span></span>
+          <span class="hero-title-last" data-hero-line><span>VOCÊ NO CONTROLE.</span></span>
+        </h1>
         <div class="hero-bottom">
-          <span>ENTREGAS</span><i aria-hidden="true"></i><span>PERCURSOS</span
-          ><i aria-hidden="true"></i><span>INDICADORES</span>
-          <p>Uma plataforma. Uma visão mais clara.</p>
-        </div>
-      </section>
-      <section class="home-benefits" aria-labelledby="beneficios">
-        <div class="home-benefits-inner">
-          <div class="home-section-heading">
-            <p class="eyebrow"><span>01</span> A plataforma</p>
-            <h2 id="beneficios">Planejamento simples.<br /><span>Operação organizada.</span></h2>
-            <p>Os recursos essenciais para transformar informações em decisões.</p>
+          <div class="hero-summary">
+            <p>
+              Entre a origem e o destino,<br />existe um mundo de decisões.<br /><strong
+                >Planeje o próximo passo.</strong
+              >
+            </p>
+            <a class="hero-access" href="/login.html"
+              >Acessar plataforma <span aria-hidden="true">↗</span></a
+            >
           </div>
-          <div class="feature-grid">
-            <a class="feature" href="/painel.html">
-              <div class="feature-copy">
-                <span class="feature-icon"
-                  ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 19h16M7 15V9M12 15V5M17 15v-3" /></svg
-                ></span>
-                <h3>Dados da operação</h3>
-                <p>Acompanhe entregas e indicadores em uma visão centralizada.</p>
-                <span class="feature-link">Ver indicadores <span aria-hidden="true">↗</span></span>
-              </div>
-              <div class="feature-photo" aria-hidden="true"></div>
-            </a>
-            <a class="feature" href="#sobre">
-              <div class="feature-copy">
-                <span class="feature-icon"
-                  ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="4" y="4" width="6" height="6" rx="1" />
-                    <rect x="14" y="4" width="6" height="6" rx="1" />
-                    <rect x="4" y="14" width="6" height="6" rx="1" />
-                    <path d="M14 17h6M17 14v6" /></svg
-                ></span>
-                <h3>Conheça a plataforma</h3>
-                <p>Entenda como organizar o planejamento de suas entregas.</p>
-                <span class="feature-link">Como funciona <span aria-hidden="true">↗</span></span>
-              </div>
-              <div class="feature-photo" aria-hidden="true"></div>
-            </a>
-            <a class="feature" href="/entregas.html">
-              <div class="feature-copy">
-                <span class="feature-icon"
-                  ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m12 3 8 4-8 4-8-4 8-4ZM4 7v10l8 4 8-4V7M12 11v10" /></svg
-                ></span>
-                <h3>Operações logísticas</h3>
-                <p>Consulte a agenda e acompanhe o andamento de cada entrega.</p>
-                <span class="feature-link">Ver entregas <span aria-hidden="true">↗</span></span>
-              </div>
-              <div class="feature-photo" aria-hidden="true"></div>
-            </a>
-            <a class="feature" href="/simulacao.html">
-              <div class="feature-copy">
-                <span class="feature-icon"
-                  ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="5" cy="19" r="2" />
-                    <circle cx="19" cy="5" r="2" />
-                    <path d="M5 17V8h7V5h5M7 19h12v-9" /></svg
-                ></span>
-                <h3>Simule rotas</h3>
-                <p>Compare percursos e estime o tempo em diferentes cenários.</p>
-                <span class="feature-link"
-                  >Comparar percursos <span aria-hidden="true">↗</span></span
-                >
-              </div>
-              <div class="feature-photo" aria-hidden="true"></div>
-            </a>
+          <a class="scroll-cue micro" href="#visao"
+            ><span class="scroll-line" aria-hidden="true"></span>ROLE PARA EXPLORAR
+            <span aria-hidden="true">↓</span></a
+          >
+          <button
+            class="video-toggle micro"
+            type="button"
+            data-video-toggle
+            aria-controls="hero-video"
+            aria-label="Pausar vídeo"
+          >
+            <span aria-hidden="true">Ⅱ</span> <span data-video-label>Pausar vídeo</span>
+          </button>
+        </div>
+        <span class="hero-side-label micro" aria-hidden="true">ORIGEM — PERCURSO — DESTINO</span>
+      </section>
+
+      <section class="vision section-shell" id="visao" aria-labelledby="vision-title">
+        <div class="section-heading" data-reveal>
+          <span class="micro">01 / A VISÃO</span
+          ><span class="micro muted">CONEXÕES QUE FAZEM SENTIDO</span>
+        </div>
+        <div class="vision-statement">
+          <h2 id="vision-title" data-reveal>A logística é sobre<br />o que vem <em>depois.</em></h2>
+          <div class="vision-copy" data-reveal>
+            <p>O próximo destino. A próxima entrega. A próxima decisão.</p>
+            <p>
+              Conectamos o planejamento à operação para você enxergar possibilidades, comparar
+              percursos e acompanhar cada etapa com clareza.
+            </p>
+            <a class="text-link" href="/painel.html"
+              >Acompanhe a operação <span aria-hidden="true">↗</span></a
+            >
           </div>
         </div>
+        <div class="route-stage" data-reveal>
+          <div class="route-stage-header micro">
+            <span><i class="signal-dot" aria-hidden="true"></i> DO PLANO AO PERCURSO</span
+            ><span>PERCURSOS ILUSTRATIVOS</span>
+          </div>
+          <svg
+            class="route-art"
+            viewBox="0 0 1200 420"
+            role="img"
+            aria-label="Diagrama ilustrativo de caminhos que conectam o centro de distribuição a uma entrega urbana"
+          >
+            <defs>
+              <pattern
+                id="city-blocks"
+                width="100"
+                height="78"
+                patternUnits="userSpaceOnUse"
+                patternTransform="skewX(-25)"
+              >
+                <rect
+                  x="8"
+                  y="8"
+                  width="76"
+                  height="52"
+                  rx="2"
+                  fill="none"
+                  stroke="#a9b9c3"
+                  stroke-opacity=".1"
+                />
+              </pattern>
+              <linearGradient id="path-ink">
+                <stop stop-color="#75aaff" />
+                <stop offset="1" stop-color="#d5e5ff" />
+              </linearGradient>
+            </defs>
+            <rect width="1200" height="420" fill="url(#city-blocks)" />
+            <g class="route-context" fill="none" stroke="#4a535a" stroke-width="1">
+              <path
+                d="M0 85h350l125 125h725M0 300h490l160-155h550M190 0v170L430 420M825 0 610 420M1060 0 850 420"
+              />
+              <path d="M0 100h344l125 125h731M0 315h495l160-155h545" />
+            </g>
+            <path
+              class="route-alt"
+              d="M135 290H410L535 155H760L875 260H1080"
+              fill="none"
+              stroke="#536775"
+              stroke-width="2"
+              stroke-dasharray="5 8"
+            />
+            <path
+              class="route-trace"
+              pathLength="1"
+              d="M135 290H310L480 100H705L875 260H1080"
+              fill="none"
+              stroke="url(#path-ink)"
+              stroke-width="3"
+            />
+            <g fill="#151719" stroke="#c0d8ff" stroke-width="2">
+              <circle cx="135" cy="290" r="8" />
+              <circle cx="480" cy="100" r="6" />
+              <circle cx="875" cy="260" r="6" />
+              <circle cx="1080" cy="260" r="8" />
+            </g>
+            <circle class="route-traveler" cx="0" cy="0" r="5" fill="#f2f3ec" />
+            <g fill="#a3b0ba" font-family="monospace" font-size="12">
+              <text x="105" y="327">ORIGEM</text>
+              <text x="447" y="75">PERCURSO A</text>
+              <text x="600" y="182">PERCURSO B</text>
+              <text x="1042" y="298">DESTINO</text>
+            </g>
+          </svg>
+          <div class="route-stage-footer micro">
+            <span>UM DESTINO. MAIS POSSIBILIDADES.</span
+            ><span>PLANEJAR / COMPARAR / ACOMPANHAR</span>
+          </div>
+        </div>
       </section>
-      <section class="home-cta" id="sobre">
-        <div class="home-workflow-copy">
-          <p class="eyebrow"><span>02</span> Como funciona</p>
-          <h2>Uma entrega.<br />Três passos para planejar.</h2>
+
+      <section class="method" id="metodo" aria-labelledby="method-title">
+        <div class="method-sticky">
+          <div class="method-visual">
+            <video
+              id="method-video"
+              data-motion-video
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="/assets/media/logistics-detail.jpg"
+              aria-label="Operação de entrega entre um galpão e uma van"
+            >
+              <source src="/assets/media/logistics-detail.mp4" type="video/mp4" />
+            </video>
+            <div class="method-visual-shade" aria-hidden="true"></div>
+            <div class="method-visual-top micro">
+              <span>02 / O MÉTODO</span><span>DA IDEIA À ENTREGA</span>
+            </div>
+            <div class="method-visual-title">
+              <p class="micro">CADA ETAPA IMPORTA.</p>
+              <h2 id="method-title">Um bom plano.<br />Um novo<br /><em>caminho.</em></h2>
+            </div>
+            <div class="method-visual-bottom">
+              <span class="micro">URBANLINK FLOW</span
+              ><button
+                class="video-toggle micro"
+                type="button"
+                data-video-toggle
+                data-video-target="#method-video"
+                aria-controls="method-video"
+              >
+                <span aria-hidden="true">Ⅱ</span><span data-video-label>Pausar vídeo</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="method-steps">
+          <article class="method-step" data-reveal>
+            <div class="step-top micro">
+              <span>01 — PLANEJAR</span><span class="step-dots" aria-hidden="true">● ○ ○</span>
+            </div>
+            <span class="step-glyph" aria-hidden="true">↗</span>
+            <h3>Antes da partida,<br />uma direção.</h3>
+            <p>
+              Origem, destino, carga e prazo. Organize o que precisa chegar antes de colocar a
+              operação em movimento.
+            </p>
+            <a class="text-link method-link" href="/entregas.html"
+              >Organizar entregas <span aria-hidden="true">↗</span></a
+            >
+            <span class="step-keyword" aria-hidden="true">PLANEJAR.</span>
+          </article>
+          <article class="method-step" data-reveal>
+            <div class="step-top micro">
+              <span>02 — COMPARAR</span><span class="step-dots" aria-hidden="true">○ ● ○</span>
+            </div>
+            <span class="step-glyph" aria-hidden="true">⇄</span>
+            <h3>O caminho muda.<br />A decisão evolui.</h3>
+            <p>
+              Compare percursos em diferentes cenários de circulação e entenda como cada alternativa
+              influencia a previsão de chegada.
+            </p>
+            <a class="text-link method-link" href="/simulacao.html"
+              >Comparar percursos <span aria-hidden="true">↗</span></a
+            >
+            <span class="step-keyword" aria-hidden="true">COMPARAR.</span>
+          </article>
+          <article class="method-step" data-reveal>
+            <div class="step-top micro">
+              <span>03 — ACOMPANHAR</span><span class="step-dots" aria-hidden="true">○ ○ ●</span>
+            </div>
+            <span class="step-glyph" aria-hidden="true">◎</span>
+            <h3>Cada entrega,<br />na sua visão.</h3>
+            <p>
+              Consulte o andamento das entregas e os indicadores da operação. Informação clara para
+              o próximo movimento.
+            </p>
+            <a class="text-link method-link" href="/painel.html"
+              >Consultar indicadores <span aria-hidden="true">↗</span></a
+            >
+            <span class="step-keyword" aria-hidden="true">CONECTAR.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="next-section section-shell" aria-labelledby="next-title">
+        <div class="section-heading" data-reveal>
+          <span class="micro">03 / SUA ÁREA DE TRABALHO</span
+          ><span class="micro muted">PLANEJE A PRÓXIMA ENTREGA</span>
+        </div>
+        <a class="next-page" href="/painel.html" data-reveal
+          ><h2 id="next-title">Sua operação.<br /><em>Em perspectiva.</em></h2>
+          <span class="next-arrow" aria-hidden="true">↗</span></a
+        >
+        <div class="next-bottom">
           <p>
-            Cadastre uma entrega, escolha um cenário de circulação e veja como o percurso influencia
-            o prazo.
+            Do planejamento ao acompanhamento.<br />Planeje entregas e acompanhe seus indicadores.
           </p>
-          <a class="btn" href="/simulacao.html"
-            >Explore a simulação
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" /></svg
-          ></a>
-        </div>
-        <ol class="workflow-steps">
-          <li>
-            <span class="step-number">01</span>
-            <div>
-              <h3>Organize a entrega</h3>
-              <p>Informe origem, destino, carga e prazo.</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number">02</span>
-            <div>
-              <h3>Compare os percursos</h3>
-              <p>Simule os cenários e veja a estimativa de tempo.</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number">03</span>
-            <div>
-              <h3>Acompanhe a operação</h3>
-              <p>Atualize o andamento e consulte os indicadores.</p>
-            </div>
-          </li>
-        </ol>
-      </section>
-      <section class="home-access">
-        <div class="home-city" role="img" aria-label="Vista de uma cidade ao anoitecer"></div>
-        <div class="home-access-copy">
-          <p class="eyebrow">A cidade em movimento. Você no controle.</p>
-          <h2>Sua operação,<br /><span>sempre por perto.</span></h2>
-          <p>Acesse pelo computador, tablet ou celular e acompanhe suas entregas.</p>
-          <a class="btn" href="/login.html"
-            >Acesse a plataforma
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" /></svg
-          ></a>
+          <a class="outline-button" href="/painel.html"
+            >Abrir o painel <span aria-hidden="true">↗</span></a
+          >
         </div>
       </section>
     </main>
-    <footer>
-      <div class="home-footer">
-        <div class="home-footer-inner">
-          <div class="home-footer-brand">
-            <img class="home-footer-logo" src="/assets/brand-logo-light.svg" alt="UrbanLink Flow" />
-            <p>Planejamento simples para a logística urbana.</p>
-          </div>
-          <div class="home-footer-columns">
-            <div>
-              <h3>Soluções</h3>
-              <a href="/entregas.html">Gestão de entregas</a
-              ><a href="/simulacao.html">Simulação de percursos</a
-              ><a href="/painel.html">Indicadores</a>
-            </div>
-            <div>
-              <h3>Sobre a plataforma</h3>
-              <p>
-                A UrbanLink Flow é uma plataforma acadêmica de planejamento e acompanhamento de
-                logística urbana.
-              </p>
-            </div>
-            <div>
-              <h3>Como funciona</h3>
-              <p>
-                As previsões usam distâncias cadastradas e cenários de velocidade média. Os dados e
-                mapas de demonstração são ilustrativos.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="home-legal">
-        <span>UrbanLink Flow · Projeto Final</span><span>Planejar. Comparar. Acompanhar.</span>
-      </div>
+    <div class="platform-footnote section-shell">
+      <p>
+        UrbanLink Flow é uma plataforma acadêmica de logística urbana. As previsões usam distâncias
+        cadastradas e cenários de velocidade média; os mapas são ilustrativos.
+      </p>
+      <nav aria-label="Recursos da plataforma">
+        <a href="/entregas.html?agenda=1">Agenda de entregas ↗</a
+        ><a href="/simulacao.html#mapa">Mapa dos percursos ↗</a
+        ><a href="#metodo">Como funciona ↓</a>
+      </nav>
+    </div>
+    <footer class="site-footer">
+      <a href="/" aria-label="UrbanLink Flow, início"
+        ><img src="/assets/brand-logo-light.svg" alt="UrbanLink Flow" width="252" height="44" /></a
+      ><span>UM NOVO OLHAR PARA A LOGÍSTICA URBANA.</span
+      ><span
+        >URBANLINK FLOW · PROJETO FINAL
+        <a href="/assets/media/media-sources.md" aria-label="Créditos dos vídeos"
+          >CRÉDITOS ↗</a
+        ></span
+      >
     </footer>
   </body>
 </html>

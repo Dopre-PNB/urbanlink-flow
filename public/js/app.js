@@ -103,7 +103,11 @@ window.UL = (() => {
     }
     return data;
   }
+  let headerEvents;
   function header() {
+    headerEvents?.abort();
+    headerEvents = new AbortController();
+    const eventOptions = { signal: headerEvents.signal };
     const current = location.pathname.split('/').pop() || 'painel.html';
     const links = [
       ['painel.html', 'Monitor de Fluxos', 'chart'],
@@ -120,13 +124,53 @@ window.UL = (() => {
       .join('')
       .toLocaleUpperCase('pt-BR');
     $('#app-header').innerHTML =
-      `<div class="header-inner"><a href="/" class="brand brand-logo" aria-label="UrbanLink Flow, página inicial"><img src="/assets/brand-logo-light.svg" alt="UrbanLink Flow"></a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">${icon('menu')}</button><nav class="nav" id="main-nav" aria-label="Menu principal"><p class="nav-label">Plataforma</p>${links.map(([href, label, symbol]) => `<a href="/${href}" ${href === current ? 'class="active" aria-current="page"' : ''}><span class="nav-icon">${icon(symbol)}</span><span>${label}</span></a>`).join('')}</nav><div class="user-area"><div class="user-profile"><div class="user-avatar" aria-hidden="true">${escape(initials)}</div><span><strong>${escape(user.nome)}</strong><small>${escape(labels[user.tipo])}</small></span></div><button class="btn secondary small" id="logout" type="button">Sair</button></div></div>`;
+      `<div class="header-inner"><a href="/" class="brand brand-logo brand-shared" aria-label="UrbanLink Flow, página inicial"><img src="/assets/brand-logo-light.svg" alt="UrbanLink Flow"></a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">${icon('menu')}</button><nav class="nav" id="main-nav" aria-label="Centro de operações"><p class="nav-label">Centro de operações</p>${links.map(([href, label, symbol]) => `<a href="/${href}" ${href === current ? 'class="active" aria-current="page"' : ''}><span class="nav-icon">${icon(symbol)}</span><span>${label}</span></a>`).join('')}</nav><div class="user-area"><div class="user-profile"><div class="user-avatar" aria-hidden="true">${escape(initials)}</div><span><strong>${escape(user.nome)}</strong><small>${escape(labels[user.tipo])}</small></span></div><button class="btn secondary small" id="logout" type="button">Sair</button><button type="button" class="motion-toggle" data-motion-toggle hidden aria-label="Ativar animações" aria-pressed="false"><span class="motion-indicator" aria-hidden="true"></span><span data-motion-label>Ativar animações</span></button></div></div>`;
     $('#logout').addEventListener('click', logout);
-    $('.nav-toggle').addEventListener('click', (event) => {
-      const open = $('#main-nav').classList.toggle('open');
-      event.currentTarget.setAttribute('aria-expanded', String(open));
-      event.currentTarget.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
-    });
+    const navToggle = $('.nav-toggle');
+    const navigation = $('#main-nav');
+    const setNavigation = (open) => {
+      navigation.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', String(open));
+      navToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    };
+    navToggle.addEventListener(
+      'click',
+      () => setNavigation(!navigation.classList.contains('open')),
+      eventOptions
+    );
+    navigation.addEventListener(
+      'click',
+      (event) => {
+        if (event.target.closest('a[href]')) setNavigation(false);
+      },
+      eventOptions
+    );
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape' && navigation.classList.contains('open')) {
+          setNavigation(false);
+          navToggle.focus();
+        }
+      },
+      eventOptions
+    );
+    document.addEventListener(
+      'click',
+      (event) => {
+        if (!$('#app-header').contains(event.target)) setNavigation(false);
+      },
+      eventOptions
+    );
+    window.addEventListener(
+      'resize',
+      () => {
+        if (!navToggle.getClientRects().length) setNavigation(false);
+      },
+      eventOptions
+    );
+    window.addEventListener('pageshow', () => setNavigation(false), eventOptions);
+    window.dispatchEvent(new CustomEvent('ul-header-ready'));
   }
   async function auth(admin = false) {
     if (!sessionStorage.getItem('ul_token')) {

@@ -109,6 +109,12 @@
         weight: route.rota_id === data.recomendada_id ? 6 : 4,
         opacity: 0.8
       }).addTo(layers);
+      const routePath = line.getElement();
+      if (routePath) {
+        routePath.setAttribute('pathLength', '1');
+        routePath.classList.add('planned-route');
+        routePath.style.setProperty('--route-delay', `${index * 90}ms`);
+      }
       const popup = document.createElement('span');
       popup.textContent = `${route.nome}: ${number(route.distancia_km, 2)} km · ${number(route.tempo_min, 2)} minutos`;
       line.bindPopup(popup);

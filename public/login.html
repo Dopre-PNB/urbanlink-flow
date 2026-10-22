@@ -6,42 +6,85 @@
     <title>Acessar plataforma — UrbanLink Flow</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/marketing.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+    <link rel="stylesheet" href="/css/motion.css" />
     <script defer src="/js/app.js"></script>
     <script defer src="/js/config.js"></script>
+    <script defer src="/js/motion.js"></script>
     <script defer src="/js/login.js"></script>
   </head>
   <body class="login-page">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <div class="login-layout">
-      <aside class="login-picture">
-        <a href="/" aria-label="Voltar ao início"
-          ><img class="home-logo" src="/assets/brand-logo-light.svg" alt="UrbanLink Flow"
-        /></a>
+      <aside class="login-picture" aria-labelledby="login-story-title">
+        <video
+          class="login-video"
+          id="login-video"
+          data-motion-video
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/assets/media/hero-truck.jpg"
+          aria-hidden="true"
+        >
+          <source src="/assets/media/hero-truck.mp4" type="video/mp4" />
+        </video>
+        <div class="login-picture-head">
+          <a class="brand-shared" href="/" aria-label="Voltar ao início"
+            ><img class="home-logo" src="/assets/brand-logo-light.svg" alt="UrbanLink Flow"
+          /></a>
+          <span class="login-coordinate" aria-hidden="true">23°33′ S / 46°38′ W</span>
+        </div>
         <div class="login-story">
-          <p class="login-eyebrow">Logística urbana, com clareza.</p>
-          <h2>O próximo percurso<br />começa com um <br /><span>bom plano.</span></h2>
+          <p class="login-eyebrow"><span aria-hidden="true"></span> Logística em movimento</p>
+          <h2 id="login-story-title">
+            <span data-hero-line><span>O próximo</span></span>
+            <span data-hero-line><span>percurso começa</span></span>
+            <span class="login-title-accent" data-hero-line><span>com um bom plano.</span></span>
+          </h2>
           <p>Da escolha do percurso à conclusão da entrega, tudo em um só lugar.</p>
-          <div class="login-photo">
-            <img src="/assets/hero.png" alt="Estrada cercada por vegetação." /><span
-              >Conecte-se. Simule. Planeje sua operação.</span
+        </div>
+        <div class="login-aside-foot">
+          <div class="login-route" aria-hidden="true">
+            <span>Origem</span>
+            <svg viewBox="0 0 220 24" preserveAspectRatio="none">
+              <circle cx="4" cy="12" r="3" />
+              <path d="M12 12H80L94 4H130L144 12H208" />
+              <circle cx="216" cy="12" r="3" />
+            </svg>
+            <span>Destino</span>
+          </div>
+          <div class="login-scene-controls">
+            <span class="login-scene-caption">Cada trajeto, uma possibilidade.</span>
+            <button
+              class="login-video-toggle"
+              type="button"
+              data-video-toggle
+              data-video-target="#login-video"
+              aria-controls="login-video"
+              aria-pressed="false"
             >
+              <span data-video-label>Pausar filme</span>
+            </button>
           </div>
         </div>
-        <p class="login-aside-foot">
-          <span aria-hidden="true"></span> UrbanLink Flow · Planejamento urbano
-        </p>
       </aside>
       <main class="login-main" id="conteudo">
-        <div class="login-content">
+        <div class="login-main-head">
           <a href="/" class="login-back"
             ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 12H5M11 6l-6 6 6 6" />
             </svg>
             Voltar ao início</a
           >
+          <button class="login-motion-toggle" data-motion-toggle type="button" aria-pressed="false">
+            Reduzir movimento
+          </button>
+        </div>
+        <div class="login-content" data-reveal>
           <div class="login-heading">
-            <p class="eyebrow login-section-label">Sua área de trabalho</p>
+            <p class="eyebrow login-section-label"><span>01 /</span> Sua área de trabalho</p>
             <h1>Acessar a plataforma</h1>
             <p class="muted">Entre para acompanhar e planejar suas entregas.</p>
           </div>
@@ -92,7 +135,10 @@
             Precisa de acesso? O administrador da plataforma cadastra sua conta.
           </p>
         </div>
-        <p class="login-main-foot">UrbanLink Flow · Projeto Final</p>
+        <div class="login-main-foot">
+          <span>UrbanLink Flow</span>
+          <span>Planeje. Conecte. Entregue.</span>
+        </div>
       </main>
     </div>
   </body>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#151719" />
+    <title>A operação — UrbanLink Flow</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="motion.css" />
+    <script defer src="motion.js"></script>
+    <script defer src="concept.js"></script>
+  </head>
+  <body class="operation-page">
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+    <header class="site-header">
+      <div class="header-brand">
+        <a class="brand-shared" href="./" aria-label="UrbanLink Flow, início"
+          ><img
+            src="../assets/brand-logo-light.svg"
+            alt="UrbanLink Flow"
+            width="252"
+            height="44" /></a
+        ><span class="header-caption">PLANEJAR O PRÓXIMO MOVIMENTO.</span>
+      </div>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="./#visao">A visão</a><a href="./#metodo">O método</a
+        ><a href="operacao.html" aria-current="page"
+          >A operação <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-controls="concept-menu"
+        aria-expanded="false"
+      >
+        <span data-menu-label>Menu</span> <span aria-hidden="true">＋</span>
+      </button>
+    </header>
+    <button
+      class="motion-toggle"
+      type="button"
+      data-motion-toggle
+      aria-label="Ativar animações nesta prévia"
+      hidden
+    >
+      <span data-motion-label>Ativar animações</span> <span aria-hidden="true">↗</span>
+    </button>
+    <nav class="concept-menu" id="concept-menu" aria-label="Menu expandido" hidden>
+      <span class="micro">EXPLORE A URBANLINK</span
+      ><a href="./"><small>01</small> Início <span aria-hidden="true">↗</span></a
+      ><a href="./#visao"><small>02</small> A visão <span aria-hidden="true">↗</span></a
+      ><a href="./#metodo"><small>03</small> O método <span aria-hidden="true">↗</span></a
+      ><a href="operacao.html" aria-current="page"
+        ><small>04</small> A operação <span aria-hidden="true">↗</span></a
+      >
+      <p>Conectar a cidade começa com um bom plano.</p>
+    </nav>
+    <main id="conteudo" class="page-main">
+      <section class="operation-intro section-shell">
+        <div class="section-heading">
+          <a class="micro back-link" href="./">← VOLTAR À VISÃO</a
+          ><span class="micro muted">03 / A OPERAÇÃO</span>
+        </div>
+        <h1>
+          <span data-hero-line><span>CLAREZA PARA</span></span
+          ><span data-hero-line
+            ><span>SEGUIR <em>EM FRENTE.</em></span></span
+          >
+        </h1>
+        <div class="operation-description">
+          <p>Transforme possibilidades em um plano.<br />E acompanhe o plano em movimento.</p>
+          <span class="micro sample-label"
+            ><i class="signal-dot" aria-hidden="true"></i> PRÉVIA INTERATIVA / DADOS
+            ILUSTRATIVOS</span
+          >
+        </div>
+      </section>
+      <section class="console" aria-labelledby="console-title" data-reveal>
+        <div class="console-heading">
+          <div>
+            <span class="micro">URBANLINK / PLANEJAMENTO</span>
+            <h2 id="console-title">O próximo percurso.</h2>
+          </div>
+          <span class="micro console-tag">ESTUDO DE INTERFACE</span>
+        </div>
+        <div class="console-layout">
+          <div class="console-controls">
+            <div class="shipment">
+              <span class="micro muted">ENTREGA DEMONSTRATIVA — 001</span>
+              <div>
+                <i class="origin-dot" aria-hidden="true"></i>
+                <p><small>ORIGEM</small>Centro de distribuição</p>
+              </div>
+              <div>
+                <i class="destination-dot" aria-hidden="true"></i>
+                <p><small>DESTINO</small>Mercado Central</p>
+              </div>
+              <div class="shipment-details">
+                <span>CARGA <strong>100 kg</strong></span
+                ><span>PRAZO <strong>20 min</strong></span>
+              </div>
+            </div>
+            <fieldset class="scenario-picker">
+              <legend class="micro">CENÁRIO DE CIRCULAÇÃO</legend>
+              <div>
+                <button type="button" data-scenario="normal" aria-pressed="true">
+                  Normal <small>30 km/h</small></button
+                ><button type="button" data-scenario="lento" aria-pressed="false">
+                  Lenta <small>20 km/h</small>
+                </button>
+              </div>
+            </fieldset>
+            <div class="route-options" aria-label="Percursos disponíveis">
+              <button
+                class="route-option is-selected"
+                type="button"
+                data-route="central"
+                aria-pressed="true"
+              >
+                <span class="route-option-top"
+                  ><span class="micro">PERCURSO A</span
+                  ><span class="micro recommended-label">MENOR TEMPO ↗</span></span
+                ><span class="route-option-middle"
+                  ><span>Via Central<small>8 km de distância</small></span
+                  ><strong
+                    ><span data-route-time="central">16</span><small>min</small></strong
+                  ></span
+                ><span class="route-duration"><i style="--duration: 44%"></i></span>
+              </button>
+              <button class="route-option" type="button" data-route="parque" aria-pressed="false">
+                <span class="route-option-top"
+                  ><span class="micro">PERCURSO B</span><span class="micro">ALTERNATIVA</span></span
+                ><span class="route-option-middle"
+                  ><span>Via Parque<small>12 km de distância</small></span
+                  ><strong><span data-route-time="parque">24</span><small>min</small></strong></span
+                ><span class="route-duration"><i style="--duration: 67%"></i></span>
+              </button>
+            </div>
+            <p class="simulation-note">
+              As estimativas usam distância e velocidade média. O mapa representa percursos
+              ilustrativos.
+            </p>
+          </div>
+          <div class="console-map">
+            <div class="map-top micro">
+              <span><i class="signal-dot" aria-hidden="true"></i> VISUALIZAÇÃO DE PERCURSOS</span
+              ><span>ORIGEM → DESTINO</span>
+            </div>
+            <svg
+              viewBox="0 0 740 620"
+              class="operation-map-art"
+              role="img"
+              aria-label="Mapa esquemático com as alternativas Via Central e Via Parque"
+            >
+              <defs>
+                <pattern id="blocks" width="82" height="74" patternUnits="userSpaceOnUse">
+                  <rect
+                    x="10"
+                    y="10"
+                    width="54"
+                    height="45"
+                    rx="3"
+                    fill="#1c2329"
+                    stroke="#28323b"
+                    stroke-width="1"
+                  />
+                </pattern>
+                <linearGradient id="river">
+                  <stop stop-color="#203746" />
+                  <stop offset="1" stop-color="#18282f" />
+                </linearGradient>
+              </defs>
+              <rect width="740" height="620" fill="#171c21" />
+              <rect width="740" height="620" fill="url(#blocks)" />
+              <path
+                d="M-30 510C160 530 140 300 340 300S510 410 800 100"
+                stroke="url(#river)"
+                stroke-width="54"
+                fill="none"
+              />
+              <path
+                d="M-30 510C160 530 140 300 340 300S510 410 800 100"
+                stroke="#32444c"
+                stroke-width="1"
+                fill="none"
+              />
+              <g fill="none" stroke="#35404a">
+                <path d="M0 142H740M0 438H740M164 0V620M574 0V620" stroke-width="5" />
+                <path
+                  d="M0 142H740M0 438H740M164 0V620M574 0V620"
+                  stroke="#171c21"
+                  stroke-width="3"
+                />
+              </g>
+              <path
+                class="map-route map-route-parque"
+                data-map-route="parque"
+                pathLength="1"
+                d="M164 438H410V365H574V142"
+                stroke="#607789"
+                stroke-width="3"
+                stroke-dasharray=".012 .02"
+                fill="none"
+                stroke-linejoin="round"
+              />
+              <path
+                class="map-route map-route-central is-active"
+                data-map-route="central"
+                pathLength="1"
+                d="M164 438V290H246V142H574"
+                stroke="#95bcfa"
+                stroke-width="4"
+                fill="none"
+                stroke-linejoin="round"
+              />
+              <g fill="#171c21" stroke="#c0d8ff" stroke-width="2">
+                <circle cx="164" cy="438" r="11" />
+                <circle cx="574" cy="142" r="11" />
+              </g>
+              <g fill="#dbe8f4">
+                <circle cx="164" cy="438" r="3" />
+                <circle cx="574" cy="142" r="3" />
+              </g>
+              <g font-size="11" font-family="monospace" fill="#a6b4c1">
+                <text x="111" y="477">DISTRIBUIÇÃO</text>
+                <text x="534" y="113">MERCADO CENTRAL</text>
+                <text x="273" y="120">VIA CENTRAL</text>
+                <text x="450" y="395">VIA PARQUE</text>
+              </g>
+            </svg>
+            <div class="map-result" aria-live="polite" aria-atomic="true">
+              <span class="micro" id="selected-route-label">VIA CENTRAL / NORMAL</span>
+              <div>
+                <strong id="arrival-time">16 <small>min</small></strong
+                ><span class="arrival-status" id="arrival-status"
+                  >Dentro do prazo <span aria-hidden="true">↗</span></span
+                >
+              </div>
+              <p id="route-feedback">Previsão de chegada 4 minutos antes do prazo.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="operation-end section-shell" data-reveal>
+        <span class="micro muted">DA ESTRADA PARA A SUA VISÃO.</span>
+        <h2>Cada movimento<br />começa com uma <em>escolha.</em></h2>
+        <a href="./" class="outline-button"
+          >Voltar à experiência <span aria-hidden="true">↗</span></a
+        >
+      </section>
+    </main>
+    <footer class="site-footer">
+      <a href="./" aria-label="UrbanLink Flow, início"
+        ><img
+          src="../assets/brand-logo-light.svg"
+          alt="UrbanLink Flow"
+          width="252"
+          height="44" /></a
+      ><span>UM NOVO OLHAR PARA A LOGÍSTICA URBANA.</span
+      ><span>ESTUDO VISUAL · 01 <a href="/assets/media/media-sources.md">CRÉDITOS ↗</a></span>
+    </footer>
+  </body>
+</html>

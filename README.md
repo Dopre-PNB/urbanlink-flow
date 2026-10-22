@@ -70,14 +70,14 @@ Veja o roteiro completo em [docs/roteiro-apresentacao.md](docs/roteiro-apresenta
 
 ## Páginas
 
-| Página           | Finalidade                                                |
-| ---------------- | --------------------------------------------------------- |
-| `index.html`     | Apresentação pública inspirada no design fornecido.       |
-| `login.html`     | Entrada única para administrador e operador.              |
-| `painel.html`    | Indicadores e últimas entregas.                           |
-| `entregas.html`  | Cadastro, busca, filtro por status/data e acompanhamento. |
-| `simulacao.html` | Comparação de percursos, cenários, histórico e mapa.      |
-| `cadastros.html` | Abas de veículos, rotas e usuários, para administrador.   |
+| Página           | Finalidade                                                  |
+| ---------------- | ----------------------------------------------------------- |
+| `index.html`     | Apresentação com vídeos de logística e acesso à plataforma. |
+| `login.html`     | Entrada única para administrador e operador.                |
+| `painel.html`    | Indicadores e últimas entregas.                             |
+| `entregas.html`  | Cadastro, busca, filtro por status/data e acompanhamento.   |
+| `simulacao.html` | Comparação de percursos, cenários, histórico e mapa.        |
+| `cadastros.html` | Abas de veículos, rotas e usuários, para administrador.     |
 
 Agenda corresponde ao filtro por data em Entregas. Mapa é uma seção de Simulação. O menu mantém as referências do design sem acrescentar outras páginas.
 

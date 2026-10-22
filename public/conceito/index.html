@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="UrbanLink Flow. Uma nova perspectiva para a logística urbana. Estudo visual interativo."
+    />
+    <meta name="theme-color" content="#151719" />
+    <title>UrbanLink Flow — A cidade em movimento</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="../assets/fonts/InterVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="motion.css" />
+    <script defer src="motion.js"></script>
+    <script defer src="concept.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+    <header class="site-header">
+      <div class="header-brand">
+        <a class="brand-shared" href="./" aria-label="UrbanLink Flow, início"
+          ><img src="../assets/brand-logo-light.svg" alt="UrbanLink Flow" width="252" height="44"
+        /></a>
+        <span class="header-caption">PLANEJAR O PRÓXIMO MOVIMENTO.</span>
+      </div>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="#visao">A visão</a><a href="#metodo">O método</a
+        ><a href="operacao.html">A operação <span aria-hidden="true">↗</span></a>
+      </nav>
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-controls="concept-menu"
+        aria-expanded="false"
+      >
+        <span data-menu-label>Menu</span> <span aria-hidden="true">＋</span>
+      </button>
+    </header>
+    <button
+      class="motion-toggle"
+      type="button"
+      data-motion-toggle
+      aria-label="Ativar animações nesta prévia"
+      hidden
+    >
+      <span data-motion-label>Ativar animações</span> <span aria-hidden="true">↗</span>
+    </button>
+    <nav class="concept-menu" id="concept-menu" aria-label="Menu expandido" hidden>
+      <span class="micro">EXPLORE A URBANLINK</span>
+      <a href="./"><small>01</small> Início <span aria-hidden="true">↗</span></a>
+      <a href="#visao"><small>02</small> A visão <span aria-hidden="true">↗</span></a>
+      <a href="#metodo"><small>03</small> O método <span aria-hidden="true">↗</span></a>
+      <a href="operacao.html"><small>04</small> A operação <span aria-hidden="true">↗</span></a>
+      <p>Conectar a cidade começa com um bom plano.</p>
+    </nav>
+    <main id="conteudo" class="page-main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" data-hero-media>
+          <video
+            id="hero-video"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="/assets/media/hero-truck.jpg"
+            aria-label="Vista aérea de caminhões percorrendo uma rodovia"
+          >
+            <source src="/assets/media/hero-truck.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="technical-grid" aria-hidden="true">
+          <i></i><i></i><i></i><span class="cross cross-one">+</span
+          ><span class="cross cross-two">+</span>
+        </div>
+        <div class="hero-topline micro">
+          <span>LOGÍSTICA URBANA / NOVAS PERSPECTIVAS</span><span>URBANLINK — FLOW</span>
+        </div>
+        <h1 class="hero-title" id="hero-title">
+          <span data-hero-line><span>A CIDADE</span></span>
+          <span class="hero-title-offset" data-hero-line><span>EM MOVIMENTO.</span></span>
+          <span class="hero-title-last" data-hero-line><span>VOCÊ NO CONTROLE.</span></span>
+        </h1>
+        <div class="hero-bottom">
+          <p>
+            Entre a origem e o destino,<br />existe um mundo de decisões.<br /><strong
+              >Planeje o próximo passo.</strong
+            >
+          </p>
+          <a class="scroll-cue micro" href="#visao"
+            ><span class="scroll-line" aria-hidden="true"></span>ROLE PARA EXPLORAR
+            <span aria-hidden="true">↓</span></a
+          >
+          <button
+            class="video-toggle micro"
+            type="button"
+            data-video-toggle
+            aria-controls="hero-video"
+            aria-label="Pausar vídeo"
+          >
+            <span aria-hidden="true">Ⅱ</span> <span data-video-label>Pausar vídeo</span>
+          </button>
+        </div>
+        <span class="hero-side-label micro" aria-hidden="true">ORIGEM — PERCURSO — DESTINO</span>
+      </section>
+
+      <section class="vision section-shell" id="visao" aria-labelledby="vision-title">
+        <div class="section-heading" data-reveal>
+          <span class="micro">01 / A VISÃO</span
+          ><span class="micro muted">CONEXÕES QUE FAZEM SENTIDO</span>
+        </div>
+        <div class="vision-statement">
+          <h2 id="vision-title" data-reveal>A logística é sobre<br />o que vem <em>depois.</em></h2>
+          <div class="vision-copy" data-reveal>
+            <p>O próximo destino. A próxima entrega. A próxima decisão.</p>
+            <p>
+              Conectamos o planejamento à operação para você enxergar possibilidades, comparar
+              percursos e acompanhar cada etapa com clareza.
+            </p>
+            <a class="text-link" href="operacao.html"
+              >Uma nova visão da operação <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </div>
+        <div class="route-stage" data-reveal>
+          <div class="route-stage-header micro">
+            <span><i class="signal-dot" aria-hidden="true"></i> DO PLANO AO PERCURSO</span
+            ><span>VISUALIZAÇÃO CONCEITUAL</span>
+          </div>
+          <svg
+            class="route-art"
+            viewBox="0 0 1200 420"
+            role="img"
+            aria-label="Diagrama ilustrativo de caminhos que conectam o centro de distribuição a uma entrega urbana"
+          >
+            <defs>
+              <pattern
+                id="city-blocks"
+                width="100"
+                height="78"
+                patternUnits="userSpaceOnUse"
+                patternTransform="skewX(-25)"
+              >
+                <rect
+                  x="8"
+                  y="8"
+                  width="76"
+                  height="52"
+                  rx="2"
+                  fill="none"
+                  stroke="#a9b9c3"
+                  stroke-opacity=".1"
+                />
+              </pattern>
+              <linearGradient id="path-ink">
+                <stop stop-color="#75aaff" />
+                <stop offset="1" stop-color="#d5e5ff" />
+              </linearGradient>
+            </defs>
+            <rect width="1200" height="420" fill="url(#city-blocks)" />
+            <g class="route-context" fill="none" stroke="#4a535a" stroke-width="1">
+              <path
+                d="M0 85h350l125 125h725M0 300h490l160-155h550M190 0v170L430 420M825 0 610 420M1060 0 850 420"
+              />
+              <path d="M0 100h344l125 125h731M0 315h495l160-155h545" />
+            </g>
+            <path
+              class="route-alt"
+              d="M135 290H410L535 155H760L875 260H1080"
+              fill="none"
+              stroke="#536775"
+              stroke-width="2"
+              stroke-dasharray="5 8"
+            />
+            <path
+              class="route-trace"
+              pathLength="1"
+              d="M135 290H310L480 100H705L875 260H1080"
+              fill="none"
+              stroke="url(#path-ink)"
+              stroke-width="3"
+            />
+            <g fill="#151719" stroke="#c0d8ff" stroke-width="2">
+              <circle cx="135" cy="290" r="8" />
+              <circle cx="480" cy="100" r="6" />
+              <circle cx="875" cy="260" r="6" />
+              <circle cx="1080" cy="260" r="8" />
+            </g>
+            <circle class="route-traveler" cx="0" cy="0" r="5" fill="#f2f3ec" />
+            <g fill="#a3b0ba" font-family="monospace" font-size="12">
+              <text x="105" y="327">ORIGEM</text>
+              <text x="447" y="75">PERCURSO A</text>
+              <text x="600" y="182">PERCURSO B</text>
+              <text x="1042" y="298">DESTINO</text>
+            </g>
+          </svg>
+          <div class="route-stage-footer micro">
+            <span>UM DESTINO. MAIS POSSIBILIDADES.</span
+            ><span>PLANEJAR / COMPARAR / ACOMPANHAR</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="method" id="metodo" aria-labelledby="method-title">
+        <div class="method-sticky">
+          <div class="method-visual">
+            <video
+              id="method-video"
+              data-motion-video
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="/assets/media/logistics-detail.jpg"
+              aria-label="Operação de entrega entre um galpão e uma van"
+            >
+              <source src="/assets/media/logistics-detail.mp4" type="video/mp4" />
+            </video>
+            <div class="method-visual-shade" aria-hidden="true"></div>
+            <div class="method-visual-top micro">
+              <span>02 / O MÉTODO</span><span>DA IDEIA À ENTREGA</span>
+            </div>
+            <div class="method-visual-title">
+              <p class="micro">CADA ETAPA IMPORTA.</p>
+              <h2 id="method-title">Um bom plano.<br />Um novo<br /><em>caminho.</em></h2>
+            </div>
+            <div class="method-visual-bottom">
+              <span class="micro">URBANLINK FLOW</span
+              ><button
+                class="video-toggle micro"
+                type="button"
+                data-video-toggle
+                data-video-target="#method-video"
+                aria-controls="method-video"
+              >
+                <span aria-hidden="true">Ⅱ</span><span data-video-label>Pausar vídeo</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="method-steps">
+          <article class="method-step" data-reveal>
+            <div class="step-top micro">
+              <span>01 — PLANEJAR</span><span class="step-dots" aria-hidden="true">● ○ ○</span>
+            </div>
+            <span class="step-glyph" aria-hidden="true">↗</span>
+            <h3>Antes da partida,<br />uma direção.</h3>
+            <p>
+              Origem, destino, carga e prazo. Organize o que precisa chegar antes de colocar a
+              operação em movimento.
+            </p>
+            <span class="step-keyword" aria-hidden="true">PLANEJAR.</span>
+          </article>
+          <article class="method-step" data-reveal>
+            <div class="step-top micro">
+              <span>02 — COMPARAR</span><span class="step-dots" aria-hidden="true">○ ● ○</span>
+            </div>
+            <span class="step-glyph" aria-hidden="true">⇄</span>
+            <h3>O caminho muda.<br />A decisão evolui.</h3>
+            <p>
+              Compare percursos em diferentes cenários de circulação e entenda como cada alternativa
+              influencia a previsão de chegada.
+            </p>
+            <span class="step-keyword" aria-hidden="true">COMPARAR.</span>
+          </article>
+          <article class="method-step" data-reveal>
+            <div class="step-top micro">
+              <span>03 — ACOMPANHAR</span><span class="step-dots" aria-hidden="true">○ ○ ●</span>
+            </div>
+            <span class="step-glyph" aria-hidden="true">◎</span>
+            <h3>Cada entrega,<br />na sua visão.</h3>
+            <p>
+              Consulte o andamento das entregas e os indicadores da operação. Informação clara para
+              o próximo movimento.
+            </p>
+            <span class="step-keyword" aria-hidden="true">CONECTAR.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="next-section section-shell" aria-labelledby="next-title">
+        <div class="section-heading" data-reveal>
+          <span class="micro">03 / A OPERAÇÃO</span
+          ><span class="micro muted">EXPLORE UMA NOVA PERSPECTIVA</span>
+        </div>
+        <a class="next-page" href="operacao.html" data-reveal
+          ><h2 id="next-title">Veja o próximo<br /><em>movimento.</em></h2>
+          <span class="next-arrow" aria-hidden="true">↗</span></a
+        >
+        <div class="next-bottom">
+          <p>Do planejamento ao acompanhamento.<br />Explore a proposta da plataforma.</p>
+          <a class="outline-button" href="operacao.html"
+            >Explorar a operação <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <a href="./" aria-label="UrbanLink Flow, início"
+        ><img
+          src="../assets/brand-logo-light.svg"
+          alt="UrbanLink Flow"
+          width="252"
+          height="44" /></a
+      ><span>UM NOVO OLHAR PARA A LOGÍSTICA URBANA.</span
+      ><span
+        >ESTUDO VISUAL · 01
+        <a href="/assets/media/media-sources.md" aria-label="Créditos dos vídeos"
+          >CRÉDITOS ↗</a
+        ></span
+      >
+    </footer>
+  </body>
+</html>

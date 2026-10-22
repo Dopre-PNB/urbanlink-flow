@@ -3,18 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#151719" />
     <title>Cadastros — UrbanLink Flow</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/workspace.css" />
+    <link rel="stylesheet" href="/css/motion.css" />
     <script defer src="/js/app.js"></script>
+    <script defer src="/js/motion.js"></script>
     <script defer src="/js/cadastros.js"></script>
   </head>
   <body class="app-page">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <header id="app-header" class="app-header"></header>
-    <main id="conteudo" class="container records-page">
-      <div class="page-heading">
+    <main id="conteudo" class="container records-page page-main">
+      <div class="page-heading" data-reveal>
         <div>
           <div class="eyebrow">Operação <span aria-hidden="true">/</span> Administração</div>
           <h1>Cadastros da plataforma</h1>
@@ -23,7 +26,7 @@
         <button id="new-record" class="btn" type="button">+ Novo veículo</button>
       </div>
       <div id="page-error" class="form-error" role="alert" hidden></div>
-      <div class="tabs" role="tablist" aria-label="Tipos de cadastro">
+      <div class="tabs" data-reveal role="tablist" aria-label="Tipos de cadastro">
         <button
           id="tab-veiculos"
           role="tab"
@@ -58,6 +61,7 @@
       <section
         id="records-panel"
         class="card table-card"
+        data-reveal
         role="tabpanel"
         aria-labelledby="tab-veiculos"
       >

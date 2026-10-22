@@ -1,0 +1,211 @@
+/*
+ * Motion hooks are documented in motion.js. All content is visible without JS.
+ * Native cross-document transitions work in supporting browsers; navigation
+ * remains ordinary HTML navigation elsewhere. Only one .brand-shared per page.
+ */
+@view-transition {
+  navigation: auto;
+}
+
+:root {
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --scroll-progress: 0;
+}
+
+.brand-shared {
+  view-transition-name: urbanlink-brand;
+}
+
+::view-transition-group(root) {
+  animation-duration: 800ms;
+  animation-timing-function: var(--motion-out);
+}
+
+::view-transition-old(root) {
+  animation: concept-page-out 580ms var(--motion-out) both;
+}
+
+::view-transition-new(root) {
+  animation: concept-page-in 800ms var(--motion-out) both;
+}
+
+::view-transition-group(urbanlink-brand) {
+  z-index: 3;
+  animation-duration: 700ms;
+  animation-timing-function: var(--motion-ease);
+}
+
+::view-transition-old(urbanlink-brand),
+::view-transition-new(urbanlink-brand) {
+  mix-blend-mode: normal;
+  height: 100%;
+}
+
+@keyframes concept-page-out {
+  to {
+    transform: translateY(-3%);
+    filter: brightness(0.68);
+  }
+}
+
+@keyframes concept-page-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(4%);
+  }
+  to {
+    clip-path: inset(0);
+    transform: translateY(0);
+  }
+}
+
+.motion-ready [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0);
+  transition:
+    opacity 800ms var(--motion-ease) var(--reveal-delay, 0ms),
+    transform 1000ms var(--motion-ease) var(--reveal-delay, 0ms);
+}
+
+.motion-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+[data-hero-line] {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.07em;
+  margin-bottom: -0.07em;
+}
+
+[data-hero-line] > span {
+  display: block;
+}
+
+.motion-ready [data-hero-line] > span {
+  animation: concept-line-in 1100ms var(--motion-ease) var(--line-delay, 80ms) both;
+}
+
+@keyframes concept-line-in {
+  from {
+    transform: translate3d(0, 112%, 0) rotate(1.5deg);
+    opacity: 0.25;
+  }
+  to {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+[data-hero-media] {
+  transform: translate3d(0, var(--hero-travel, 0px), 0) scale(var(--hero-scale, 1.035));
+  transform-origin: center center;
+  backface-visibility: hidden;
+}
+
+#concept-menu {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path 650ms var(--motion-out),
+    opacity 300ms ease,
+    visibility 0s 650ms;
+}
+
+#concept-menu.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  clip-path: inset(0);
+  transition:
+    clip-path 650ms var(--motion-out),
+    opacity 300ms ease,
+    visibility 0s;
+}
+
+#concept-menu a {
+  display: flex;
+  transform: translate3d(0, 24px, 0);
+  opacity: 0;
+  transition:
+    transform 600ms var(--motion-ease),
+    opacity 450ms ease;
+}
+
+#concept-menu.is-open a {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition-delay: 170ms;
+}
+
+#concept-menu.is-open a:nth-child(2) {
+  transition-delay: 230ms;
+}
+
+#concept-menu.is-open a:nth-child(3) {
+  transition-delay: 290ms;
+}
+
+.menu-open,
+.menu-open body {
+  overflow: hidden;
+}
+
+[data-video-toggle] {
+  touch-action: manipulation;
+}
+
+html.motion-reduced {
+  scroll-behavior: auto !important;
+}
+
+html.motion-reduced.motion-ready [data-reveal],
+html.motion-reduced.motion-ready [data-hero-line] > span,
+html.motion-reduced [data-hero-media],
+html.motion-reduced #concept-menu,
+html.motion-reduced #concept-menu a {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+html.motion-reduced.motion-ready [data-reveal] {
+  opacity: 1 !important;
+}
+
+html.motion-reduced::view-transition-group(*),
+html.motion-reduced::view-transition-old(*),
+html.motion-reduced::view-transition-new(*) {
+  animation: none !important;
+}
+
+/* Respect the device before JavaScript initializes, but allow explicit preview. */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.motion-enabled) {
+    scroll-behavior: auto !important;
+  }
+
+  html:not(.motion-enabled).motion-ready [data-reveal],
+  html:not(.motion-enabled).motion-ready [data-hero-line] > span,
+  html:not(.motion-enabled) [data-hero-media],
+  html:not(.motion-enabled) #concept-menu,
+  html:not(.motion-enabled) #concept-menu a {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  html:not(.motion-enabled).motion-ready [data-reveal] {
+    opacity: 1 !important;
+  }
+
+  html:not(.motion-enabled)::view-transition-group(*),
+  html:not(.motion-enabled)::view-transition-old(*),
+  html:not(.motion-enabled)::view-transition-new(*) {
+    animation: none !important;
+  }
+}
