@@ -1234,14 +1234,3 @@ td code {
     padding: 20px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  html:not(.motion-enabled) {
-    scroll-behavior: auto;
-  }
-  html:not(.motion-enabled) *,
-  html:not(.motion-enabled) *::before,
-  html:not(.motion-enabled) *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
-}

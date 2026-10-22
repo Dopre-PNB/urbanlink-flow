@@ -120,13 +120,6 @@ button {
   backdrop-filter: blur(18px);
   border-bottom: 1px solid #ffffff16;
 }
-html.motion-reduced *,
-html.motion-reduced *::before,
-html.motion-reduced *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-}
 .hero-title > span:nth-child(2) {
   --line-delay: 190ms;
 }
@@ -348,10 +341,11 @@ html.motion-reduced *::after {
   line-height: 1.04;
   font-weight: 480;
   letter-spacing: -0.065em;
-  width: 100%;
-  padding: 35px 8vw 70px;
+  width: fit-content;
+  max-width: 88%;
+  padding: 35px 0 70px;
   margin: 85px auto 0;
-  text-align: center;
+  text-align: left;
   text-shadow: 0 2px 20px #00000016;
 }
 .hero-title > span {
@@ -736,7 +730,6 @@ em {
   }
   .hero-title {
     font-size: 8.1vw;
-    padding-inline: 5vw;
   }
   .hero-title .hero-title-last {
     font-size: 0.61em;
@@ -793,7 +786,7 @@ em {
     display: none;
   }
   .hero-title {
-    padding: 0 6vw 80px;
+    padding: 0 0 80px;
     margin-top: 50px;
     font-size: 9.2vw;
     line-height: 1.13;
@@ -1010,18 +1003,6 @@ em {
   .operation-end {
     padding-top: 35px;
     padding-bottom: 65px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  html:not(.motion-enabled) {
-    scroll-behavior: auto;
-  }
-  html:not(.motion-enabled) *,
-  html:not(.motion-enabled) *::before,
-  html:not(.motion-enabled) *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }
 
