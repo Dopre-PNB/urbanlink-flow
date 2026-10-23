@@ -105,6 +105,10 @@ button {
 .section-shell {
   padding-inline: clamp(24px, 5.5vw, 104px);
 }
+.anchor-alias {
+  display: block;
+  height: 0;
+}
 .site-header {
   position: fixed;
   top: 0;
