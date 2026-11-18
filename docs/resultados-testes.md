@@ -1,5 +1,15 @@
 # Resultados da verificação
 
+## Conferência dos cinco requisitos da entrega — 18/11/2026
+
+- O GitHub público continha o código-fonte da aplicação e a documentação. A verificação encontrou **96 links relativos válidos** em 20 arquivos Markdown após a reorganização. A formatação e a revisão das alterações passaram.
+- A instalação foi executada em uma cópia limpa extraída do ZIP, sem `.env`, dependências ou banco prévio. `npm.cmd ci` instalou as dependências, `npm.cmd run demo` criou a configuração e iniciou MySQL e aplicação, e **32 testes locais passaram**.
+- Os SQL completos da pasta `arquivos-adicionais/sql/` foram validados com MySQL 8.0.46 e com PostgreSQL 18.6 em memória via PGlite. Em cada banco, a estrutura e a carga foram executadas duas vezes, preservando os registros e suas edições. Foram conferidos os vínculos e a compatibilidade dos hashes com as duas contas locais de demonstração. A verificação em PGlite cobre a criação das tabelas e a carga. O comando de criar a base PostgreSQL é próprio do cliente `psql`. [Guia dos scripts](../arquivos-adicionais/README.md)
+- Os diagramas foram comparados aos dois esquemas físicos. A notação Mermaid do modelo conceitual e do DER foi corrigida para representar vínculos não identificadores e as duas referências opcionais.
+- A revisão confirmou a página pública, o login e a documentação interativa no navegador interno. A API pública informou `status: ok` e `banco: conectado`. Em uma nova execução com as credenciais privadas de avaliação, a suíte de API e serviços aprovou **32 testes**.
+- A conta de operador abriu a entrega de avaliação, que continuava pendente e com prazo de 20 minutos. A previsão retornou 16 e 24 minutos no cenário normal e 24 e 36 no lento. A consulta preservou a entrega disponível para o avaliador.
+- A primeira execução no Chrome aprovou 20 de 21 cenários. A checagem final apontou uma exceção do navegador em transições para a tela de login e para o painel. A ativação da transição passou a ocorrer no cabeçalho das duas páginas. O Render publicou a correção `2878bb8` às 17h03 (Brasília). Na versão corrigida, a suíte de interface aprovou **21 de 21 cenários**, incluindo navegação, perfis, cadastros, entregas, simulação, filtros, mapa, documentação interativa e adaptação a celular e tablet.
+
 ## Revisão dos arquivos de entrega — 18/11/2026
 
 Ambiente Windows, Node.js 24.18.0, aplicação em `http://127.0.0.1:3000` e MySQL 8 dedicado na porta 3307. Dependências instaladas com `npm.cmd ci`; aplicação iniciada com `npm.cmd run demo`, preservando dados existentes.
