@@ -2,9 +2,51 @@
 
 Projeto final de Desenvolvimento de Sistemas: plataforma web simples para cadastrar entregas, comparar percursos e acompanhar uma operação logística. O back-end segue as aulas de Node.js, Express e Sequelize, com MySQL na demonstração local. A publicação gratuita no Render usa PostgreSQL, por solicitação do responsável pelo projeto. As páginas usam HTML, CSS e JavaScript puro.
 
+## Links e arquivos da entrega
+
+- **GitHub:** [Dopre-PNB/urbanlink-flow](https://github.com/Dopre-PNB/urbanlink-flow).
+- **Endereço publicado:** [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com).
+- **Instalação, configuração e uso:** [guia completo](docs/instalacao-e-uso.md).
+- **Banco de dados:** [modelo conceitual](docs/modelo-conceitual.md), [modelo lógico](docs/modelo-logico.md) e [DER](docs/der.md).
+- **Arquivos adicionais:** [scripts SQL de criação/inserção e instruções](arquivos-adicionais/README.md).
+- **Índice dos requisitos:** [conferência da entrega](docs/entrega.md).
+
+## Objetivo do sistema
+
+Centralizar os cadastros e o acompanhamento das entregas e apoiar a escolha de um percurso com base na distância, no cenário de circulação e no prazo informado. A simulação tem finalidade didática e permite comparar alternativas antes de vincular uma rota à entrega.
+
+## Funcionalidades
+
+- Login com e-mail/senha e permissões de administrador e operador.
+- Cadastro e manutenção de usuários, veículos e rotas pelo administrador.
+- Criação e edição de entregas com origem, destino, peso, prazo, data e veículo.
+- Busca, paginação e filtros por status e data.
+- Atualização do estado da entrega, com controle da capacidade e disponibilidade do veículo.
+- Comparação de rotas alternativas nos cenários normal e lento, recomendação e conferência do prazo.
+- Registro, consulta, recálculo e exclusão de simulações com autoria e histórico dos resultados.
+- Visualização ilustrativa de percursos em mapa e painel de indicadores.
+- Documentação interativa da API com Swagger/OpenAPI.
+
+## Tecnologias utilizadas
+
+| Camada                     | Tecnologias                                               |
+| -------------------------- | --------------------------------------------------------- |
+| Interface                  | HTML5, CSS3, JavaScript, Inter e Lenis servido localmente |
+| Mapa                       | Leaflet e OpenStreetMap                                   |
+| Servidor/API               | Node.js 22 a 24, Express 5 e Sequelize 6                  |
+| Persistência               | MySQL 8 local e PostgreSQL na hospedagem                  |
+| Autenticação               | JSON Web Token (JWT) e bcrypt                             |
+| Documentação               | Markdown, diagramas Mermaid/SVG e OpenAPI 3/Swagger UI    |
+| Verificação                | Node Test Runner, Playwright e Prettier                   |
+| Versionamento e publicação | Git, GitHub e Render; configuração em `render.yaml`       |
+
+As versões exatas das dependências ficam em [package-lock.json](package-lock.json).
+
 ## Publicar no GitHub e no Render
 
-O site está publicado em [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com), com site/API e PostgreSQL no próprio Render, ambos no plano Free. A publicação e o fluxo completo foram verificados em 08/10/2026. O código está no [GitHub](https://github.com/Dopre-PNB/urbanlink-flow). O arquivo `render.yaml` e o [passo a passo de publicação](docs/publicacao-github-render.md) registram a configuração. Em produção, o primeiro administrador usa credenciais privadas configuradas no Render e as contas de demonstração não são criadas.
+O endereço configurado é [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com), com site/API e PostgreSQL no próprio Render, ambos no plano Free. A última verificação completa registrada da hospedagem é de 08/10/2026. **Na conferência de 18/11/2026, o endereço apresentou a tela de inicialização do Render e a API não respondeu dentro de 25 segundos; o funcionamento público ainda precisa ser restabelecido e validado.** O banco gratuito original tinha expiração prevista para 07/11/2026. O requisito de site funcionando continua pendente até a nova validação.
+
+O código está no [GitHub](https://github.com/Dopre-PNB/urbanlink-flow). O arquivo `render.yaml` e o [passo a passo de publicação](docs/publicacao-github-render.md) registram a configuração. Em produção, o primeiro administrador usa credenciais privadas configuradas no Render e as contas de demonstração não são criadas. O responsável deve fornecer acesso ao avaliador por um canal privado para permitir os testes das funções protegidas.
 
 O site gratuito hiberna após 15 minutos sem acesso. O PostgreSQL gratuito expira após 30 dias; essa validade é independente da hibernação do site. Nenhuma conversão para plano pago faz parte desta configuração. Veja as [limitações oficiais do Render Free](https://render.com/docs/free).
 
@@ -13,7 +55,7 @@ O site gratuito hiberna após 15 minutos sem acesso. O PostgreSQL gratuito expir
 Requisitos: Node.js 22 a 24 e MySQL 8 ou superior. No PowerShell, entre nesta pasta e execute:
 
 ```powershell
-npm.cmd install
+npm.cmd ci
 ```
 
 A forma mais simples de apresentar usando a instância dedicada é:
@@ -29,7 +71,7 @@ Também é possível executar as etapas separadamente:
 **MySQL já instalado:** copie a configuração de exemplo e edite `.env` com endereço, porta, usuário e senha de uma conta que possa criar o banco `urbanlink_flow`. Depois:
 
 ```powershell
-Copy-Item .env.example .env
+if (-not (Test-Path -LiteralPath '.env')) { Copy-Item -LiteralPath '.env.example' -Destination '.env' }
 npm.cmd run db:setup
 npm.cmd start
 ```
@@ -90,9 +132,13 @@ Os pontos no mapa ilustram o percurso cadastrado. A aplicação não calcula dis
 ## Estrutura e documentação
 
 ```text
+arquivos-adicionais/      instruções e entradas SQL para criação/inserção
 database/schema.sql       modelo físico MySQL, PK, FK e índices
 database/schema-postgres.sql modelo físico PostgreSQL para o Render
+database/seed.sql         dados demonstrativos em SQL MySQL
+database/seed-postgres.sql dados demonstrativos em SQL PostgreSQL
 docs/                     requisitos, modelos, OpenAPI, testes e apresentação
+docs/diagramas/           diagramas visuais e fontes editáveis
 public/                   seis páginas, CSS, JavaScript e imagens
 scripts/                  configuração MySQL local, setup e dados iniciais
 src/config/               ambiente e conexão Sequelize
@@ -110,6 +156,10 @@ Documentos principais:
 - [Requisitos e regras](docs/requisitos.md)
 - [Modelo conceitual](docs/modelo-conceitual.md)
 - [Modelo lógico](docs/modelo-logico.md)
+- [Diagrama Entidade-Relacionamento (DER)](docs/der.md)
+- [Instalação e uso](docs/instalacao-e-uso.md)
+- [Arquivos adicionais e scripts SQL](arquivos-adicionais/README.md)
+- [Índice da entrega](docs/entrega.md)
 - [Matriz de rastreabilidade](docs/matriz-rastreabilidade.md)
 - [Plano e casos de teste](docs/plano-de-testes.md)
 - [OpenAPI 3](docs/openapi.json)
@@ -117,6 +167,20 @@ Documentos principais:
 - [Publicação no GitHub e no Render](docs/publicacao-github-render.md)
 
 Os modelos físicos estão em [database/schema.sql](database/schema.sql), para MySQL, e [database/schema-postgres.sql](database/schema-postgres.sql), para PostgreSQL. A variável `DATABASE_URL` seleciona PostgreSQL; sem ela, a aplicação usa a configuração MySQL `DB_*`. Os dois bancos usam as mesmas cinco entidades e regras da plataforma. A API segue `/api` e retorna `{ dados }` nas consultas individuais; as listas retornam `{ dados, total, pagina, limite }`. Utilize o token de login no cabeçalho `Authorization: Bearer ...`.
+
+## Modelagem do banco de dados
+
+![Diagrama Entidade-Relacionamento](docs/diagramas/der.svg)
+
+| Entidade     | Finalidade e vínculos                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| `usuarios`   | Acesso e perfil; identifica o autor da entrega e o autor/editor das simulações.                          |
+| `veiculos`   | Placa, capacidade e estado; pode atender várias entregas ao longo do tempo.                              |
+| `rotas`      | Origem, destino, distância e pontos; pode ser vinculada a entregas e recomendada em simulações.          |
+| `entregas`   | Carga, prazo, data e estado; exige usuário e veículo, e admite rota ainda não definida.                  |
+| `simulacoes` | Resultado e retrato das alternativas; pertence a uma entrega, rota recomendada e autor; editor opcional. |
+
+Os sete relacionamentos são 1:N. `entregas.rota_id` e `simulacoes.atualizado_por_id` são opcionais; os demais vínculos são obrigatórios. Cada tabela tem chave primária `id`. Os [modelos na pasta de documentação](docs/der.md) detalham cardinalidades, atributos, chaves e restrições. Os [scripts SQL adicionais](arquivos-adicionais/README.md) indicam a ordem de criação do banco/tabelas e inserção dos dados.
 
 ## Verificação
 

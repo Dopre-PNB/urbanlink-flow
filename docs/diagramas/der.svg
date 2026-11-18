@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1430" viewBox="0 0 1640 1430" role="img" aria-labelledby="title desc">
+<title id="title">UrbanLink Flow · Diagrama Entidade-Relacionamento</title><desc id="desc">Cinco entidades e sete relacionamentos do UrbanLink Flow. Somente a rota escolhida da entrega e o último atualizador da simulação são opcionais.</desc>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#173048}.title{font-size:32px;font-weight:700}.subtitle{font-size:17px;fill:#526b80}.name{font-size:23px;font-weight:700;fill:#fff}.body{font-size:18px}.row{font-family:Consolas,monospace;font-size:17px}.label{font-size:16px;font-weight:700;paint-order:stroke;stroke:#f4f7fb;stroke-width:8px;stroke-linejoin:round}.small{font-size:15px;fill:#526b80}.key{fill:#006a70;font-weight:700}.line{fill:none;stroke:#386f94;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.optional{stroke:#965989;stroke-dasharray:7 5}.point{fill:#386f94}.card{fill:#fff;stroke:#b9cbd9;stroke-width:1.5}</style>
+<rect width="1640" height="1430" fill="#f4f7fb"/>
+<text x="48" y="56" class="title" text-anchor="start">UrbanLink Flow · Diagrama Entidade-Relacionamento</text>
+<text x="48" y="90" class="subtitle" text-anchor="start">PK = chave primária · FK = chave estrangeira · UQ = único · ? = aceita NULL · cardinalidades explícitas nas relações</text>
+<rect class="card" x="60" y="160" width="450" height="279" rx="10"/>
+<path d="M70,160 H500 Q510,160 510,170 V214 H60 V170 Q60,160 70,160" fill="#123d55"/>
+<text x="80" y="195" class="name" text-anchor="start">usuarios</text>
+<text x="80" y="240" class="row" text-anchor="start">PK     id: inteiro gerado</text>
+<text x="80" y="269" class="row" text-anchor="start">       nome: texto(100)</text>
+<text x="80" y="298" class="row" text-anchor="start">UQ     email: texto(150)</text>
+<text x="80" y="327" class="row" text-anchor="start">       senha_hash: texto(255)</text>
+<text x="80" y="356" class="row" text-anchor="start">       tipo: domínio</text>
+<text x="80" y="385" class="row" text-anchor="start">       createdAt: data/hora</text>
+<text x="80" y="414" class="row" text-anchor="start">       updatedAt: data/hora</text>
+<rect class="card" x="600" y="160" width="440" height="279" rx="10"/>
+<path d="M610,160 H1030 Q1040,160 1040,170 V214 H600 V170 Q600,160 610,160" fill="#123d55"/>
+<text x="620" y="195" class="name" text-anchor="start">veiculos</text>
+<text x="620" y="240" class="row" text-anchor="start">PK     id: inteiro gerado</text>
+<text x="620" y="269" class="row" text-anchor="start">       nome: texto(100)</text>
+<text x="620" y="298" class="row" text-anchor="start">UQ     placa: texto(15)</text>
+<text x="620" y="327" class="row" text-anchor="start">       capacidade_kg: decimal(10,2)</text>
+<text x="620" y="356" class="row" text-anchor="start">       status: domínio</text>
+<text x="620" y="385" class="row" text-anchor="start">       createdAt: data/hora</text>
+<text x="620" y="414" class="row" text-anchor="start">       updatedAt: data/hora</text>
+<rect class="card" x="1130" y="160" width="450" height="308" rx="10"/>
+<path d="M1140,160 H1570 Q1580,160 1580,170 V214 H1130 V170 Q1130,160 1140,160" fill="#123d55"/>
+<text x="1150" y="195" class="name" text-anchor="start">rotas</text>
+<text x="1150" y="240" class="row" text-anchor="start">PK     id: inteiro gerado</text>
+<text x="1150" y="269" class="row" text-anchor="start">UQ     nome: texto(100)</text>
+<text x="1150" y="298" class="row" text-anchor="start">       origem: texto(150)</text>
+<text x="1150" y="327" class="row" text-anchor="start">       destino: texto(150)</text>
+<text x="1150" y="356" class="row" text-anchor="start">       distancia_km: decimal(10,2)</text>
+<text x="1150" y="385" class="row" text-anchor="start">       pontos: JSON</text>
+<text x="1150" y="414" class="row" text-anchor="start">       createdAt: data/hora</text>
+<text x="1150" y="443" class="row" text-anchor="start">       updatedAt: data/hora</text>
+<rect class="card" x="140" y="690" width="580" height="453" rx="10"/>
+<path d="M150,690 H710 Q720,690 720,700 V744 H140 V700 Q140,690 150,690" fill="#123d55"/>
+<text x="160" y="725" class="name" text-anchor="start">entregas</text>
+<text x="160" y="770" class="row" text-anchor="start">PK     id: inteiro gerado</text>
+<text x="160" y="799" class="row" text-anchor="start">       descricao: texto(200)</text>
+<text x="160" y="828" class="row" text-anchor="start">       origem: texto(150)</text>
+<text x="160" y="857" class="row" text-anchor="start">       destino: texto(150)</text>
+<text x="160" y="886" class="row" text-anchor="start">       peso_kg: decimal(10,2)</text>
+<text x="160" y="915" class="row" text-anchor="start">       prazo_min: decimal(10,2)</text>
+<text x="160" y="944" class="row" text-anchor="start">       data_agendada: data</text>
+<text x="160" y="973" class="row" text-anchor="start">       status: domínio</text>
+<text x="160" y="1002" class="row" text-anchor="start">FK     usuario_id → usuarios.id</text>
+<text x="160" y="1031" class="row" text-anchor="start">FK     veiculo_id → veiculos.id</text>
+<text x="160" y="1060" class="row" text-anchor="start">FK ?   rota_id → rotas.id</text>
+<text x="160" y="1089" class="row" text-anchor="start">       createdAt: data/hora</text>
+<text x="160" y="1118" class="row" text-anchor="start">       updatedAt: data/hora</text>
+<rect class="card" x="940" y="690" width="580" height="395" rx="10"/>
+<path d="M950,690 H1510 Q1520,690 1520,700 V744 H940 V700 Q940,690 950,690" fill="#123d55"/>
+<text x="960" y="725" class="name" text-anchor="start">simulacoes</text>
+<text x="960" y="770" class="row" text-anchor="start">PK     id: inteiro gerado</text>
+<text x="960" y="799" class="row" text-anchor="start">FK     entrega_id → entregas.id</text>
+<text x="960" y="828" class="row" text-anchor="start">       cenario: domínio</text>
+<text x="960" y="857" class="row" text-anchor="start">       velocidade_kmh: inteiro</text>
+<text x="960" y="886" class="row" text-anchor="start">       prazo_min: decimal(10,2)</text>
+<text x="960" y="915" class="row" text-anchor="start">FK     rota_id → rotas.id</text>
+<text x="960" y="944" class="row" text-anchor="start">       resultados: JSON</text>
+<text x="960" y="973" class="row" text-anchor="start">FK     usuario_id → usuarios.id</text>
+<text x="960" y="1002" class="row" text-anchor="start">FK ?   atualizado_por_id → usuarios.id</text>
+<text x="960" y="1031" class="row" text-anchor="start">       createdAt: data/hora</text>
+<text x="960" y="1060" class="row" text-anchor="start">       updatedAt: data/hora</text>
+<polyline class="line" points="280,439 280,690"/>
+<circle cx="280" cy="439" r="4" fill="#386f94"/>
+<circle cx="280" cy="690" r="4" fill="#386f94"/>
+<text x="280" y="565" class="label" text-anchor="middle">1 cadastra 0..N</text>
+<polyline class="line" points="800,439 800,600 650,600 650,690"/>
+<circle cx="800" cy="439" r="4" fill="#386f94"/>
+<circle cx="650" cy="690" r="4" fill="#386f94"/>
+<text x="770" y="587" class="label" text-anchor="middle">1 transporta 0..N</text>
+<polyline class="line optional" points="1200,468 1200,650 690,650 690,690"/>
+<circle cx="1200" cy="468" r="4" fill="#965989"/>
+<circle cx="690" cy="690" r="4" fill="#965989"/>
+<text x="1040" y="636" class="label" text-anchor="middle">0..1 escolhida em 0..N</text>
+<polyline class="line" points="1430,468 1430,690"/>
+<circle cx="1430" cy="468" r="4" fill="#386f94"/>
+<circle cx="1430" cy="690" r="4" fill="#386f94"/>
+<text x="1430" y="574" class="label" text-anchor="middle">1 recomendada em 0..N</text>
+<polyline class="line" points="720,900 940,900"/>
+<circle cx="720" cy="900" r="4" fill="#386f94"/>
+<circle cx="940" cy="900" r="4" fill="#386f94"/>
+<text x="830" y="878" class="label" text-anchor="middle">1 possui 0..N</text>
+<polyline class="line" points="60,260 30,260 30,1260 1110,1260 1110,1085"/>
+<circle cx="60" cy="260" r="4" fill="#386f94"/>
+<circle cx="1110" cy="1085" r="4" fill="#386f94"/>
+<text x="600" y="1247" class="label" text-anchor="middle">USUÁRIO 1 executa 0..N SIMULAÇÕES · usuario_id</text>
+<polyline class="line optional" points="60,360 12,360 12,1330 1370,1330 1370,1085"/>
+<circle cx="60" cy="360" r="4" fill="#965989"/>
+<circle cx="1370" cy="1085" r="4" fill="#965989"/>
+<text x="735" y="1317" class="label" text-anchor="middle">USUÁRIO 0..1 atualiza 0..N SIMULAÇÕES · atualizado_por_id</text>
+<text x="60" y="1395" class="small" text-anchor="start">Todas as FKs usam ON DELETE RESTRICT e ON UPDATE RESTRICT. Tipos completos, domínios e regras estão em docs/modelo-logico.md.</text>
+</svg>

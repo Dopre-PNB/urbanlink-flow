@@ -1,21 +1,33 @@
 # Publicação no GitHub e no Render
 
-O [GitHub](https://github.com/Dopre-PNB/urbanlink-flow) guarda o código. Um único Web Service no Render serve as seis páginas HTML/CSS/JavaScript e a API Node.js/Express. A publicação usa PostgreSQL no próprio Render, escolhido pelo responsável pelo projeto para manter aplicação e banco no plano Free. O ambiente local continua usando MySQL, conforme as aulas.
+O [GitHub](https://github.com/Dopre-PNB/urbanlink-flow) guarda o código. Um único Web Service no Render serve as seis páginas HTML/CSS/JavaScript e a API Node.js/Express. A publicação usa PostgreSQL no próprio Render e mantém custo zero. O ambiente local continua usando MySQL, conforme as aulas.
+
+## Situação na revisão de entrega — 18/11/2026
+
+**Restauração em validação.** O endereço continua sendo [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com). A conferência inicial encontrou o banco original `urbanlink-flow-db` expirado e suspenso, com expiração prevista para 07/11/2026. O recurso antigo permanece intocado; esta restauração parte de um banco lógico novo e não recupera os dados antigos.
+
+O responsável autorizou reutilizar a instância PostgreSQL gratuita ativa `nexa-play-db-7ida`, em Virginia, com PostgreSQL 18. A aplicação UrbanLink usa nela o banco lógico separado `urbanlink_flow` e o usuário SQL próprio `urbanlink_flow_user`. As tabelas e credenciais da aplicação Nexa não são reutilizadas. A URL de conexão UrbanLink fica somente nas variáveis privadas do Web Service.
+
+A instância compartilhada expira em **17/12/2026 às 21h41, horário de Brasília (UTC−03:00)**. Criar outro banco lógico não reinicia esse prazo. O requisito de site funcionando permanece pendente até concluir os passos da seção 5 e registrar os resultados em [resultados dos testes](resultados-testes.md).
 
 ```text
-Navegador → Render Free (site + API) → Render PostgreSQL Free
-                         ↑                rede interna
-                    GitHub / main
+Navegador → urbanlink-flow (Web Service Free)
+                         ↑               ↓ rede interna
+                    GitHub / main   nexa-play-db-7ida (PostgreSQL 18 Free)
+                                         ├─ urbanlink_flow / urbanlink_flow_user
+                                         └─ banco da aplicação Nexa, preservado
 ```
 
 ## 1. Entender os limites gratuitos
 
 - O Web Service Free hiberna após 15 minutos sem acessos e pode demorar cerca de um minuto para reativar. Abra o site antes da apresentação.
-- O PostgreSQL Free tem 1 GB de armazenamento e expira após 30 dias. A hibernação do site não prolonga esse prazo. Exporte os dados antes da expiração se precisar preservá-los.
+- O Render permite somente uma instância PostgreSQL Free ativa por workspace. É permitido criar bancos lógicos adicionais dentro dela; isso não cria uma segunda instância.
+- Os bancos lógicos UrbanLink e Nexa compartilham o mesmo limite de 1 GB, capacidade de processamento, memória, conexões e prazo de validade. A separação de bancos não fornece recursos físicos independentes.
+- A instância atual expira em **17/12/2026 às 21h41 (Brasília)**. O plano gratuito não inclui backups gerenciados. Exporte os dados antes dessa data; hibernação, nova publicação ou criação de outro banco lógico não prolongam a validade.
 - A conta utilizada não tem forma de pagamento cadastrada. Quando limites gratuitos aplicáveis forem atingidos, o serviço pode ser suspenso. Não adicione cartão, selecione plano pago ou aumente recursos para contornar uma suspensão.
 - Esta configuração não inclui disco pago, banco MySQL hospedado ou atualização para planos pagos.
 
-Os limites e a data de expiração devem ser conferidos no painel antes da apresentação. Referência: [regras do Render Free](https://render.com/docs/free).
+Os limites e a data de expiração devem ser conferidos no painel antes da apresentação. Referências: [regras do Render Free](https://render.com/docs/free) e [vários bancos na mesma instância](https://render.com/docs/postgresql-creating-connecting#adding-multiple-databases-to-a-single-instance).
 
 ## 2. Manter o código no GitHub
 
@@ -31,20 +43,28 @@ O `.gitignore` exclui `.env`, suas variações privadas, `.local`, dependências
 
 ## 3. Configurar os serviços no Render
 
-Use os recursos existentes quando já estiverem criados. Não aplique outro Blueprint para duplicar o site ou o banco. `render.yaml` registra a configuração para uma nova instalação; o caminho **New → Blueprint** permite reproduzi-la conectando a branch `main`. Confira se todos os recursos estão no plano **Free** antes de criar.
+Use o Web Service e a instância já existentes. Não aplique outro Blueprint para duplicar recursos e não crie outra instância PostgreSQL para esta configuração. O `render.yaml` contém apenas o serviço web e os campos de ambiente: não há uma seção `databases` para criar ou alterar a instância compartilhada.
 
-Para criar ou conferir manualmente o banco, use **New → Postgres**:
+Confira a conexão da restauração:
 
-| Campo   | Valor                            |
-| ------- | -------------------------------- |
-| Name    | `urbanlink-flow-db`              |
-| Region  | Virginia, a mesma região do site |
-| Plan    | Free                             |
-| Storage | 1 GB incluído no plano gratuito  |
+| Campo                          | Valor                                                         |
+| ------------------------------ | ------------------------------------------------------------- |
+| Instância PostgreSQL existente | `nexa-play-db-7ida`                                           |
+| Versão                         | PostgreSQL 18                                                 |
+| Região                         | Virginia, a mesma região do site                              |
+| Plano                          | Free                                                          |
+| Banco lógico da UrbanLink      | `urbanlink_flow`                                              |
+| Usuário SQL da UrbanLink       | `urbanlink_flow_user`, com acesso próprio para esta aplicação |
+| Armazenamento                  | 1 GB compartilhado com os demais bancos da instância          |
+| Validade da instância          | 17/12/2026 às 21h41 (Brasília)                                |
 
-Depois de o banco ficar disponível, use a **Internal Database URL** na variável `DATABASE_URL` do Web Service. Mantenha essa conexão dentro da rede do Render. O PostgreSQL já existe quando o projeto inicia; o setup prepara somente as tabelas e os dados iniciais necessários.
+O banco lógico e o usuário são preparados uma vez pela administração da instância, antes de iniciar o projeto. O usuário de execução não precisa criar bancos nem outros usuários: o setup prepara as tabelas no banco ao qual ele já se conecta.
 
-Para criar ou conferir o site em **New → Web Service**:
+`DATABASE_URL` é um segredo preenchido manualmente e aponta para o host interno da instância, o usuário `urbanlink_flow_user` e o banco final `urbanlink_flow`. Não copie diretamente a URL padrão mostrada para o Nexa e não use `fromDatabase.connectionString`: ambos podem selecionar o banco ou usuário padrão da outra aplicação. O `render.yaml` usa `sync: false` para esse campo. Em um serviço existente, confira o valor nas configurações privadas; uma atualização do Blueprint não solicita novamente valores com `sync: false`.
+
+O usuário UrbanLink é criado diretamente por SQL, sem trocar a credencial padrão da instância. A criação de uma credencial pelo painel/API do Render muda o usuário padrão e pode afetar referências de outros serviços. Veja [gerenciamento de credenciais PostgreSQL](https://render.com/docs/postgresql-credentials).
+
+Confira o Web Service existente:
 
 | Campo             | Valor                             |
 | ----------------- | --------------------------------- |
@@ -72,7 +92,7 @@ Insira senhas apenas nas configurações privadas do serviço. Não coloque a UR
 | `NODE_ENV`               | `production`                                                                           |
 | `HOST`                   | `0.0.0.0`                                                                              |
 | `PORT`                   | Deixe o Render fornecer                                                                |
-| `DATABASE_URL`           | Internal Database URL do PostgreSQL do projeto                                         |
+| `DATABASE_URL`           | URL interna privada com usuário `urbanlink_flow_user` e banco `urbanlink_flow`         |
 | `DB_SSL`                 | `false` para a conexão interna entre estes serviços do Render                          |
 | `JWT_SECRET`             | Chave aleatória com pelo menos 32 caracteres; gerada pelo Blueprint                    |
 | `INITIAL_ADMIN_EMAIL`    | E-mail escolhido para o acesso de administrador                                        |
@@ -83,26 +103,42 @@ A presença de `DATABASE_URL` seleciona PostgreSQL. As variáveis `DB_HOST`, `DB
 
 `DB_SSL=false` acima se aplica à URL interna do Render. Para uma conexão PostgreSQL externa com TLS, use `DB_SSL=true` e um certificado válido; configure `DB_SSL_CA` se o provedor exigir uma autoridade certificadora própria. Não desative a verificação de certificado para contornar um erro externo.
 
-Em produção, os atalhos de demonstração ficam ocultos e nenhum veículo, rota, entrega ou operador de demonstração é criado. O primeiro acesso usa as credenciais configuradas acima. O administrador cadastra o operador e os dados da apresentação pela plataforma.
+Em produção, os atalhos de demonstração ficam ocultos e o setup não cria veículo, rota, entrega ou operador de demonstração. O banco lógico novo recebe a estrutura e somente o administrador inicial configurado acima. Os dados de avaliação são cadastrados depois pela plataforma/API com autenticação. Contas e senhas de avaliação são fornecidas por canal privado; não execute os arquivos `database/seed*.sql` no banco publicado.
 
 Quando já existe um administrador, reiniciar ou publicar novamente preserva usuários e senhas. Alterar `INITIAL_ADMIN_PASSWORD` não redefine uma senha existente: use a edição de usuários da plataforma. As variáveis `INITIAL_ADMIN_*` podem ser removidas após o primeiro acesso.
 
 ## 5. Conferir a publicação
 
-O site foi publicado em [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com) em 08/10/2026. O Render confirmou **Live**, a API respondeu com o banco conectado e os testes de API e interface passaram usando PostgreSQL. O banco gratuito atual expira em **07/11/2026**. Para conferir após alterações, siga os passos abaixo:
+A publicação original de 08/10/2026 é um registro histórico e não valida a restauração atual. Para concluir a conferência no novo banco lógico:
 
 1. Aguarde a implantação ficar **Live** no painel.
 2. Abra `/api/health`; o retorno esperado é `{"status":"ok","banco":"conectado"}`.
-3. Abra o login e confira que os botões de demonstração estão ocultos. Entre com o administrador inicial.
+3. Abra o login e confira que os botões de demonstração estão ocultos. Entre com o administrador configurado no ambiente privado.
 4. Cadastre operador, veículo e rotas do roteiro. Confira as permissões e execute uma entrega/simulação.
 5. Confira `/api/docs` e abra o site no celular.
-6. Depois de uma nova publicação, confirme que os registros permanecem no banco.
+6. Confira que a conexão utiliza `urbanlink_flow` e o usuário próprio; depois de uma nova publicação, confirme que os registros UrbanLink permanecem no banco.
+7. Registre a data e os resultados dos testes e confirme que a aplicação Nexa continua usando sua configuração existente.
 
 O Render pode publicar automaticamente alterações enviadas à branch conectada. O navegador usa o mesmo endereço para as páginas e a API. Os scripts físicos `database/schema.sql` e `database/schema-postgres.sql` representam as mesmas entidades em MySQL e PostgreSQL, respectivamente.
 
+## 6. Exportar antes da expiração
+
+Exporte o banco lógico UrbanLink antes de **17/12/2026 às 21h41 (Brasília)**. Faça também uma exportação separada dos outros bancos caso seja responsável por eles; um arquivo do banco UrbanLink não inclui os dados do Nexa. O plano gratuito não fornece backups gerenciados nem garante recuperação após o prazo de exclusão descrito pelo Render. A [documentação oficial de backups](https://render.com/docs/postgresql-backups#exporting-with-pg_dump) orienta usar `pg_dump` localmente e repetir a exportação para cada banco lógico.
+
+Use um cliente `pg_dump` compatível com PostgreSQL 18 e a conexão externa privada correspondente ao banco `urbanlink_flow`, com TLS. Informe a conexão por variável de ambiente privada, sem incluí-la no histórico dos comandos ou em arquivos versionados. No PowerShell, com `URBANLINK_BACKUP_URL` já definida de forma privada:
+
+```powershell
+New-Item -ItemType Directory -Force -Path '.local/backups' | Out-Null
+$backupStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+pg_dump --format=custom --file=".local/backups/urbanlink-flow-$backupStamp.dump" --dbname=$env:URBANLINK_BACKUP_URL
+```
+
+Confira o término sem erro e guarde uma cópia do arquivo em local privado. A pasta `.local` é ignorada pelo Git. A exportação não prolonga a hospedagem: antes da expiração, o responsável precisa escolher um novo destino gratuito e testar a restauração, preservando o requisito de custo zero.
+
 ## Se a inicialização falhar
 
-- **Banco indisponível:** confira se o PostgreSQL está disponível e dentro do prazo gratuito, se `DATABASE_URL` contém a URL interna completa e se os dois serviços estão na mesma região.
+- **Banco indisponível:** confira a validade da instância `nexa-play-db-7ida`, a região e a URL interna privada do banco `urbanlink_flow`. O recurso antigo `urbanlink-flow-db` está expirado e não é o destino desta restauração.
+- **Tabelas ou dados de outro projeto:** pare a preparação e confira o nome final do banco e o usuário de `DATABASE_URL`. Não execute o setup sobre o banco lógico do Nexa.
 - **Erro de certificado:** para acesso externo, mantenha `DB_SSL=true` e configure a CA correta quando exigida. Para esta conexão interna do Render, confira `DB_SSL=false`.
 - **Configuração MySQL solicitada no Render:** confira se `DATABASE_URL` foi cadastrada no Web Service. Sem ela, o projeto usa MySQL.
 - **Administrador inicial ausente:** preencha `INITIAL_ADMIN_EMAIL` e `INITIAL_ADMIN_PASSWORD` se o banco ainda não tem administrador.

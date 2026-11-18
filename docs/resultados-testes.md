@@ -1,5 +1,16 @@
 # Resultados da verificação
 
+## Revisão dos arquivos de entrega — 18/11/2026
+
+Ambiente Windows, Node.js 24.18.0, aplicação em `http://127.0.0.1:3000` e MySQL 8 dedicado na porta 3307. Dependências instaladas com `npm.cmd ci`; aplicação iniciada com `npm.cmd run demo`, preservando dados existentes.
+
+- A suíte `npm.cmd test` aprovou **32 testes, zero falhas**, incluindo as dez verificações HTTP de login, permissões, CRUD, entregas, simulações e painel. Os registros temporários são limpos pelos próprios IDs.
+- Scripts de criação/inserção SQL verificados em um banco MySQL 8 temporário e no PostgreSQL 18.6 em memória via PGlite 0.5.16. Ambos produziram 2 usuários, 2 veículos, 2 rotas, 1 entrega e nenhuma simulação inicial. A segunda execução preservou valores editados; hashes bcrypt, vínculos e idempotência foram conferidos. O banco MySQL temporário foi removido e os dados originais preservados. A execução PostgreSQL em memória não substitui a validação da conexão com a hospedagem.
+- Duas dependências transitivas foram atualizadas dentro dos intervalos já permitidos pelo projeto (`body-parser` 2.4.0 e `qs` 6.17.1). Após a atualização, `npm.cmd audit` retornou **zero vulnerabilidades conhecidas**.
+- O navegador interno apresentou a tela de inicialização do Render no endereço público; `/api/health` não respondeu dentro de 25 segundos. **A hospedagem não foi validada como funcional nesta revisão.** A expiração prevista do banco original, registrada anteriormente, era 07/11/2026; a causa atual depende da conferência dos recursos no Render.
+
+Os resultados históricos abaixo se referem às datas indicadas. Eles não comprovam disponibilidade atual do site.
+
 ## Integração visual — 22/10/2026
 
 Ambiente local Windows, aplicação completa em `http://127.0.0.1:3000`, MySQL dedicado na porta 3307. O design aprovado foi aplicado a início, login, painel, entregas, simulação e cadastros.

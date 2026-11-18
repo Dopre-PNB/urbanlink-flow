@@ -37,7 +37,7 @@
 
 **O veículo aparece se movendo?** A operação é acompanhada pela mudança de status. O mapa mostra os percursos cadastrados; não há rastreamento GPS.
 
-**Onde os dados ficam?** No MySQL. A API do servidor valida os dados e aplica regras antes de gravar. O front-end exibe o resultado.
+**Onde os dados ficam?** No MySQL na demonstração local e no PostgreSQL na hospedagem Render. A API do servidor valida os dados e aplica regras antes de gravar. O front-end exibe o resultado.
 
 **Como os perfis são protegidos?** O login gera um token temporário. O servidor valida o token e consulta o perfil atual antes das ações. Esconder um botão é apenas conveniência visual.
 
