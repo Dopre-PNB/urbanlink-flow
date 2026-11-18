@@ -4,11 +4,11 @@ O [GitHub](https://github.com/Dopre-PNB/urbanlink-flow) guarda o código. Um ún
 
 ## Situação na revisão de entrega — 18/11/2026
 
-**Restauração em validação.** O endereço continua sendo [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com). A conferência inicial encontrou o banco original `urbanlink-flow-db` expirado e suspenso, com expiração prevista para 07/11/2026. O recurso antigo permanece intocado; esta restauração parte de um banco lógico novo e não recupera os dados antigos.
+**Restauração verificada em 18/11/2026 às 16h44 (Brasília).** O endereço [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com) está publicado, e `/api/health` retornou HTTP 200 com banco conectado. A publicação do commit `3baa90e` ficou **Live** no Render. A conferência inicial havia encontrado o banco original `urbanlink-flow-db` expirado e suspenso, com expiração prevista para 07/11/2026. O recurso antigo permanece intocado; esta restauração usa um banco lógico novo e não recupera os dados antigos.
 
 O responsável autorizou reutilizar a instância PostgreSQL gratuita ativa `nexa-play-db-7ida`, em Virginia, com PostgreSQL 18. A aplicação UrbanLink usa nela o banco lógico separado `urbanlink_flow` e o usuário SQL próprio `urbanlink_flow_user`. As tabelas e credenciais da aplicação Nexa não são reutilizadas. A URL de conexão UrbanLink fica somente nas variáveis privadas do Web Service.
 
-A instância compartilhada expira em **17/12/2026 às 21h41, horário de Brasília (UTC−03:00)**. Criar outro banco lógico não reinicia esse prazo. O requisito de site funcionando permanece pendente até concluir os passos da seção 5 e registrar os resultados em [resultados dos testes](resultados-testes.md).
+A instância compartilhada expira em **17/12/2026 às 21h41, horário de Brasília (UTC−03:00)**. Criar outro banco lógico não reinicia esse prazo. A suíte de testes da API foi executada contra a publicação: **32 testes aprovados, nenhuma falha**, com registros temporários removidos ao final. Administrador e operador privados autenticaram, e o banco recebeu dois veículos, duas rotas e uma entrega pendente de 100 kg com prazo de 20 minutos para avaliação. As evidências e o alcance da verificação estão em [resultados dos testes](resultados-testes.md).
 
 ```text
 Navegador → urbanlink-flow (Web Service Free)
@@ -109,7 +109,7 @@ Quando já existe um administrador, reiniciar ou publicar novamente preserva usu
 
 ## 5. Conferir a publicação
 
-A publicação original de 08/10/2026 é um registro histórico e não valida a restauração atual. Para concluir a conferência no novo banco lógico:
+A restauração de 18/11/2026 foi validada com publicação **Live**, saúde HTTP 200 e 32 testes da API aprovados, conforme os [resultados registrados](resultados-testes.md). Para conferir novamente após alterações e preparar uma apresentação:
 
 1. Aguarde a implantação ficar **Live** no painel.
 2. Abra `/api/health`; o retorno esperado é `{"status":"ok","banco":"conectado"}`.

@@ -1,30 +1,34 @@
 # Conferência da entrega — UrbanLink Flow
 
-Este índice relaciona cada requisito aos arquivos do repositório e registra a pendência que impede considerar a entrega totalmente concluída. Revisão em **18/11/2026**.
+Este índice relaciona os cinco requisitos aos arquivos e links da entrega, revisados em **18/11/2026**.
 
-| Requisito                               | Local de conferência                                                                                                  | Situação                                                                                             |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 1. Link do GitHub e códigos organizados | [Dopre-PNB/urbanlink-flow](https://github.com/Dopre-PNB/urbanlink-flow), com `src/`, `public/`, `scripts/` e `tests/` | Repositório público identificado; arquivos da revisão preparados para atualização.                   |
-| 2. Site publicado e funcionando         | [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com)                                                    | **Pendente:** tela de inicialização do Render; `/api/health` sem resposta em 25 segundos na revisão. |
-| 3. README completo                      | [README.md](../README.md)                                                                                             | Nome, descrição, objetivo, funcionalidades, tecnologias, endereço e modelagem documentados.          |
-| 4. Modelagem na pasta de documentação   | [Modelo conceitual](modelo-conceitual.md), [modelo lógico](modelo-logico.md), [DER](der.md) e [diagramas](diagramas/) | Arquivos disponíveis em `docs/`.                                                                     |
-| 5. Pasta de arquivos adicionais         | [arquivos-adicionais/](../arquivos-adicionais/README.md)                                                              | SQL de criação/inserção para MySQL e PostgreSQL e acesso às instruções de instalação/uso.            |
+| Requisito                                  | Local de conferência                                                                                                  | Situação                                                                                           |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 1. GitHub com todos os códigos organizados | [Dopre-PNB/urbanlink-flow](https://github.com/Dopre-PNB/urbanlink-flow), com `src/`, `public/`, `scripts/` e `tests/` | Repositório público atualizado.                                                                    |
+| 2. Site publicado e funcionando            | [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com)                                                    | Publicação ativa, API conectada ao banco e 32 testes aprovados na revisão.                         |
+| 3. README completo                         | [README.md](../README.md)                                                                                             | Nome, descrição, objetivo, funcionalidades, tecnologias, site e modelagem documentados.            |
+| 4. Modelagem na pasta de documentação      | [Modelo conceitual](modelo-conceitual.md), [modelo lógico](modelo-logico.md), [DER](der.md) e [diagramas](diagramas/) | Documentos, diagramas SVG e fontes editáveis disponíveis em `docs/`.                               |
+| 5. Pasta de arquivos adicionais            | [arquivos-adicionais/](../arquivos-adicionais/README.md)                                                              | SQL de criação/inserção para MySQL e PostgreSQL, ordem de execução e instruções de instalação/uso. |
 
 ## Arquivos para avaliação
 
 - [Instalar, configurar, executar e utilizar o sistema](instalacao-e-uso.md).
-- [Modelagem conceitual](modelo-conceitual.md), com entidades, regras e cardinalidades.
-- [Modelagem lógica](modelo-logico.md), com tabelas, atributos, tipos, PKs e FKs.
+- [Modelo conceitual](modelo-conceitual.md), com entidades, regras e cardinalidades.
+- [Modelo lógico](modelo-logico.md), com tabelas, atributos, tipos, PKs e FKs.
 - [Diagrama Entidade-Relacionamento](der.md), com arquivos visuais e fontes editáveis.
 - [Estrutura SQL MySQL](../database/schema.sql) e [dados SQL MySQL](../database/seed.sql).
 - [Estrutura SQL PostgreSQL](../database/schema-postgres.sql) e [dados SQL PostgreSQL](../database/seed-postgres.sql).
 - [Entradas SQL e ordem de execução](../arquivos-adicionais/README.md).
 - [Resultados de testes](resultados-testes.md) e [roteiro de apresentação](roteiro-apresentacao.md).
 
-## Concluir o requisito de publicação
+## Acessar o sistema publicado
 
-A última verificação completa registrada da hospedagem é de 08/10/2026. O PostgreSQL gratuito original tinha expiração prevista para 07/11/2026. O estado atual do recurso e a causa da indisponibilidade precisam ser confirmados no Render; a data prevista não substitui essa conferência.
+O responsável deve fornecer as credenciais privadas ao avaliador por um canal privado. O site não possui cadastro público e as contas de demonstração documentadas no README são somente locais. Na hospedagem, estão disponíveis um administrador e um operador privado, dois veículos, duas rotas e uma entrega pendente de exemplo.
 
-Após corrigir a publicação, confirme a resposta `{"status":"ok","banco":"conectado"}` em `/api/health`, faça login, cadastre uma entrega de teste, compare e salve uma simulação, atualize o estado e confira o painel. O responsável deve fornecer credenciais ao avaliador por canal privado: as contas demonstrativas documentadas são locais e não são criadas em produção.
+Para avaliar, entre com o operador, abra a entrega demonstrativa, compare os cenários normal/lento, salve a simulação, confirme a rota, atualize o estado da entrega e confira o painel. Use o administrador para testar os cadastros. O [guia de uso](instalacao-e-uso.md) detalha as ações.
 
-Registre a nova verificação em [resultados-testes.md](resultados-testes.md) e atualize a situação neste índice, no README e no [guia de publicação](publicacao-github-render.md). Até lá, não apresente o link como sistema funcional validado.
+## Validação e disponibilidade
+
+Em 18/11/2026, o Render confirmou a publicação ativa e `/api/health` retornou `{"status":"ok","banco":"conectado"}`. Os **32 testes automatizados passaram localmente e na execução contra a API publicada**, sem falhas. A suíte publicada cobre login/perfis, CRUD, entregas, simulações, vínculos, filtros e indicadores. Consulte os [resultados e limites](resultados-testes.md).
+
+A hospedagem permanece gratuita. O banco lógico UrbanLink usa usuário próprio em uma instância PostgreSQL compartilhada, autorizada pelo responsável, sem acesso às tabelas do outro projeto. O banco antigo expirado foi preservado, mas os seus dados não foram migrados. A instância atual expira em **17/12/2026 às 21h41 (Brasília)**. Exporte os dados e defina um novo destino antes dessa data; veja o [guia de publicação](publicacao-github-render.md).

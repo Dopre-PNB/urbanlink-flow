@@ -7,7 +7,20 @@ Ambiente Windows, Node.js 24.18.0, aplicação em `http://127.0.0.1:3000` e MySQ
 - A suíte `npm.cmd test` aprovou **32 testes, zero falhas**, incluindo as dez verificações HTTP de login, permissões, CRUD, entregas, simulações e painel. Os registros temporários são limpos pelos próprios IDs.
 - Scripts de criação/inserção SQL verificados em um banco MySQL 8 temporário e no PostgreSQL 18.6 em memória via PGlite 0.5.16. Ambos produziram 2 usuários, 2 veículos, 2 rotas, 1 entrega e nenhuma simulação inicial. A segunda execução preservou valores editados; hashes bcrypt, vínculos e idempotência foram conferidos. O banco MySQL temporário foi removido e os dados originais preservados. A execução PostgreSQL em memória não substitui a validação da conexão com a hospedagem.
 - Duas dependências transitivas foram atualizadas dentro dos intervalos já permitidos pelo projeto (`body-parser` 2.4.0 e `qs` 6.17.1). Após a atualização, `npm.cmd audit` retornou **zero vulnerabilidades conhecidas**.
-- O navegador interno apresentou a tela de inicialização do Render no endereço público; `/api/health` não respondeu dentro de 25 segundos. **A hospedagem não foi validada como funcional nesta revisão.** A expiração prevista do banco original, registrada anteriormente, era 07/11/2026; a causa atual depende da conferência dos recursos no Render.
+- A conferência inicial encontrou a tela de inicialização do Render e ausência de resposta em `/api/health`. O painel confirmou o banco original expirado/suspenso desde novembro; os registros mostraram falha ao resolver o endereço desse banco. A restauração e sua validação estão descritas abaixo.
+- Prettier e `git diff --check` aprovados. Os 94 links relativos encontrados em 19 arquivos Markdown apontavam para destinos existentes. Os dois diagramas SVG foram inspecionados visualmente no navegador interno. `render.yaml` passou no JSON Schema oficial atual do Render, sem erros ou avisos de sintaxe YAML.
+
+### Publicação restabelecida e validada
+
+O responsável autorizou o uso da instância gratuita PostgreSQL 18 ativa `nexa-play-db-7ida`, com **banco lógico `urbanlink_flow` e usuário SQL `urbanlink_flow_user` exclusivos**. A inspeção confirmou que os metadados das 15 tabelas Nexa permaneceram iguais e que o usuário UrbanLink não tem privilégios sobre suas tabelas/colunas. A criação limitou o novo usuário a 12 conexões e não alterou as credenciais padrão, tabelas ou configuração da aplicação Nexa. O banco original expirado não foi excluído; seus dados não foram recuperados ou migrados.
+
+Somente a conexão privada do Web Service UrbanLink foi substituída; a verificação HTTP passou a usar `/api/health`. A publicação automática do commit `3baa90e` foi confirmada como **Live** pelo Render em **18/11/2026 às 16h44 (Brasília)**. O endereço público respondeu HTTP 200 com `{"status":"ok","banco":"conectado"}`.
+
+No ambiente publicado, `npm test` foi executado com as contas privadas de administrador e operador: **32 testes aprovados, zero falhas, aproximadamente 28,6 segundos**. As dez verificações HTTP usaram a API e o PostgreSQL reais; os demais testes de serviços/configuração executaram localmente no mesmo comando. Foram conferidos login/perfis, CRUD, capacidade, disputa por veículo, cenários normal/lento, gravação e atualização de histórico, filtros, paginação e indicadores. Os testes limparam somente os registros temporários que criaram.
+
+Foram mantidos, para avaliação, dois veículos, duas rotas e uma entrega pendente de 100 kg com prazo de 20 minutos, cadastrados pela API autenticada. Administrador e operador privado autenticaram com sucesso. As contas locais com senhas públicas não foram criadas em produção. Os acessos estão guardados em arquivo local privado, ignorado pelo Git, para envio ao avaliador pelo responsável.
+
+A página inicial e a tela de login foram abertas no navegador interno após a restauração. A suíte legada de interface `test:ui` não foi reexecutada nesta rodada; as evidências de interface de outubro permanecem históricas. A instância compartilhada continua gratuita e expira em **17/12/2026 às 21h41 (Brasília)**; essa validação não prolonga a disponibilidade.
 
 Os resultados históricos abaixo se referem às datas indicadas. Eles não comprovam disponibilidade atual do site.
 

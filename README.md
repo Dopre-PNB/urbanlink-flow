@@ -44,11 +44,13 @@ As versões exatas das dependências ficam em [package-lock.json](package-lock.j
 
 ## Publicar no GitHub e no Render
 
-O endereço configurado é [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com), com site/API e PostgreSQL no próprio Render, ambos no plano Free. A última verificação completa registrada da hospedagem é de 08/10/2026. **Na conferência de 18/11/2026, o endereço apresentou a tela de inicialização do Render e a API não respondeu dentro de 25 segundos; o funcionamento público ainda precisa ser restabelecido e validado.** O banco gratuito original tinha expiração prevista para 07/11/2026. O requisito de site funcionando continua pendente até a nova validação.
+O sistema está publicado e foi validado em **18/11/2026** em [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com). O Render confirmou a publicação ativa; `/api/health` respondeu `{"status":"ok","banco":"conectado"}` e os **32 testes de API/serviços passaram**, incluindo login dos dois perfis, cadastros, entregas, simulações e indicadores. A página pública e o login também foram conferidos no navegador interno.
+
+Site/API e PostgreSQL permanecem no plano Free. Após a expiração do banco original, foi criado o banco lógico exclusivo `urbanlink_flow`, com usuário próprio, na instância PostgreSQL 18 já ativa no espaço do responsável. A instância é compartilhada com o Nexa Play, mantendo bases e credenciais separadas. As 15 tabelas do Nexa foram preservadas e o usuário UrbanLink não recebeu permissões sobre elas. A restauração usa dados novos de avaliação; os dados do banco expirado não foram migrados.
 
 O código está no [GitHub](https://github.com/Dopre-PNB/urbanlink-flow). O arquivo `render.yaml` e o [passo a passo de publicação](docs/publicacao-github-render.md) registram a configuração. Em produção, o primeiro administrador usa credenciais privadas configuradas no Render e as contas de demonstração não são criadas. O responsável deve fornecer acesso ao avaliador por um canal privado para permitir os testes das funções protegidas.
 
-O site gratuito hiberna após 15 minutos sem acesso. O PostgreSQL gratuito expira após 30 dias; essa validade é independente da hibernação do site. Nenhuma conversão para plano pago faz parte desta configuração. Veja as [limitações oficiais do Render Free](https://render.com/docs/free).
+O site gratuito hiberna após 15 minutos sem acesso. A instância PostgreSQL atual expira em **17/12/2026 às 21h41 (Brasília)**; essa validade é independente da hibernação do site. Os projetos compartilham os recursos e o limite de 1 GB da instância. Exporte os dados antes da expiração. Nenhuma conversão para plano pago foi feita. Veja as [limitações oficiais do Render Free](https://render.com/docs/free).
 
 ## Começar no Windows
 
