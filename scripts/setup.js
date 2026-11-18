@@ -21,7 +21,10 @@ async function setupPostgres() {
   const client = new Client(require('../src/config/postgres-options')());
   await client.connect();
   try {
-    const sql = await fs.readFile(path.join(__dirname, '../database/schema-postgres.sql'), 'utf8');
+    const sql = await fs.readFile(
+      path.join(__dirname, '../arquivos-adicionais/sql/postgresql/01-criar-tabelas.sql'),
+      'utf8'
+    );
     await client.query('BEGIN');
     await client.query(sql);
     await client.query('COMMIT');
@@ -42,10 +45,12 @@ async function setupMySQL() {
     multipleStatements: true
   });
   try {
-    let sql = (await fs.readFile(path.join(__dirname, '../database/schema.sql'), 'utf8')).replace(
-      /\burbanlink_flow\b/g,
-      nome
-    );
+    let sql = (
+      await fs.readFile(
+        path.join(__dirname, '../arquivos-adicionais/sql/mysql/01-criar-banco-e-tabelas.sql'),
+        'utf8'
+      )
+    ).replace(/\burbanlink_flow\b/g, nome);
     // Provedores gerenciados já entregam o banco criado e podem bloquear CREATE DATABASE.
     if (!createDatabase) sql = sql.replace(/^CREATE DATABASE[^\n]*\n/m, '');
     await connection.query(sql);

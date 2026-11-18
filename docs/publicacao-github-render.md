@@ -103,7 +103,7 @@ A presença de `DATABASE_URL` seleciona PostgreSQL. As variáveis `DB_HOST`, `DB
 
 `DB_SSL=false` acima se aplica à URL interna do Render. Para uma conexão PostgreSQL externa com TLS, use `DB_SSL=true` e um certificado válido; configure `DB_SSL_CA` se o provedor exigir uma autoridade certificadora própria. Não desative a verificação de certificado para contornar um erro externo.
 
-Em produção, os atalhos de demonstração ficam ocultos e o setup não cria veículo, rota, entrega ou operador de demonstração. O banco lógico novo recebe a estrutura e somente o administrador inicial configurado acima. Os dados de avaliação são cadastrados depois pela plataforma/API com autenticação. Contas e senhas de avaliação são fornecidas por canal privado; não execute os arquivos `database/seed*.sql` no banco publicado.
+Em produção, os atalhos de demonstração ficam ocultos. O setup prepara a estrutura e cria o administrador inicial configurado acima. Os dados de avaliação são cadastrados depois pela plataforma com autenticação. Forneça as credenciais ao avaliador por canal privado. Reserve os scripts `02-inserir-dados.sql` para a demonstração local.
 
 Quando já existe um administrador, reiniciar ou publicar novamente preserva usuários e senhas. Alterar `INITIAL_ADMIN_PASSWORD` não redefine uma senha existente: use a edição de usuários da plataforma. As variáveis `INITIAL_ADMIN_*` podem ser removidas após o primeiro acesso.
 
@@ -119,7 +119,7 @@ A restauração de 18/11/2026 foi validada com publicação **Live**, saúde HTT
 6. Confira que a conexão utiliza `urbanlink_flow` e o usuário próprio; depois de uma nova publicação, confirme que os registros UrbanLink permanecem no banco.
 7. Registre a data e os resultados dos testes e confirme que a aplicação Nexa continua usando sua configuração existente.
 
-O Render pode publicar automaticamente alterações enviadas à branch conectada. O navegador usa o mesmo endereço para as páginas e a API. Os scripts físicos `database/schema.sql` e `database/schema-postgres.sql` representam as mesmas entidades em MySQL e PostgreSQL, respectivamente.
+O Render pode publicar automaticamente alterações enviadas à branch conectada. O navegador usa o mesmo endereço para as páginas e a API. Os [scripts físicos em arquivos adicionais](../arquivos-adicionais/sql/) representam as mesmas entidades em MySQL e PostgreSQL.
 
 ## 6. Exportar antes da expiração
 

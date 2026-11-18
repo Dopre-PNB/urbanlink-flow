@@ -3,7 +3,7 @@
   "info": {
     "title": "UrbanLink Flow API",
     "version": "1.0.0",
-    "description": "API acadêmica de logística urbana: entregas, rotas cadastradas, simulações estimadas e dois perfis. Todos os dados funcionais persistem em MySQL. Horários de previsão não representam tráfego em tempo real."
+    "description": "API acadêmica de logística urbana com entregas, rotas cadastradas, simulações e dois perfis. O ambiente local usa MySQL por padrão e a publicação usa PostgreSQL. Os tempos são estimados a partir das distâncias cadastradas e do cenário de circulação."
   },
   "servers": [
     {

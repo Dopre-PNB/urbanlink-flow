@@ -6,7 +6,7 @@ Projeto final de Desenvolvimento de Sistemas: plataforma web simples para cadast
 
 - **GitHub:** [Dopre-PNB/urbanlink-flow](https://github.com/Dopre-PNB/urbanlink-flow).
 - **Endereço publicado:** [urbanlink-flow.onrender.com](https://urbanlink-flow.onrender.com).
-- **Instalação, configuração e uso:** [guia completo](docs/instalacao-e-uso.md).
+- **Instalação, configuração e uso:** [guia completo](arquivos-adicionais/instalacao-e-uso.md).
 - **Banco de dados:** [modelo conceitual](docs/modelo-conceitual.md), [modelo lógico](docs/modelo-logico.md) e [DER](docs/der.md).
 - **Arquivos adicionais:** [scripts SQL de criação/inserção e instruções](arquivos-adicionais/README.md).
 - **Índice dos requisitos:** [conferência da entrega](docs/entrega.md).
@@ -127,18 +127,15 @@ Agenda corresponde ao filtro por data em Entregas. Mapa é uma seção de Simula
 
 ## Simulação e limites
 
-As distâncias são estimativas cadastradas para duas alternativas que têm a mesma origem e o mesmo destino. A previsão usa `tempo em minutos = distância em km / velocidade em km/h × 60`: 30 km/h no cenário normal e 20 km/h no lento. Recomenda-se o menor tempo; em caso de igualdade, vence a rota de menor ID. A igualdade com o prazo conta como dentro do prazo.
+O sistema estima o tempo das rotas cadastradas com a mesma origem e o mesmo destino da entrega. O roteiro de demonstração usa duas alternativas. A previsão divide a distância em quilômetros pela velocidade em quilômetros por hora e multiplica o resultado por 60. A velocidade é de 30 km/h no cenário normal e 20 km/h no lento. O sistema recomenda a rota mais rápida e usa o menor ID para desempatar. Uma previsão igual ao prazo conta como dentro dele.
 
 Os pontos no mapa ilustram o percurso cadastrado. A aplicação não calcula distâncias viárias, GPS ou tráfego ao vivo. O mapa-base do OpenStreetMap depende de internet. Cadastros e cálculos usam a API e um banco relacional: MySQL na demonstração local e PostgreSQL na publicação gratuita do Render. O monitoramento resulta da atualização de status pelo operador. O Painel consulta a API a cada 30 segundos, pausando a consulta quando a aba fica oculta. A média de tempo e o percentual dentro do prazo vêm da última simulação de cada entrega, não da duração real da viagem.
 
 ## Estrutura e documentação
 
 ```text
-arquivos-adicionais/      instruções e entradas SQL para criação/inserção
-database/schema.sql       modelo físico MySQL, PK, FK e índices
-database/schema-postgres.sql modelo físico PostgreSQL para o Render
-database/seed.sql         dados demonstrativos em SQL MySQL
-database/seed-postgres.sql dados demonstrativos em SQL PostgreSQL
+arquivos-adicionais/      guia de instalação, configuração e uso
+arquivos-adicionais/sql/  criação do banco e das tabelas e inserção de dados
 docs/                     requisitos, modelos, OpenAPI, testes e apresentação
 docs/diagramas/           diagramas visuais e fontes editáveis
 public/                   seis páginas, CSS, JavaScript e imagens
@@ -159,7 +156,7 @@ Documentos principais:
 - [Modelo conceitual](docs/modelo-conceitual.md)
 - [Modelo lógico](docs/modelo-logico.md)
 - [Diagrama Entidade-Relacionamento (DER)](docs/der.md)
-- [Instalação e uso](docs/instalacao-e-uso.md)
+- [Instalação e uso](arquivos-adicionais/instalacao-e-uso.md)
 - [Arquivos adicionais e scripts SQL](arquivos-adicionais/README.md)
 - [Índice da entrega](docs/entrega.md)
 - [Matriz de rastreabilidade](docs/matriz-rastreabilidade.md)
@@ -168,7 +165,7 @@ Documentos principais:
 - [Referências e decisões de escopo](docs/fontes-e-escopo.md)
 - [Publicação no GitHub e no Render](docs/publicacao-github-render.md)
 
-Os modelos físicos estão em [database/schema.sql](database/schema.sql), para MySQL, e [database/schema-postgres.sql](database/schema-postgres.sql), para PostgreSQL. A variável `DATABASE_URL` seleciona PostgreSQL; sem ela, a aplicação usa a configuração MySQL `DB_*`. Os dois bancos usam as mesmas cinco entidades e regras da plataforma. A API segue `/api` e retorna `{ dados }` nas consultas individuais; as listas retornam `{ dados, total, pagina, limite }`. Utilize o token de login no cabeçalho `Authorization: Bearer ...`.
+Os modelos físicos dos dois bancos estão na [pasta de scripts SQL](arquivos-adicionais/sql/). A variável `DATABASE_URL` seleciona PostgreSQL. Sem ela, a aplicação usa a configuração MySQL `DB_*`. Os dois bancos usam as mesmas cinco entidades e regras da plataforma. A API fica em `/api` e retorna `{ dados }` nas consultas individuais e `{ dados, total, pagina, limite }` nas listas. Utilize o token de login no cabeçalho `Authorization: Bearer ...`.
 
 ## Modelagem do banco de dados
 

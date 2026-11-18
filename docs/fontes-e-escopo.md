@@ -27,7 +27,7 @@ O termo monitoramento é concretizado com atualização manual do status e consu
 
 Os materiais de aula usam MySQL, preservado no ambiente local. Depois da implementação, o responsável pelo projeto solicitou hospedar aplicação e banco no próprio Render, exclusivamente no plano gratuito. A publicação foi adaptada para PostgreSQL, pois a opção gratuita de banco relacional do Render usa esse mecanismo. Node.js, Express, Sequelize, as cinco entidades, os perfis, as seis páginas e as regras de negócio permanecem no projeto.
 
-`DATABASE_URL` seleciona PostgreSQL. Sem essa variável, a conexão continua usando as variáveis `DB_*` do MySQL local. Cada banco possui seu script físico: `database/schema.sql` e `database/schema-postgres.sql`. O modelo conceitual e os relacionamentos lógicos são comuns aos dois.
+`DATABASE_URL` seleciona PostgreSQL. Sem essa variável, a conexão usa as variáveis `DB_*` do MySQL local. O modelo conceitual e os relacionamentos lógicos são comuns aos dois bancos. Confira os esquemas físicos para [MySQL](../arquivos-adicionais/sql/mysql/01-criar-banco-e-tabelas.sql) e [PostgreSQL](../arquivos-adicionais/sql/postgresql/01-criar-tabelas.sql).
 
 Esta decisão permite a apresentação no plano Free, mas o PostgreSQL gratuito expira após 30 dias. O site hiberna após 15 minutos sem acesso. Não foi autorizada contratação, atualização automática para plano pago ou inclusão de forma de pagamento. Esses limites devem ser considerados na data da apresentação e na preservação dos dados. Referência: [Render Free](https://render.com/docs/free).
 

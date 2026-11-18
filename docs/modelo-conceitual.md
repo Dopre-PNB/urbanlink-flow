@@ -8,13 +8,13 @@ O [SVG](diagramas/modelo-conceitual.svg) pode ser aberto no navegador ou inserid
 
 ```mermaid
 erDiagram
-    USUARIO ||--o{ ENTREGA : cadastra
-    USUARIO ||--o{ SIMULACAO : executa
-    USUARIO o|--o{ SIMULACAO : atualiza
-    VEICULO ||--o{ ENTREGA : transporta
-    ROTA o|--o{ ENTREGA : percurso_escolhido
-    ENTREGA ||--o{ SIMULACAO : possui
-    ROTA ||--o{ SIMULACAO : recomenda
+    USUARIO ||..o{ ENTREGA : cadastra
+    USUARIO ||..o{ SIMULACAO : executa
+    USUARIO |o..o{ SIMULACAO : atualiza
+    VEICULO ||..o{ ENTREGA : transporta
+    ROTA |o..o{ ENTREGA : percurso_escolhido
+    ENTREGA ||..o{ SIMULACAO : possui
+    ROTA ||..o{ SIMULACAO : recomenda
 ```
 
 ## Entidades e atributos de negócio
@@ -55,4 +55,4 @@ Os dois relacionamentos entre Usuário e Simulação representam papéis diferen
 
 Mapa, agenda e indicadores são visualizações dessas entidades; não criam outras tabelas. O mapa representa pontos cadastrados e não constitui rastreamento por GPS.
 
-Continue em [modelo lógico](modelo-logico.md), [DER com atributos](der.md) e scripts físicos [MySQL](../database/schema.sql) / [PostgreSQL](../database/schema-postgres.sql).
+Continue em [modelo lógico](modelo-logico.md), [DER com atributos](der.md) e scripts físicos [MySQL](../arquivos-adicionais/sql/mysql/01-criar-banco-e-tabelas.sql) / [PostgreSQL](../arquivos-adicionais/sql/postgresql/01-criar-tabelas.sql).

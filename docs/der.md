@@ -9,19 +9,20 @@ Arquivo para apresentação: [der.svg](diagramas/der.svg). O SVG é vetorial e p
 ## Legenda
 
 - `PK`: chave primária; `FK`: chave estrangeira; `UK` / `UQ`: valor único.
-- `||`: exatamente um; `o|`: zero ou um; `o{`: zero ou muitos.
+- `||` indica exatamente um. `|o` à esquerda indica zero ou um. `o{` à direita indica zero ou muitos.
+- No Mermaid, `..` indica relacionamento não identificador. As chaves estrangeiras ficam fora das chaves primárias. O SVG destaca os vínculos opcionais com traço e cor distintos.
 - Os dois campos opcionais são `entregas.rota_id` e `simulacoes.atualizado_por_id`.
 - Todas as relações usam `ON DELETE RESTRICT` e `ON UPDATE RESTRICT`.
 
 ```mermaid
 erDiagram
-    USUARIOS ||--o{ ENTREGAS : cadastra
-    VEICULOS ||--o{ ENTREGAS : transporta
-    ROTAS o|--o{ ENTREGAS : escolhida
-    ENTREGAS ||--o{ SIMULACOES : possui
-    ROTAS ||--o{ SIMULACOES : recomendada
-    USUARIOS ||--o{ SIMULACOES : executa
-    USUARIOS o|--o{ SIMULACOES : atualiza
+    USUARIOS ||..o{ ENTREGAS : cadastra
+    VEICULOS ||..o{ ENTREGAS : transporta
+    ROTAS |o..o{ ENTREGAS : escolhida
+    ENTREGAS ||..o{ SIMULACOES : possui
+    ROTAS ||..o{ SIMULACOES : recomendada
+    USUARIOS ||..o{ SIMULACOES : executa
+    USUARIOS |o..o{ SIMULACOES : atualiza
 
     USUARIOS {
         int id PK
@@ -81,4 +82,4 @@ erDiagram
     }
 ```
 
-Os tipos do diagrama são abreviações de documentação. Os tipos executáveis estão nos scripts [MySQL](../database/schema.sql) e [PostgreSQL](../database/schema-postgres.sql). Em Entregas, `rota_id` é a escolha operacional; em Simulações, é a recomendação calculada. A recomendação não altera automaticamente a rota da entrega: o operador confirma a escolha na aplicação.
+Os tipos do diagrama são abreviações de documentação. Os tipos executáveis estão nos scripts [MySQL](../arquivos-adicionais/sql/mysql/01-criar-banco-e-tabelas.sql) e [PostgreSQL](../arquivos-adicionais/sql/postgresql/01-criar-tabelas.sql). Em Entregas, `rota_id` é a escolha operacional. Em Simulações, é a recomendação calculada. O operador confirma a escolha na aplicação para atualizar a rota da entrega.

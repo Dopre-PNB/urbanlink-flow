@@ -1,6 +1,6 @@
 # Modelo lógico — UrbanLink Flow
 
-O modelo relacional contém cinco tabelas e sete chaves estrangeiras. É comum ao MySQL local e ao PostgreSQL usado na hospedagem. O [DER](der.md) e o [diagrama SVG](diagramas/der.svg) apresentam as mesmas entidades e relações. As fontes físicas são [schema.sql](../database/schema.sql) e [schema-postgres.sql](../database/schema-postgres.sql); os modelos da aplicação estão em [src/models/index.js](../src/models/index.js).
+O modelo relacional contém cinco tabelas e sete chaves estrangeiras. É comum ao MySQL local e ao PostgreSQL usado na hospedagem. O [DER](der.md) e o [diagrama SVG](diagramas/der.svg) apresentam as mesmas entidades e relações. Os esquemas físicos estão nos scripts [MySQL](../arquivos-adicionais/sql/mysql/01-criar-banco-e-tabelas.sql) e [PostgreSQL](../arquivos-adicionais/sql/postgresql/01-criar-tabelas.sql). Os modelos da aplicação estão em [src/models/index.js](../src/models/index.js).
 
 ## Convenções
 

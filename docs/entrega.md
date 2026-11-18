@@ -12,12 +12,12 @@ Este índice relaciona os cinco requisitos aos arquivos e links da entrega, revi
 
 ## Arquivos para avaliação
 
-- [Instalar, configurar, executar e utilizar o sistema](instalacao-e-uso.md).
+- [Instalar, configurar, executar e utilizar o sistema](../arquivos-adicionais/instalacao-e-uso.md).
 - [Modelo conceitual](modelo-conceitual.md), com entidades, regras e cardinalidades.
 - [Modelo lógico](modelo-logico.md), com tabelas, atributos, tipos, PKs e FKs.
 - [Diagrama Entidade-Relacionamento](der.md), com arquivos visuais e fontes editáveis.
-- [Estrutura SQL MySQL](../database/schema.sql) e [dados SQL MySQL](../database/seed.sql).
-- [Estrutura SQL PostgreSQL](../database/schema-postgres.sql) e [dados SQL PostgreSQL](../database/seed-postgres.sql).
+- [Criação do banco e das tabelas MySQL](../arquivos-adicionais/sql/mysql/01-criar-banco-e-tabelas.sql) e [dados SQL MySQL](../arquivos-adicionais/sql/mysql/02-inserir-dados.sql).
+- [Criação do banco PostgreSQL](../arquivos-adicionais/sql/postgresql/00-criar-banco-local.sql), [tabelas PostgreSQL](../arquivos-adicionais/sql/postgresql/01-criar-tabelas.sql) e [dados SQL PostgreSQL](../arquivos-adicionais/sql/postgresql/02-inserir-dados.sql).
 - [Entradas SQL e ordem de execução](../arquivos-adicionais/README.md).
 - [Resultados de testes](resultados-testes.md) e [roteiro de apresentação](roteiro-apresentacao.md).
 
@@ -25,7 +25,7 @@ Este índice relaciona os cinco requisitos aos arquivos e links da entrega, revi
 
 O responsável deve fornecer as credenciais privadas ao avaliador por um canal privado. O site não possui cadastro público e as contas de demonstração documentadas no README são somente locais. Na hospedagem, estão disponíveis um administrador e um operador privado, dois veículos, duas rotas e uma entrega pendente de exemplo.
 
-Para avaliar, entre com o operador, abra a entrega demonstrativa, compare os cenários normal/lento, salve a simulação, confirme a rota, atualize o estado da entrega e confira o painel. Use o administrador para testar os cadastros. O [guia de uso](instalacao-e-uso.md) detalha as ações.
+Para avaliar, entre com o operador, abra a entrega demonstrativa, compare os cenários normal e lento, salve a simulação, confirme a rota, atualize o estado da entrega e confira o painel. Use o administrador para testar os cadastros. O [guia de uso](../arquivos-adicionais/instalacao-e-uso.md) detalha as ações.
 
 ## Validação e disponibilidade
 

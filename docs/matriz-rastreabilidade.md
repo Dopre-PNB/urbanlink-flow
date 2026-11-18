@@ -14,7 +14,7 @@
 | API documentada                             | OpenAPI com métodos, schemas, códigos e perfis                            | Validação JSON/referências; acesso HTTP               |
 | Modelo conceitual                           | docs/modelo-conceitual.md                                                 | Entidades e cardinalidades conferidas                 |
 | Modelo lógico                               | docs/modelo-logico.md                                                     | Atributos, PK/FK e domínios conferidos                |
-| Modelo físico e banco normalizado           | database/schema.sql; models Sequelize; MySQL real                         | Setup/seed; CT13, CT22; consultas após criação/edição |
+| Modelo físico e banco normalizado           | SQL em `arquivos-adicionais/sql/`, modelos Sequelize e MySQL real         | Setup/seed; CT13, CT22; consultas após criação/edição |
 | Integração front/back/banco                 | fetch da mesma origem; Express; Sequelize/MySQL                           | Teste HTTP real + fluxo em navegador                  |
 | Segurança                                   | JWT/bcrypt/RBAC; autoria do token; validação e vínculos                   | CT02–CT08, CT11–CT17, CT21–CT22                       |
 | Desempenho e usabilidade                    | Paginação, índices, formulários, atualização de painel                    | CT23–CT26                                             |
