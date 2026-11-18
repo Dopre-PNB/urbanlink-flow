@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1030" viewBox="0 0 1640 1030" role="img" aria-labelledby="title desc">
+<title id="title">UrbanLink Flow · Modelo lógico</title><desc id="desc">Cinco entidades e sete relacionamentos do UrbanLink Flow. Somente a rota escolhida da entrega e o último atualizador da simulação são opcionais.</desc>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#173048}.title{font-size:32px;font-weight:700}.subtitle{font-size:17px;fill:#526b80}.name{font-size:23px;font-weight:700;fill:#fff}.body{font-size:18px}.row{font-family:Consolas,monospace;font-size:17px}.label{font-size:16px;font-weight:700;paint-order:stroke;stroke:#f4f7fb;stroke-width:8px;stroke-linejoin:round}.small{font-size:15px;fill:#526b80}.key{fill:#006a70;font-weight:700}.line{fill:none;stroke:#386f94;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.optional{stroke:#965989;stroke-dasharray:7 5}.point{fill:#386f94}.card{fill:#fff;stroke:#b9cbd9;stroke-width:1.5}</style>
+<rect width="1640" height="1030" fill="#f4f7fb"/>
+<text x="48" y="56" class="title" text-anchor="start">UrbanLink Flow · Modelo lógico</text>
+<text x="48" y="90" class="subtitle" text-anchor="start">Esquema relacional · 5 tabelas · 7 chaves estrangeiras</text>
+<style>.column{font-size:14px;font-weight:700;fill:#526b80}.relation-key{font-size:15px;font-weight:700;fill:#006a70}</style>
+<rect class="card" x="48" y="130" width="500" height="282" rx="10"/>
+<path d="M58,130 H538 Q548,130 548,140 V174 H48 V140 Q48,130 58,130" fill="#123d55"/>
+<text x="68" y="160" class="name" text-anchor="start">usuarios</text>
+<text x="68" y="199" class="column" text-anchor="start">Atributo</text>
+<text x="246" y="199" class="column" text-anchor="start">Tipo</text>
+<text x="403" y="199" class="column" text-anchor="start">Chave / referência</text>
+<rect x="50" y="210" width="496" height="28" fill="#edf4f8"/>
+<text x="68" y="229" class="row" text-anchor="start">id</text>
+<text x="246" y="229" class="small" text-anchor="start">Inteiro gerado</text>
+<text x="403" y="229" class="relation-key" text-anchor="start">PK</text>
+<text x="68" y="257" class="row" text-anchor="start">nome</text>
+<text x="246" y="257" class="small" text-anchor="start">Texto(100)</text>
+<rect x="50" y="266" width="496" height="28" fill="#edf4f8"/>
+<text x="68" y="285" class="row" text-anchor="start">email</text>
+<text x="246" y="285" class="small" text-anchor="start">Texto(150)</text>
+<text x="403" y="285" class="relation-key" text-anchor="start">UQ</text>
+<text x="68" y="313" class="row" text-anchor="start">senha_hash</text>
+<text x="246" y="313" class="small" text-anchor="start">Texto(255)</text>
+<rect x="50" y="322" width="496" height="28" fill="#edf4f8"/>
+<text x="68" y="341" class="row" text-anchor="start">tipo</text>
+<text x="246" y="341" class="small" text-anchor="start">Domínio de texto</text>
+<text x="68" y="369" class="row" text-anchor="start">createdAt</text>
+<text x="246" y="369" class="small" text-anchor="start">Data e hora</text>
+<rect x="50" y="378" width="496" height="28" fill="#edf4f8"/>
+<text x="68" y="397" class="row" text-anchor="start">updatedAt</text>
+<text x="246" y="397" class="small" text-anchor="start">Data e hora</text>
+<rect class="card" x="570" y="130" width="500" height="282" rx="10"/>
+<path d="M580,130 H1060 Q1070,130 1070,140 V174 H570 V140 Q570,130 580,130" fill="#123d55"/>
+<text x="590" y="160" class="name" text-anchor="start">veiculos</text>
+<text x="590" y="199" class="column" text-anchor="start">Atributo</text>
+<text x="768" y="199" class="column" text-anchor="start">Tipo</text>
+<text x="925" y="199" class="column" text-anchor="start">Chave / referência</text>
+<rect x="572" y="210" width="496" height="28" fill="#edf4f8"/>
+<text x="590" y="229" class="row" text-anchor="start">id</text>
+<text x="768" y="229" class="small" text-anchor="start">Inteiro gerado</text>
+<text x="925" y="229" class="relation-key" text-anchor="start">PK</text>
+<text x="590" y="257" class="row" text-anchor="start">nome</text>
+<text x="768" y="257" class="small" text-anchor="start">Texto(100)</text>
+<rect x="572" y="266" width="496" height="28" fill="#edf4f8"/>
+<text x="590" y="285" class="row" text-anchor="start">placa</text>
+<text x="768" y="285" class="small" text-anchor="start">Texto(15)</text>
+<text x="925" y="285" class="relation-key" text-anchor="start">UQ</text>
+<text x="590" y="313" class="row" text-anchor="start">capacidade_kg</text>
+<text x="768" y="313" class="small" text-anchor="start">Decimal(10,2)</text>
+<rect x="572" y="322" width="496" height="28" fill="#edf4f8"/>
+<text x="590" y="341" class="row" text-anchor="start">status</text>
+<text x="768" y="341" class="small" text-anchor="start">Domínio de texto</text>
+<text x="590" y="369" class="row" text-anchor="start">createdAt</text>
+<text x="768" y="369" class="small" text-anchor="start">Data e hora</text>
+<rect x="572" y="378" width="496" height="28" fill="#edf4f8"/>
+<text x="590" y="397" class="row" text-anchor="start">updatedAt</text>
+<text x="768" y="397" class="small" text-anchor="start">Data e hora</text>
+<rect class="card" x="1092" y="130" width="500" height="310" rx="10"/>
+<path d="M1102,130 H1582 Q1592,130 1592,140 V174 H1092 V140 Q1092,130 1102,130" fill="#123d55"/>
+<text x="1112" y="160" class="name" text-anchor="start">rotas</text>
+<text x="1112" y="199" class="column" text-anchor="start">Atributo</text>
+<text x="1290" y="199" class="column" text-anchor="start">Tipo</text>
+<text x="1447" y="199" class="column" text-anchor="start">Chave / referência</text>
+<rect x="1094" y="210" width="496" height="28" fill="#edf4f8"/>
+<text x="1112" y="229" class="row" text-anchor="start">id</text>
+<text x="1290" y="229" class="small" text-anchor="start">Inteiro gerado</text>
+<text x="1447" y="229" class="relation-key" text-anchor="start">PK</text>
+<text x="1112" y="257" class="row" text-anchor="start">nome</text>
+<text x="1290" y="257" class="small" text-anchor="start">Texto(100)</text>
+<text x="1447" y="257" class="relation-key" text-anchor="start">UQ</text>
+<rect x="1094" y="266" width="496" height="28" fill="#edf4f8"/>
+<text x="1112" y="285" class="row" text-anchor="start">origem</text>
+<text x="1290" y="285" class="small" text-anchor="start">Texto(150)</text>
+<text x="1112" y="313" class="row" text-anchor="start">destino</text>
+<text x="1290" y="313" class="small" text-anchor="start">Texto(150)</text>
+<rect x="1094" y="322" width="496" height="28" fill="#edf4f8"/>
+<text x="1112" y="341" class="row" text-anchor="start">distancia_km</text>
+<text x="1290" y="341" class="small" text-anchor="start">Decimal(10,2)</text>
+<text x="1112" y="369" class="row" text-anchor="start">pontos</text>
+<text x="1290" y="369" class="small" text-anchor="start">JSON</text>
+<rect x="1094" y="378" width="496" height="28" fill="#edf4f8"/>
+<text x="1112" y="397" class="row" text-anchor="start">createdAt</text>
+<text x="1290" y="397" class="small" text-anchor="start">Data e hora</text>
+<text x="1112" y="425" class="row" text-anchor="start">updatedAt</text>
+<text x="1290" y="425" class="small" text-anchor="start">Data e hora</text>
+<rect class="card" x="48" y="466" width="761" height="450" rx="10"/>
+<path d="M58,466 H799 Q809,466 809,476 V510 H48 V476 Q48,466 58,466" fill="#123d55"/>
+<text x="68" y="496" class="name" text-anchor="start">entregas</text>
+<text x="68" y="535" class="column" text-anchor="start">Atributo</text>
+<text x="302" y="535" class="column" text-anchor="start">Tipo</text>
+<text x="496" y="535" class="column" text-anchor="start">Chave / referência</text>
+<rect x="50" y="546" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="565" class="row" text-anchor="start">id</text>
+<text x="302" y="565" class="small" text-anchor="start">Inteiro gerado</text>
+<text x="496" y="565" class="relation-key" text-anchor="start">PK</text>
+<text x="68" y="593" class="row" text-anchor="start">descricao</text>
+<text x="302" y="593" class="small" text-anchor="start">Texto(200)</text>
+<rect x="50" y="602" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="621" class="row" text-anchor="start">origem</text>
+<text x="302" y="621" class="small" text-anchor="start">Texto(150)</text>
+<text x="68" y="649" class="row" text-anchor="start">destino</text>
+<text x="302" y="649" class="small" text-anchor="start">Texto(150)</text>
+<rect x="50" y="658" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="677" class="row" text-anchor="start">peso_kg</text>
+<text x="302" y="677" class="small" text-anchor="start">Decimal(10,2)</text>
+<text x="68" y="705" class="row" text-anchor="start">prazo_min</text>
+<text x="302" y="705" class="small" text-anchor="start">Decimal(10,2)</text>
+<rect x="50" y="714" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="733" class="row" text-anchor="start">data_agendada</text>
+<text x="302" y="733" class="small" text-anchor="start">Data</text>
+<text x="68" y="761" class="row" text-anchor="start">status</text>
+<text x="302" y="761" class="small" text-anchor="start">Domínio de texto</text>
+<rect x="50" y="770" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="789" class="row" text-anchor="start">usuario_id</text>
+<text x="302" y="789" class="small" text-anchor="start">Inteiro</text>
+<text x="496" y="789" class="relation-key" text-anchor="start">FK → usuarios.id</text>
+<text x="68" y="817" class="row" text-anchor="start">veiculo_id</text>
+<text x="302" y="817" class="small" text-anchor="start">Inteiro</text>
+<text x="496" y="817" class="relation-key" text-anchor="start">FK → veiculos.id</text>
+<rect x="50" y="826" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="845" class="row" text-anchor="start">rota_id</text>
+<text x="302" y="845" class="small" text-anchor="start">Inteiro</text>
+<text x="496" y="845" class="relation-key" text-anchor="start">FK → rotas.id · aceita nulo</text>
+<text x="68" y="873" class="row" text-anchor="start">createdAt</text>
+<text x="302" y="873" class="small" text-anchor="start">Data e hora</text>
+<rect x="50" y="882" width="757" height="28" fill="#edf4f8"/>
+<text x="68" y="901" class="row" text-anchor="start">updatedAt</text>
+<text x="302" y="901" class="small" text-anchor="start">Data e hora</text>
+<rect class="card" x="831" y="466" width="761" height="394" rx="10"/>
+<path d="M841,466 H1582 Q1592,466 1592,476 V510 H831 V476 Q831,466 841,466" fill="#123d55"/>
+<text x="851" y="496" class="name" text-anchor="start">simulacoes</text>
+<text x="851" y="535" class="column" text-anchor="start">Atributo</text>
+<text x="1085" y="535" class="column" text-anchor="start">Tipo</text>
+<text x="1279" y="535" class="column" text-anchor="start">Chave / referência</text>
+<rect x="833" y="546" width="757" height="28" fill="#edf4f8"/>
+<text x="851" y="565" class="row" text-anchor="start">id</text>
+<text x="1085" y="565" class="small" text-anchor="start">Inteiro gerado</text>
+<text x="1279" y="565" class="relation-key" text-anchor="start">PK</text>
+<text x="851" y="593" class="row" text-anchor="start">entrega_id</text>
+<text x="1085" y="593" class="small" text-anchor="start">Inteiro</text>
+<text x="1279" y="593" class="relation-key" text-anchor="start">FK → entregas.id</text>
+<rect x="833" y="602" width="757" height="28" fill="#edf4f8"/>
+<text x="851" y="621" class="row" text-anchor="start">cenario</text>
+<text x="1085" y="621" class="small" text-anchor="start">Domínio de texto</text>
+<text x="851" y="649" class="row" text-anchor="start">velocidade_kmh</text>
+<text x="1085" y="649" class="small" text-anchor="start">Inteiro</text>
+<rect x="833" y="658" width="757" height="28" fill="#edf4f8"/>
+<text x="851" y="677" class="row" text-anchor="start">prazo_min</text>
+<text x="1085" y="677" class="small" text-anchor="start">Decimal(10,2)</text>
+<text x="851" y="705" class="row" text-anchor="start">rota_id</text>
+<text x="1085" y="705" class="small" text-anchor="start">Inteiro</text>
+<text x="1279" y="705" class="relation-key" text-anchor="start">FK → rotas.id</text>
+<rect x="833" y="714" width="757" height="28" fill="#edf4f8"/>
+<text x="851" y="733" class="row" text-anchor="start">resultados</text>
+<text x="1085" y="733" class="small" text-anchor="start">JSON</text>
+<text x="851" y="761" class="row" text-anchor="start">usuario_id</text>
+<text x="1085" y="761" class="small" text-anchor="start">Inteiro</text>
+<text x="1279" y="761" class="relation-key" text-anchor="start">FK → usuarios.id</text>
+<rect x="833" y="770" width="757" height="28" fill="#edf4f8"/>
+<text x="851" y="789" class="row" text-anchor="start">atualizado_por_id</text>
+<text x="1085" y="789" class="small" text-anchor="start">Inteiro</text>
+<text x="1279" y="789" class="relation-key" text-anchor="start">FK → usuarios.id · aceita nulo</text>
+<text x="851" y="817" class="row" text-anchor="start">createdAt</text>
+<text x="1085" y="817" class="small" text-anchor="start">Data e hora</text>
+<rect x="833" y="826" width="757" height="28" fill="#edf4f8"/>
+<text x="851" y="845" class="row" text-anchor="start">updatedAt</text>
+<text x="1085" y="845" class="small" text-anchor="start">Data e hora</text>
+<text x="49" y="961" class="body" text-anchor="start">PK = chave primária · FK = chave estrangeira · UQ = valor único</text>
+<text x="49" y="992" class="small" text-anchor="start">Os atributos são obrigatórios, exceto os dois marcados com “aceita nulo”.</text>
+</svg>

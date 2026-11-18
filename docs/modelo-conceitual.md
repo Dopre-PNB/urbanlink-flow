@@ -4,7 +4,9 @@ O sistema acompanha entregas urbanas e compara percursos estimados. O domínio t
 
 ![Modelo conceitual das entidades e seus relacionamentos](diagramas/modelo-conceitual.svg)
 
-O [SVG](diagramas/modelo-conceitual.svg) pode ser aberto no navegador ou inserido na apresentação. A representação Mermaid mantém o diagrama editável no próprio documento.
+[Abrir imagem do modelo conceitual](diagramas/modelo-conceitual.svg)
+
+A representação Mermaid mantém o diagrama editável no próprio documento.
 
 ```mermaid
 erDiagram

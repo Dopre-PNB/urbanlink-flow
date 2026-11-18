@@ -327,3 +327,154 @@ function edge(out, points, x, y, label, optional = false) {
   out.push('</svg>');
   writeFileSync(fileURLToPath(new URL('./der.svg', import.meta.url)), out.join('\n') + '\n');
 }
+
+function relation(out, x, y, width, name, rows, typeOffset, keyOffset) {
+  const height = 86 + rows.length * 28;
+  out.push(
+    `<rect class="card" x="${x}" y="${y}" width="${width}" height="${height}" rx="10"/>`,
+    `<path d="M${x + 10},${y} H${x + width - 10} Q${x + width},${y} ${x + width},${y + 10} V${y + 44} H${x} V${y + 10} Q${x},${y} ${x + 10},${y}" fill="#123d55"/>`,
+    text(x + 20, y + 30, name, 'name'),
+    text(x + 20, y + 69, 'Atributo', 'column'),
+    text(x + typeOffset, y + 69, 'Tipo', 'column'),
+    text(x + keyOffset, y + 69, 'Chave / referência', 'column')
+  );
+
+  rows.forEach(([attribute, type, key], index) => {
+    const top = y + 80 + index * 28;
+    if (index % 2 === 0) {
+      out.push(`<rect x="${x + 2}" y="${top}" width="${width - 4}" height="28" fill="#edf4f8"/>`);
+    }
+    out.push(
+      text(x + 20, top + 19, attribute, 'row'),
+      text(x + typeOffset, top + 19, type, 'small')
+    );
+    if (key) out.push(text(x + keyOffset, top + 19, key, 'relation-key'));
+  });
+}
+
+{
+  const out = start(
+    'UrbanLink Flow · Modelo lógico',
+    'Esquema relacional · 5 tabelas · 7 chaves estrangeiras',
+    1030
+  );
+  out.push(
+    '<style>.column{font-size:14px;font-weight:700;fill:#526b80}.relation-key{font-size:15px;font-weight:700;fill:#006a70}</style>'
+  );
+  const timestamps = [
+    ['createdAt', 'Data e hora'],
+    ['updatedAt', 'Data e hora']
+  ];
+  relation(
+    out,
+    48,
+    130,
+    500,
+    'usuarios',
+    [
+      ['id', 'Inteiro gerado', 'PK'],
+      ['nome', 'Texto(100)'],
+      ['email', 'Texto(150)', 'UQ'],
+      ['senha_hash', 'Texto(255)'],
+      ['tipo', 'Domínio de texto'],
+      ...timestamps
+    ],
+    198,
+    355
+  );
+  relation(
+    out,
+    570,
+    130,
+    500,
+    'veiculos',
+    [
+      ['id', 'Inteiro gerado', 'PK'],
+      ['nome', 'Texto(100)'],
+      ['placa', 'Texto(15)', 'UQ'],
+      ['capacidade_kg', 'Decimal(10,2)'],
+      ['status', 'Domínio de texto'],
+      ...timestamps
+    ],
+    198,
+    355
+  );
+  relation(
+    out,
+    1092,
+    130,
+    500,
+    'rotas',
+    [
+      ['id', 'Inteiro gerado', 'PK'],
+      ['nome', 'Texto(100)', 'UQ'],
+      ['origem', 'Texto(150)'],
+      ['destino', 'Texto(150)'],
+      ['distancia_km', 'Decimal(10,2)'],
+      ['pontos', 'JSON'],
+      ...timestamps
+    ],
+    198,
+    355
+  );
+
+  relation(
+    out,
+    48,
+    466,
+    761,
+    'entregas',
+    [
+      ['id', 'Inteiro gerado', 'PK'],
+      ['descricao', 'Texto(200)'],
+      ['origem', 'Texto(150)'],
+      ['destino', 'Texto(150)'],
+      ['peso_kg', 'Decimal(10,2)'],
+      ['prazo_min', 'Decimal(10,2)'],
+      ['data_agendada', 'Data'],
+      ['status', 'Domínio de texto'],
+      ['usuario_id', 'Inteiro', 'FK → usuarios.id'],
+      ['veiculo_id', 'Inteiro', 'FK → veiculos.id'],
+      ['rota_id', 'Inteiro', 'FK → rotas.id · aceita nulo'],
+      ...timestamps
+    ],
+    254,
+    448
+  );
+  relation(
+    out,
+    831,
+    466,
+    761,
+    'simulacoes',
+    [
+      ['id', 'Inteiro gerado', 'PK'],
+      ['entrega_id', 'Inteiro', 'FK → entregas.id'],
+      ['cenario', 'Domínio de texto'],
+      ['velocidade_kmh', 'Inteiro'],
+      ['prazo_min', 'Decimal(10,2)'],
+      ['rota_id', 'Inteiro', 'FK → rotas.id'],
+      ['resultados', 'JSON'],
+      ['usuario_id', 'Inteiro', 'FK → usuarios.id'],
+      ['atualizado_por_id', 'Inteiro', 'FK → usuarios.id · aceita nulo'],
+      ...timestamps
+    ],
+    254,
+    448
+  );
+
+  out.push(
+    text(49, 961, 'PK = chave primária · FK = chave estrangeira · UQ = valor único', 'body'),
+    text(
+      49,
+      992,
+      'Os atributos são obrigatórios, exceto os dois marcados com “aceita nulo”.',
+      'small'
+    ),
+    '</svg>'
+  );
+  writeFileSync(
+    fileURLToPath(new URL('./modelo-logico.svg', import.meta.url)),
+    out.join('\n') + '\n'
+  );
+}

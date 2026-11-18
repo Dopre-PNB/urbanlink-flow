@@ -1,9 +1,10 @@
 # Diagramas do banco de dados
 
 - [Modelo conceitual](modelo-conceitual.svg): entidades do domínio e cardinalidades.
+- [Modelo lógico](modelo-logico.svg): tabelas, atributos, tipos e chaves.
 - [DER](der.svg): tabelas, atributos, chaves e relacionamentos implementados.
 
-Os arquivos SVG podem ser abertos em qualquer navegador, ampliados e incluídos em apresentações. A cardinalidade indicada junto ao nome de uma entidade informa quantos registros dessa entidade se associam a um registro da entidade oposta. Os documentos [conceitual](../modelo-conceitual.md), [lógico](../modelo-logico.md) e [DER](../der.md) apresentam o detalhamento e uma representação Mermaid editável.
+Os arquivos SVG podem ser ampliados no navegador e incluídos em apresentações. Os documentos [conceitual](../modelo-conceitual.md), [lógico](../modelo-logico.md) e [DER](../der.md) detalham os modelos. O conceitual e o DER também oferecem representações editáveis em Mermaid.
 
 Para alterar a apresentação visual dos SVGs, edite [gerar-diagramas.mjs](gerar-diagramas.mjs) e execute na raiz do projeto:
 
